@@ -482,8 +482,8 @@ function renderSetup(v){
     if(!draft.toursManual) draft.tours=defaultTours(n);
     draft.tours=Math.max(1,Math.min(draft.tours,maxTours));
     const sq=genSeq(n,draft.tours), peak=Math.max(...sq);
-    ruleRow('Nombre de tours','monte à '+peak+' carte'+(peak>1?'s':'')+' · '+maxTours+' max','tours',
-      stepper(draft.tours,1,maxTours,val=>{ draft.tours=val; draft.toursManual=true; render(); }));
+    ruleRow('Nombre de tours','monte à '+peak+' carte'+(peak>1?'s':'')+' · saisis de 1 à '+maxTours,'tours',
+      toursStepper(draft.tours,1,maxTours,val=>{ draft.tours=val; draft.toursManual=true; render(); }));
   } else {
     ruleRow('Nombre de tours','Ajoute des joueurs pour le régler','tours',null);
   }
@@ -576,6 +576,19 @@ function stepper(val,min,max,fn){
   const v=el('div','v',val);
   const plus=el('button',null,'＋'); plus.disabled=val>=max; plus.setAttribute('aria-label','plus'); plus.onclick=()=>fn(val+1);
   s.appendChild(minus); s.appendChild(v); s.appendChild(plus); return s;
+}
+function toursStepper(val,min,max,fn){
+  const s=el('div','step');
+  const minus=el('button',null,'−'); minus.disabled=val<=min; minus.setAttribute('aria-label','un tour de moins'); minus.onclick=()=>fn(Math.max(min,val-1));
+  const inp=el('input','v'); inp.type='text'; inp.inputMode='numeric'; inp.value=val;
+  inp.setAttribute('aria-label','Nombre de tours');
+  inp.style.cssText='width:46px;text-align:center;background:transparent;border:none;color:var(--text);font-weight:600;font-size:16px;padding:0';
+  inp.onfocus=()=>inp.select();
+  const commit=()=>{ let n=parseInt(inp.value,10); if(isNaN(n))n=val; n=Math.max(min,Math.min(max,n)); fn(n); };
+  inp.onchange=commit;
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); inp.blur(); }});
+  const plus=el('button',null,'＋'); plus.disabled=val>=max; plus.setAttribute('aria-label','un tour de plus'); plus.onclick=()=>fn(Math.min(max,val+1));
+  s.appendChild(minus); s.appendChild(inp); s.appendChild(plus); return s;
 }
 
 function scoreboard(r,phase){
