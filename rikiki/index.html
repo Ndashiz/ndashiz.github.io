@@ -355,7 +355,7 @@ function validateBids(){
 function validateRound(){
   const r=G.rounds[G.cur], cards=G.seq[G.cur], act=playersIn(G.cur);
   const sum=act.reduce((s,p)=>s+r.tricks[p.id],0);
-  if(sum!==cards) return;
+  if(sum>cards) return; // on peut faire moins de plis que de cartes, jamais plus
   r.done=true;
   if(G.cur>=G.seq.length-1){ finishGame(); return; }
   G.cur++; G.phase='bids'; save(); render();
@@ -575,8 +575,9 @@ function renderTricks(v,r,cards){
     v.appendChild(row);
   });
   const sum=act.reduce((s,p)=>s+r.tricks[p.id],0);
-  const ok=sum===cards;
-  const t=el('div','tally'); t.innerHTML='Total des plis <b class="'+(ok?'good':'bad')+'">'+sum+' / '+cards+'</b>'; v.appendChild(t);
+  const over=sum>cards, ok=!over;
+  const left=over?'Total des plis · trop de plis':(sum<cards?'Total des plis · '+(cards-sum)+' non réalisé'+(cards-sum>1?'s':''):'Total des plis');
+  const t=el('div','tally'); t.innerHTML=left+' <b class="'+(over?'bad':sum===cards?'good':'')+'">'+sum+' / '+cards+'</b>'; v.appendChild(t);
   v.appendChild(scoreboard(r,'tricks'));
 
   const cta=el('div','sticky-cta');
