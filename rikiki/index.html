@@ -259,6 +259,11 @@ function genSeq(n,tours){
 const activeIn=(p,idx)=> !p.out || idx < p.outAt;
 const playersIn=idx=> G.players.filter(p=>activeIn(p,idx));
 function dealerOf(r){ const a=playersIn(r); return a.length? a[r%a.length].id : null; }
+function consecutiveZeroBids(p){
+  let c=0;
+  for(let i=G.cur-1;i>=0;i--){ const r=G.rounds[i]; if(!r.done) continue; if(!activeIn(p,i)) break; if(r.bids[p.id]===0) c++; else break; }
+  return c;
+}
 function roundScore(bid,tricks,malus){
   if(bid===tricks) return 10+2*bid;
   return malus==='ecart' ? -2*Math.abs(tricks-bid) : -2*bid;
@@ -328,7 +333,7 @@ function insights(){
 function topInsight(){ const a=insights(); return a.length?a[0]:''; }
 
 /* ---- actions ---- */
-function newGame(){ draft={players:[], config:{malus:'ecart', donneur:true}, tours:defaultTours(4), toursManual:false}; view='setup'; render(); }
+function newGame(){ draft={players:[], config:{malus:'ecart', donneur:true, nozero:false}, tours:defaultTours(4), toursManual:false}; view='setup'; render(); }
 function addPlayer(name){ if(!name.trim())return; if(draft.players.length>=8)return;
   draft.players.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,5), name:name.trim().slice(0,16)}); render(); setTimeout(()=>$('#nm')?.focus(),0); }
 function startGame(){
@@ -340,6 +345,7 @@ function startGame(){
 }
 function validateBids(){
   const r=G.rounds[G.cur], cards=G.seq[G.cur], dId=dealerOf(G.cur), act=playersIn(G.cur);
+  if(G.config.nozero){ for(const p of act){ if(consecutiveZeroBids(p)>=3 && r.bids[p.id]<1) return; } }
   if(G.config.donneur && dId){
     const others=act.reduce((s,p)=> p.id===dId?s:s+r.bids[p.id],0);
     if(r.bids[dId]===cards-others) return;
@@ -466,7 +472,8 @@ function renderSetup(v){
       +'<div class="exr"><span>annonce 3, fait 3</span><span class="g">+16</span><span class="g">+16</span></div>'
       +'<div class="exr"><span>annonce 3, fait 2</span><span class="r">−2</span><span class="r">−6</span></div>'
       +'<div class="exr"><span>annonce 3, fait 0</span><span class="r">−6</span><span class="r">−6</span></div></div>',
-    donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.'
+    donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.',
+    nozero:'Si un joueur annonce 0 pendant 3 tours d\'affilée, il doit annoncer au moins 1 au tour suivant. Empêche de se cacher en passant systématiquement.'
   };
   function ruleRow(label, sub, helpKey, control){
     const row=el('div','cfg');
@@ -491,6 +498,8 @@ function renderSetup(v){
   ruleRow('Malus si raté','','malus',seg);
   const tog=el('button','tog'+(draft.config.donneur?' on':''),'<i></i>'); tog.setAttribute('role','switch'); tog.onclick=()=>{ draft.config.donneur=!draft.config.donneur; render(); };
   ruleRow('Règle du donneur','Somme des annonces ≠ plis','donneur',tog);
+  const togZ=el('button','tog'+(draft.config.nozero?' on':''),'<i></i>'); togZ.setAttribute('role','switch'); togZ.onclick=()=>{ draft.config.nozero=!draft.config.nozero; render(); };
+  ruleRow('Pas de zéro en série','Min. 1 après 3 zéros d\'affilée','nozero',togZ);
   v.appendChild(c);
 
   const cta=el('div','sticky-cta');
@@ -528,12 +537,17 @@ function renderBids(v,r,cards,dId){
   if(G.config.donneur){ const others=act.reduce((s,p)=> p.id===dId?s:s+r.bids[p.id],0); forbidden=cards-others; }
   act.forEach((p)=>{
     const i=G.players.indexOf(p), isD=p.id===dId;
+    const mustBid1=G.config.nozero && consecutiveZeroBids(p)>=3, minBid=mustBid1?1:0;
+    if(r.bids[p.id]<minBid) r.bids[p.id]=minBid;
     const row=el('div','pr'+(isD?' dealer':''));
     const a=el('div','av',init(p.name)); a.style.background=AV[i%AV.length]; a.style.width='30px'; a.style.height='30px'; a.style.fontSize='11px';
+    const warns=[];
+    if(isD&&forbidden!=null&&forbidden>=0&&forbidden<=cards) warns.push('ne peut pas annoncer '+forbidden);
+    if(mustBid1) warns.push('doit annoncer au moins 1 · 3 zéros de suite');
     const nm=el('div','nm'); nm.innerHTML='<b>'+p.name+(isD?' <span class="chip-d">donneur</span>':'')+'</b>'
-      +(isD&&forbidden!=null&&forbidden>=0&&forbidden<=cards?'<small class="warn">ne peut pas annoncer '+forbidden+'</small>':'');
+      +(warns.length?'<small class="warn">'+warns.join(' · ')+'</small>':'');
     row.appendChild(a); row.appendChild(nm);
-    row.appendChild(stepper(r.bids[p.id],0,cards,val=>{ r.bids[p.id]=val; save(); render(); }));
+    row.appendChild(stepper(r.bids[p.id],minBid,cards,val=>{ r.bids[p.id]=val; save(); render(); }));
     v.appendChild(row);
   });
   const sum=act.reduce((s,p)=>s+r.bids[p.id],0);
