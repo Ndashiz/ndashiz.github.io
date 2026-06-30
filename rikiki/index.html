@@ -238,6 +238,20 @@ const Store={ mem:{},
 };
 const K_GAME='rikiki.game', K_HIST='rikiki.history';
 
+/* ---- aide contextuelle des règles (partagée setup ↔ écran Règles) ---- */
+const HELP={
+  prog:'Le nombre de cartes distribuées monte de 1 jusqu\'au maximum permis par le paquet, puis redescend à 1.',
+  tours:'Pré-rempli selon le nombre de joueurs (jeu complet). Tu peux le réduire ou l\'augmenter librement.',
+  malus:'<b style="font-weight:500">Réussi</b> : +10 et +2 par pli annoncé (identique dans les deux modes). <b style="font-weight:500">Raté</b> : « à l\'écart » punit la distance à ton annonce ; « sur l\'annonce » punit la taille de ton annonce.'
+    +'<div class="exg"><div class="exh"><span>exemple</span><span>à l\'écart</span><span>sur l\'annonce</span></div>'
+    +'<div class="exr"><span>annonce 3, fait 3</span><span class="g">+16</span><span class="g">+16</span></div>'
+    +'<div class="exr"><span>annonce 3, fait 2</span><span class="r">−2</span><span class="r">−6</span></div>'
+    +'<div class="exr"><span>annonce 3, fait 0</span><span class="r">−6</span><span class="r">−6</span></div></div>',
+  donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.',
+  nozero:'Si un joueur annonce 0 pendant 3 tours d\'affilée, il doit annoncer au moins 1 au tour suivant. Empêche de se cacher en passant systématiquement.',
+  plis:'Le total des plis réalisés peut être inférieur au nombre de cartes du tour (certaines mains ne font pas de pli). Il ne peut jamais le dépasser.'
+};
+
 let G=Store.get(K_GAME);              // partie en cours
 let HIST=Store.get(K_HIST)||[];       // parties terminées
 let view='home';                      // home|setup|round|standings|sheet|finished
@@ -389,6 +403,8 @@ function topbar(){
     bar.innerHTML='<button class="iconbtn" onclick="back()" aria-label="Retour">‹</button><span class="ttl">Feuille de match</span>';
   } else if(view==='stats'){
     bar.innerHTML='<button class="iconbtn" onclick="back()" aria-label="Retour">‹</button><span class="ttl">Stats en direct</span>';
+  } else if(view==='rules'){
+    bar.innerHTML='<button class="iconbtn" onclick="back()" aria-label="Retour">‹</button><span class="ttl">Règles du jeu</span>';
   } else if(view==='finished'){
     bar.innerHTML='<span class="ttl">Partie terminée</span>';
   } else if(view==='round'){
@@ -406,7 +422,7 @@ function back(){ view=backTo; render(); }
 function render(){
   topbar();
   const v=$('#view'); v.innerHTML=''; v.scrollTop=0;
-  ({home:renderHome, setup:renderSetup, round:renderRound, standings:renderStandings, sheet:renderSheet, stats:renderStats, finished:renderFinished}[view])(v);
+  ({home:renderHome, setup:renderSetup, round:renderRound, standings:renderStandings, sheet:renderSheet, stats:renderStats, rules:renderRules, finished:renderFinished}[view])(v);
 }
 
 function renderHome(v){
@@ -464,17 +480,6 @@ function renderSetup(v){
 
   v.appendChild(el('div','section-lbl','Règles'));
   const c=el('div','card rules'); c.style.padding='2px 14px';
-  const HELP={
-    prog:'Le nombre de cartes distribuées monte de 1 jusqu\'au maximum permis par le paquet, puis redescend à 1.',
-    tours:'Pré-rempli selon le nombre de joueurs (jeu complet). Tu peux le réduire ou l\'augmenter librement.',
-    malus:'<b style="font-weight:500">Réussi</b> : +10 et +2 par pli annoncé (identique dans les deux modes). <b style="font-weight:500">Raté</b> : « à l\'écart » punit la distance à ton annonce ; « sur l\'annonce » punit la taille de ton annonce.'
-      +'<div class="exg"><div class="exh"><span>exemple</span><span>à l\'écart</span><span>sur l\'annonce</span></div>'
-      +'<div class="exr"><span>annonce 3, fait 3</span><span class="g">+16</span><span class="g">+16</span></div>'
-      +'<div class="exr"><span>annonce 3, fait 2</span><span class="r">−2</span><span class="r">−6</span></div>'
-      +'<div class="exr"><span>annonce 3, fait 0</span><span class="r">−6</span><span class="r">−6</span></div></div>',
-    donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.',
-    nozero:'Si un joueur annonce 0 pendant 3 tours d\'affilée, il doit annoncer au moins 1 au tour suivant. Empêche de se cacher en passant systématiquement.'
-  };
   function ruleRow(label, sub, helpKey, control){
     const row=el('div','cfg');
     row.innerHTML='<div class="ci"><b>'+label+' <button class="infob" type="button" aria-label="Explication">ⓘ</button></b>'+(sub?'<small>'+sub+'</small>':'')+'</div>';
@@ -708,6 +713,27 @@ function renderStats(v){
   }
 }
 
+function renderRules(v){
+  const cfg=G.config, peak=Math.max(...G.seq);
+  v.appendChild(el('div','section-lbl','Règles de cette partie'));
+  const c=el('div','card rules'); c.style.padding='2px 14px';
+  function rr(label, value, helpKey){
+    const row=el('div','cfg');
+    row.innerHTML='<div class="ci"><b>'+label+' <button class="infob" type="button" aria-label="Explication">ⓘ</button></b>'+(value?'<small>'+value+'</small>':'')+'</div>';
+    c.appendChild(row);
+    const note=el('div','cfgnote hide',HELP[helpKey]); c.appendChild(note);
+    row.querySelector('.infob').onclick=()=>note.classList.toggle('hide');
+  }
+  rr('Progression','Montante puis descendante · jusqu\'à '+peak+' carte'+(peak>1?'s':''),'prog');
+  rr('Nombre de tours',G.seq.length+' tours','tours');
+  rr('Malus si raté',cfg.malus==='ecart'?'À l\'écart':'Sur l\'annonce','malus');
+  rr('Plis réalisés','Somme ≤ cartes du tour','plis');
+  rr('Règle du donneur',cfg.donneur?'Activée · somme des annonces ≠ plis':'Désactivée','donneur');
+  rr('Pas de zéro en série',cfg.nozero?'Activée · min. 1 après 3 zéros':'Désactivée','nozero');
+  v.appendChild(c);
+  v.appendChild(el('div','note','Touche ⓘ pour le détail d\'une règle. Réglages fixés au démarrage ; le nombre de tours reste ajustable depuis le menu.'));
+}
+
 function renderFinished(v){
   const last=HIST[0];
   const hero=el('div','fin-hero');
@@ -743,6 +769,7 @@ function openMenu(){
     +'<div class="mi" id="m-st"><i>♛</i> Classement</div>'
     +'<div class="mi" id="m-stat"><i>◆</i> Stats en direct</div>'
     +'<div class="mi" id="m-sh"><i>▦</i> Feuille de match</div>'
+    +'<div class="mi" id="m-rules"><i>ⓘ</i> Règles du jeu</div>'
     +'<div class="toursctl"><span>Nombre de tours</span><div class="tc"><button id="tc-m" aria-label="moins">−</button><b>'+G.seq.length+'</b><button id="tc-p" aria-label="plus">＋</button></div></div>'
     +'<div class="mi" id="m-stop"><i>○</i> Un joueur s\'arrête</div>'
     +'<div class="mi" id="m-un"><i>↺</i> Annuler le dernier tour</div>'
@@ -753,6 +780,7 @@ function openMenu(){
   $('#m-st').onclick=()=>{ closeMenu(); go('standings'); };
   $('#m-stat').onclick=()=>{ closeMenu(); go('stats'); };
   $('#m-sh').onclick=()=>{ closeMenu(); go('sheet'); };
+  $('#m-rules').onclick=()=>{ closeMenu(); go('rules'); };
   $('#tc-m').onclick=()=>adjustTours(-1);
   $('#tc-p').onclick=()=>adjustTours(1);
   $('#m-stop').onclick=menuStopPlayer;
