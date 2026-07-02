@@ -250,6 +250,7 @@ const HELP={
     +'<div style="margin-top:6px">Exception : une annonce de 0 ratée est toujours punie à l\'écart (−2 par pli fait).</div>',
   donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.',
   nozero:'Si un joueur annonce 0 pendant 3 tours d\'affilée, il doit annoncer au moins 1 au tour suivant. Empêche de se cacher en passant systématiquement.',
+  premier:'Le premier donneur est tiré au sort par défaut. Touche le bouton pour désigner un joueur. Le donneur tourne ensuite à chaque tour, dans l\'ordre de la table.',
   plis:'Le total des plis réalisés peut être inférieur au nombre de cartes du tour (certaines mains ne font pas de pli). Il ne peut jamais le dépasser.'
 };
 
@@ -273,7 +274,7 @@ function genSeq(n,tours){
 }
 const activeIn=(p,idx)=> !p.out || idx < p.outAt;
 const playersIn=idx=> G.players.filter(p=>activeIn(p,idx));
-function dealerOf(r){ const a=playersIn(r); return a.length? a[r%a.length].id : null; }
+function dealerOf(r){ const a=playersIn(r); return a.length? a[(r+(G.dealerOff||0))%a.length].id : null; }
 function consecutiveZeroBids(p){
   let c=0;
   for(let i=G.cur-1;i>=0;i--){ const r=G.rounds[i]; if(!r.done) continue; if(!activeIn(p,i)) break; if(r.bids[p.id]===0) c++; else break; }
@@ -286,7 +287,7 @@ function roundScore(bid,tricks,malus){
   return -2*bid;
 }
 function totals(){
-  const t={}; G.players.forEach(p=>t[p.id]=0);
+  const t={}; G.players.forEach(p=>t[p.id]=(G.adj&&G.adj[p.id])||0); // corrections manuelles incluses
   G.rounds.forEach((r,idx)=>{ if(r.done) G.players.forEach(p=>{ if(activeIn(p,idx)) t[p.id]+=roundScore(r.bids[p.id],r.tricks[p.id],G.config.malus); }); });
   return t;
 }
@@ -350,13 +351,15 @@ function insights(){
 function topInsight(){ const a=insights(); return a.length?a[0]:''; }
 
 /* ---- actions ---- */
-function newGame(){ draft={players:[], config:{malus:'ecart', donneur:true, nozero:false}, tours:defaultTours(4), toursManual:false}; view='setup'; render(); }
+function newGame(){ draft={players:[], config:{malus:'ecart', donneur:true, nozero:false}, tours:defaultTours(4), toursManual:false, dealer:'random'}; view='setup'; render(); }
 function addPlayer(name){ if(!name.trim())return; if(draft.players.length>=8)return;
   draft.players.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,5), name:name.trim().slice(0,16)}); render(); setTimeout(()=>$('#nm')?.focus(),0); }
 function startGame(){
   const seq=genSeq(draft.players.length, draft.tours);
+  let off=Math.floor(Math.random()*draft.players.length); // premier donneur au hasard par défaut
+  if(draft.dealer && draft.dealer!=='random'){ const i=draft.players.findIndex(p=>p.id===draft.dealer); if(i>=0) off=i; }
   G={ id:'g'+Date.now(), createdAt:Date.now(), players:draft.players, config:{...draft.config},
-      seq, rounds:seq.map(()=>({bids:{},tricks:{},done:false})), cur:0, phase:'bids', status:'playing' };
+      seq, rounds:seq.map(()=>({bids:{},tricks:{},done:false})), cur:0, phase:'bids', status:'playing', dealerOff:off, adj:{} };
   G.players.forEach(p=>{ G.rounds.forEach(r=>{ r.bids[p.id]=0; r.tricks[p.id]=0; }); });
   draft=null; view='round'; save(); render();
 }
@@ -477,9 +480,14 @@ function renderSetup(v){
     const r=el('div','player');
     const a=el('div','av',init(p.name)); a.style.background=AV[i%AV.length];
     r.appendChild(a); r.appendChild(el('b',null,p.name));
+    const up=el('button','x','↑'); up.setAttribute('aria-label','Monter'); if(i===0){up.disabled=true;up.style.opacity='.25';}
+    up.onclick=()=>{ [draft.players[i-1],draft.players[i]]=[draft.players[i],draft.players[i-1]]; render(); };
+    const dn=el('button','x','↓'); dn.setAttribute('aria-label','Descendre'); if(i===draft.players.length-1){dn.disabled=true;dn.style.opacity='.25';}
+    dn.onclick=()=>{ [draft.players[i+1],draft.players[i]]=[draft.players[i],draft.players[i+1]]; render(); };
     const x=el('button','x','✕'); x.setAttribute('aria-label','Retirer'); x.onclick=()=>{ draft.players.splice(i,1); render(); };
-    r.appendChild(x); v.appendChild(r);
+    r.appendChild(up); r.appendChild(dn); r.appendChild(x); v.appendChild(r);
   });
+  if(draft.players.length>=2) v.appendChild(el('div','note','L\'ordre de la liste = l\'ordre autour de la table (sens des annonces).'));
 
   v.appendChild(el('div','section-lbl','Règles'));
   const c=el('div','card rules'); c.style.padding='2px 14px';
@@ -508,6 +516,13 @@ function renderSetup(v){
   ruleRow('Règle du donneur','Somme des annonces ≠ plis','donneur',tog);
   const togZ=el('button','tog'+(draft.config.nozero?' on':''),'<i></i>'); togZ.setAttribute('role','switch'); togZ.onclick=()=>{ draft.config.nozero=!draft.config.nozero; render(); };
   ruleRow('Pas de zéro en série','Min. 1 après 3 zéros d\'affilée','nozero',togZ);
+  if(draft.players.length>=2){
+    const curD=draft.players.find(p=>p.id===draft.dealer);
+    const segD=el('div','seg'); const bD=el('button','on',curD?curD.name:'🎲 Au hasard');
+    bD.onclick=()=>{ const ids=['random',...draft.players.map(p=>p.id)]; const k=Math.max(0,ids.indexOf(curD?draft.dealer:'random')); draft.dealer=ids[(k+1)%ids.length]; render(); };
+    segD.appendChild(bD);
+    ruleRow('Premier donneur','Touche pour changer','premier',segD);
+  }
   v.appendChild(c);
 
   const cta=el('div','sticky-cta');
@@ -540,10 +555,12 @@ function renderRound(v){
 
 function renderBids(v,r,cards,dId){
   const act=playersIn(G.cur);
-  v.appendChild(el('div','section-lbl','Combien chacun annonce ?'));
+  const di=act.findIndex(p=>p.id===dId);
+  const ordered=di>=0?[...act.slice(di+1),...act.slice(0,di+1)]:act; // ordre d'annonce : après le donneur, donneur en dernier
+  v.appendChild(el('div','section-lbl','Combien chacun annonce ? · donneur en dernier'));
   let forbidden=null;
   if(G.config.donneur){ const others=act.reduce((s,p)=> p.id===dId?s:s+r.bids[p.id],0); forbidden=cards-others; }
-  act.forEach((p)=>{
+  ordered.forEach((p)=>{
     const i=G.players.indexOf(p), isD=p.id===dId;
     const mustBid1=G.config.nozero && consecutiveZeroBids(p)>=3, minBid=mustBid1?1:0;
     if(r.bids[p.id]<minBid) r.bids[p.id]=minBid;
@@ -568,9 +585,11 @@ function renderBids(v,r,cards,dId){
 }
 
 function renderTricks(v,r,cards){
-  const act=playersIn(G.cur);
+  const act=playersIn(G.cur), dId=dealerOf(G.cur);
+  const di=act.findIndex(p=>p.id===dId);
+  const ordered=di>=0?[...act.slice(di+1),...act.slice(0,di+1)]:act; // même ordre que les annonces
   v.appendChild(el('div','section-lbl','Qui a fait combien de plis ?'));
-  act.forEach((p)=>{
+  ordered.forEach((p)=>{
     const i=G.players.indexOf(p);
     const row=el('div','pr');
     const a=el('div','av',init(p.name)); a.style.background=AV[i%AV.length]; a.style.width='30px'; a.style.height='30px'; a.style.fontSize='11px';
@@ -659,7 +678,7 @@ function prevStandings(){
   const done=G.rounds.map((r,i)=>r.done?i:-1).filter(i=>i>=0);
   if(done.length<2)return null;
   const last=done[done.length-1];
-  const t={}; G.players.forEach(p=>t[p.id]=0);
+  const t={}; G.players.forEach(p=>t[p.id]=(G.adj&&G.adj[p.id])||0);
   G.rounds.forEach((r,i)=>{ if(r.done&&i!==last)G.players.forEach(p=>{ if(activeIn(p,i))t[p.id]+=roundScore(r.bids[p.id],r.tricks[p.id],G.config.malus); }); });
   const arr=G.players.map(p=>({id:p.id,pts:t[p.id]})); arr.sort((a,b)=>b.pts-a.pts); return arr;
 }
@@ -671,7 +690,7 @@ function renderSheet(v){
   const run={}; G.players.forEach(p=>run[p.id]=0);
   G.seq.forEach((cards,i)=>{
     const r=G.rounds[i];
-    body+='<tr><td>'+(i+1)+' · '+cards+'♠</td>';
+    body+='<tr'+(r.done?' data-edit="'+i+'" style="cursor:pointer"':'')+'><td>'+(i+1)+' · '+cards+'♠</td>';
     G.players.forEach(p=>{
       if(r.done && activeIn(p,i)){ const sc=roundScore(r.bids[p.id],r.tricks[p.id],G.config.malus); run[p.id]+=sc;
         const ok=r.bids[p.id]===r.tricks[p.id];
@@ -681,8 +700,45 @@ function renderSheet(v){
     });
     body+='</tr>';
   });
-  let tot='<tr class="total"><td>Total</td>'+G.players.map(p=>'<td>'+run[p.id]+'</td>').join('')+'</tr>';
-  tbl.innerHTML=head+body+tot; wrap.appendChild(tbl); v.appendChild(wrap);
+  const adj=G.adj||{}, hasAdj=G.players.some(p=>adj[p.id]);
+  let adjRow=hasAdj?'<tr><td>Ajust.</td>'+G.players.map(p=>'<td class="cellv">'+((adj[p.id]||0)>0?'+':'')+(adj[p.id]||0)+'</td>').join('')+'</tr>':'';
+  let tot='<tr class="total"><td>Total</td>'+G.players.map(p=>'<td>'+(run[p.id]+(adj[p.id]||0))+'</td>').join('')+'</tr>';
+  tbl.innerHTML=head+body+adjRow+tot; wrap.appendChild(tbl); v.appendChild(wrap);
+  tbl.querySelectorAll('tr[data-edit]').forEach(tr=>tr.onclick=()=>editRound(+tr.getAttribute('data-edit')));
+  const nDone=G.rounds.filter(r=>r.done).length;
+  if(nDone) v.appendChild(el('div','note','Touche un tour joué pour corriger ses annonces ou ses plis — les totaux sont recalculés.'));
+}
+function editRound(i){
+  const r=G.rounds[i]; if(!r||!r.done) return;
+  const cards=G.seq[i], act=G.players.filter(p=>activeIn(p,i));
+  const tmp={bids:{...r.bids},tricks:{...r.tricks}};
+  const draw=()=>{
+    const sum=act.reduce((s,p)=>s+tmp.tricks[p.id],0), over=sum>cards;
+    const o=$('#overlay');
+    o.innerHTML='<div class="scrim" id="scrim"><div class="sheetmenu" style="padding:8px 16px calc(14px + env(safe-area-inset-bottom))">'
+      +'<div class="h" style="padding:14px 4px 8px">Corriger le tour '+(i+1)+' · '+(cards>1?cards+' cartes':'1 carte')+'</div>'
+      +'<div id="edrows"></div>'
+      +'<div class="tally">Total des plis <b class="'+(over?'bad':sum===cards?'good':'')+'">'+sum+' / '+cards+'</b></div>'
+      +'<div style="display:flex;gap:9px;margin-top:6px"><button class="btn ghost" id="ed-cancel" style="flex:1">Annuler</button><button class="btn gold" id="ed-save" style="flex:1"'+(over?' disabled':'')+'>Enregistrer</button></div>'
+      +'</div></div>';
+    const box=$('#edrows');
+    act.forEach(p=>{
+      const row=el('div','pr'); row.style.background='var(--panel2)';
+      const sc=roundScore(tmp.bids[p.id],tmp.tricks[p.id],G.config.malus), ok=tmp.bids[p.id]===tmp.tricks[p.id];
+      const nm=el('div','nm'); nm.innerHTML='<b>'+p.name+'</b><small class="'+(ok?'':'warn')+'">'+(sc>0?'+':'')+sc+' pts</small>';
+      row.appendChild(nm);
+      const w1=el('div',null,'<small style="display:block;text-align:center;color:var(--faint);font-size:10px;margin-bottom:2px">ANNONCE</small>');
+      w1.appendChild(stepper(tmp.bids[p.id],0,cards,val=>{ tmp.bids[p.id]=val; draw(); }));
+      const w2=el('div',null,'<small style="display:block;text-align:center;color:var(--faint);font-size:10px;margin-bottom:2px">PLIS</small>');
+      w2.appendChild(stepper(tmp.tricks[p.id],0,cards,val=>{ tmp.tricks[p.id]=val; draw(); }));
+      row.appendChild(w1); row.appendChild(w2);
+      box.appendChild(row);
+    });
+    $('#scrim').onclick=e=>{ if(e.target.id==='scrim')closeMenu(); };
+    $('#ed-cancel').onclick=closeMenu;
+    $('#ed-save').onclick=()=>{ r.bids=tmp.bids; r.tricks=tmp.tricks; save(); closeMenu(); render(); };
+  };
+  draw();
 }
 
 function renderStats(v){
@@ -773,6 +829,8 @@ function openMenu(){
     +'<div class="mi" id="m-stat"><i>◆</i> Stats en direct</div>'
     +'<div class="mi" id="m-sh"><i>▦</i> Feuille de match</div>'
     +'<div class="mi" id="m-rules"><i>ⓘ</i> Règles du jeu</div>'
+    +'<div class="mi" id="m-ord"><i>⇅</i> Ordre des joueurs</div>'
+    +'<div class="mi" id="m-fix"><i>✎</i> Corriger un score</div>'
     +'<div class="toursctl"><span>Nombre de tours</span><div class="tc"><button id="tc-m" aria-label="moins">−</button><b>'+G.seq.length+'</b><button id="tc-p" aria-label="plus">＋</button></div></div>'
     +'<div class="mi" id="m-stop"><i>○</i> Un joueur s\'arrête</div>'
     +'<div class="mi" id="m-un"><i>↺</i> Annuler le dernier tour</div>'
@@ -784,12 +842,60 @@ function openMenu(){
   $('#m-stat').onclick=()=>{ closeMenu(); go('stats'); };
   $('#m-sh').onclick=()=>{ closeMenu(); go('sheet'); };
   $('#m-rules').onclick=()=>{ closeMenu(); go('rules'); };
+  $('#m-ord').onclick=menuOrder;
+  $('#m-fix').onclick=menuFixScore;
   $('#tc-m').onclick=()=>adjustTours(-1);
   $('#tc-p').onclick=()=>adjustTours(1);
   $('#m-stop').onclick=menuStopPlayer;
   $('#m-un').onclick=undoRound;
   $('#m-end').onclick=confirmEnd;
   $('#m-home').onclick=quitToHome;
+}
+function menuOrder(){
+  const o=$('#overlay');
+  o.innerHTML='<div class="scrim" id="scrim"><div class="sheetmenu"><div class="h">Ordre autour de la table</div><div id="ordrows"></div><div class="mi" id="m-back"><i>‹</i> Retour</div></div></div>';
+  const box=$('#ordrows');
+  G.players.forEach((p,i)=>{
+    const row=el('div','mi');
+    row.innerHTML='<i>'+(i+1)+'</i><span style="flex:1">'+p.name
+      +(p.out?' <span class="tag-out">arrêté</span>':'')
+      +(p.id===dealerOf(G.cur)?' <span class="chip-d">donneur</span>':'')+'</span>';
+    const up=el('button','iconbtn','↑'); up.style.width='34px'; up.style.height='34px'; up.setAttribute('aria-label','Monter');
+    if(i===0){up.disabled=true;up.style.opacity='.3';}
+    up.onclick=e=>{ e.stopPropagation(); movePlayer(i,-1); };
+    const dn=el('button','iconbtn','↓'); dn.style.width='34px'; dn.style.height='34px'; dn.setAttribute('aria-label','Descendre');
+    if(i===G.players.length-1){dn.disabled=true;dn.style.opacity='.3';}
+    dn.onclick=e=>{ e.stopPropagation(); movePlayer(i,1); };
+    row.appendChild(up); row.appendChild(dn); box.appendChild(row);
+  });
+  $('#scrim').onclick=e=>{ if(e.target.id==='scrim'){ closeMenu(); render(); } };
+  $('#m-back').onclick=()=>{ render(); openMenu(); };
+}
+function movePlayer(i,dir){
+  const j=i+dir; if(j<0||j>=G.players.length) return;
+  const dPrev=dealerOf(G.cur); // le donneur du tour courant ne doit pas changer
+  [G.players[i],G.players[j]]=[G.players[j],G.players[i]];
+  const a=playersIn(G.cur), di=a.findIndex(p=>p.id===dPrev);
+  if(di>=0) G.dealerOff=((di-G.cur)%a.length+a.length)%a.length;
+  save(); menuOrder();
+}
+function menuFixScore(){
+  const t=totals();
+  const items=G.players.map(p=>'<div class="mi" data-fix="'+p.id+'"><i>✎</i> <span style="flex:1">'+p.name+'</span><b class="num">'+t[p.id]+'</b></div>').join('');
+  $('#overlay').innerHTML='<div class="scrim" id="scrim"><div class="sheetmenu">'
+    +'<div class="h">Corriger le score de…</div>'+items
+    +'<div class="mi" id="m-back"><i>‹</i> Retour</div></div></div>';
+  $('#scrim').onclick=e=>{ if(e.target.id==='scrim')closeMenu(); };
+  $('#m-back').onclick=openMenu;
+  document.querySelectorAll('[data-fix]').forEach(n=>n.onclick=()=>{
+    const id=n.getAttribute('data-fix'), p=G.players.find(x=>x.id===id), cur=totals()[id];
+    const val=prompt('Nouveau score total pour '+p.name+' :', cur);
+    if(val===null) return;
+    const nv=parseInt(val,10);
+    if(isNaN(nv)){ alert('Valeur invalide.'); return; }
+    G.adj=G.adj||{}; G.adj[id]=(G.adj[id]||0)+(nv-cur);
+    save(); closeMenu(); go('standings');
+  });
 }
 function menuStopPlayer(){
   const act=G.players.filter(p=>!p.out);
