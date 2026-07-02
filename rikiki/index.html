@@ -246,7 +246,8 @@ const HELP={
     +'<div class="exg"><div class="exh"><span>exemple</span><span>à l\'écart</span><span>sur l\'annonce</span></div>'
     +'<div class="exr"><span>annonce 3, fait 3</span><span class="g">+16</span><span class="g">+16</span></div>'
     +'<div class="exr"><span>annonce 3, fait 2</span><span class="r">−2</span><span class="r">−6</span></div>'
-    +'<div class="exr"><span>annonce 3, fait 0</span><span class="r">−6</span><span class="r">−6</span></div></div>',
+    +'<div class="exr"><span>annonce 0, fait 2</span><span class="r">−4</span><span class="r">−4</span></div></div>'
+    +'<div style="margin-top:6px">Exception : une annonce de 0 ratée est toujours punie à l\'écart (−2 par pli fait).</div>',
   donneur:'Le donneur annonce en dernier et ne peut pas faire que la somme des annonces égale le nombre de plis : un joueur ratera forcément.',
   nozero:'Si un joueur annonce 0 pendant 3 tours d\'affilée, il doit annoncer au moins 1 au tour suivant. Empêche de se cacher en passant systématiquement.',
   plis:'Le total des plis réalisés peut être inférieur au nombre de cartes du tour (certaines mains ne font pas de pli). Il ne peut jamais le dépasser.'
@@ -280,7 +281,9 @@ function consecutiveZeroBids(p){
 }
 function roundScore(bid,tricks,malus){
   if(bid===tricks) return 10+2*bid;
-  return malus==='ecart' ? -2*Math.abs(tricks-bid) : -2*bid;
+  // raté : à l'écart, ou annonce 0 (toujours puni à l'écart), sinon -2 × annonce
+  if(malus==='ecart' || bid===0) return -2*Math.abs(tricks-bid);
+  return -2*bid;
 }
 function totals(){
   const t={}; G.players.forEach(p=>t[p.id]=0);
@@ -321,7 +324,7 @@ function winProb(){
     for(let r=0;r<rem;r++){ ps.forEach(p=>{ if(p.out)return;
       const pr=(p.succ+1)/(p.played+2);
       if(Math.random()<pr) sc[p.id]+=10+2*Math.round(p.avgBid);
-      else sc[p.id]+=(G.config.malus==='ecart'? -2*Math.max(1,Math.round(p.avgMiss)) : -2*Math.round(p.avgBid));
+      else { const b=Math.round(p.avgBid); sc[p.id]+=(G.config.malus==='ecart'||b===0? -2*Math.max(1,Math.round(p.avgMiss)) : -2*b); }
     }); }
     let best=-1e9,who=[]; ps.forEach(p=>{ if(sc[p.id]>best){best=sc[p.id];who=[p.id];} else if(sc[p.id]===best)who.push(p.id); });
     wins[who[Math.floor(Math.random()*who.length)]]++;
