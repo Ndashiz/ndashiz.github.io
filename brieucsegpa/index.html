@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0d0d">
+<title>JOBFLIX — L'académie des chômeurs d'élite</title>
+<style>
+:root{
+  --bg:#0e0d0d; --panel:#151313; --card:#ffffff; --ink:#1c1b1a; --ink2:#4a4744; --ink3:#7b7773;
+  --line:#e3e0dc; --paper:#f6f5f3;
+  --accent:#9b1c1c; --accent-soft:#fdf1f1; --accent2:#0f5c63;
+  --ok:#1f7a4d; --ok-soft:#eaf6ef; --ko:#a01f2d; --ko-soft:#fdeeef;
+  --warn:#8a5a00; --warn-soft:#fdf5e6;
+  --radius:14px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ---------- brand bar ---------- */
+.brandbar{background:#0e0d0d;color:#fff;padding:14px 0}
+.brandbar .inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-weight:900;letter-spacing:-.04em;font-size:25px;color:#e50914;text-transform:uppercase;line-height:1}
+.logo span{color:#fff}
+.slogan{font-size:12.5px;color:#9c9691;letter-spacing:.02em}
+.brandbar .spacer{flex:1}
+.switch{display:flex;gap:6px}
+.switch button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#ddd6d2;
+  border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.switch button:hover{background:rgba(255,255,255,.16);color:#fff}
+.switch button.on{background:#e50914;border-color:#e50914;color:#fff}
+
+/* ---------- module hero ---------- */
+header.top{color:#fff;padding:40px 0 32px}
+header.top.belfius{background:linear-gradient(160deg,#1c1b1a 0%,#2e1a1a 55%,#5c1414 100%)}
+header.top.amindis{background:linear-gradient(160deg,#0d1418 0%,#10262b 55%,#0f4c55 100%)}
+header.top .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:10px;opacity:.85}
+header.top.belfius .eyebrow{color:#e8b9b9}
+header.top.amindis .eyebrow{color:#9fd6d9}
+header.top h1{margin:0 0 6px;font-size:30px;line-height:1.2;font-weight:700;letter-spacing:-.02em}
+header.top .sub{color:#d9d3cf;font-size:15px;max-width:72ch;margin:0}
+header.top .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+header.top .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);padding:4px 11px;border-radius:999px;font-size:12.5px}
+
+/* ---------- nav ---------- */
+nav.tabs{position:sticky;top:0;z-index:50;background:rgba(246,245,243,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.tabs .inner{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs .inner::-webkit-scrollbar{display:none}
+nav.tabs button{border:0;background:none;padding:15px 15px 12px;font-size:14.5px;font-weight:600;color:var(--ink3);
+  cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;font-family:inherit;transition:.15s}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.module.amindis nav.tabs button.on{color:var(--accent2);border-bottom-color:var(--accent2)}
+
+/* ---------- layout ---------- */
+.module{display:none}
+.module.on{display:block}
+main{padding:34px 0 90px}
+section.pane{display:none;animation:fade .25s ease}
+section.pane.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h2{font-size:24px;letter-spacing:-.015em;margin:0 0 6px}
+h2 .num{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:8px}
+.module.amindis h2 .num{color:var(--accent2)}
+.lede{color:var(--ink2);margin:0 0 26px;max-width:78ch}
+h3{font-size:18.5px;margin:34px 0 10px;letter-spacing:-.01em;scroll-margin-top:70px}
+h4{font-size:15.5px;margin:20px 0 6px}
+p{margin:0 0 12px} ul,ol{margin:0 0 14px;padding-left:20px} li{margin-bottom:6px}
+a{color:var(--accent)} .module.amindis a{color:var(--accent2)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px}
+.card.tight{padding:16px 18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
+.tag.teal{background:#e9f4f4;color:var(--accent2)}
+.tag.grey{background:#efedea;color:var(--ink2)}
+.en{color:var(--ink3);font-weight:400;font-size:.93em}
+
+dl.gloss{margin:0}
+dl.gloss>div{padding:14px 0;border-bottom:1px solid var(--line)}
+dl.gloss>div:last-child{border-bottom:0;padding-bottom:0}
+dl.gloss dt{font-weight:700;margin-bottom:4px}
+dl.gloss dd{margin:0;color:var(--ink2)}
+dd .impl{display:block;margin-top:6px;padding-left:12px;border-left:2px solid var(--accent);color:var(--ink2);font-size:14.6px}
+.module.amindis dd .impl{border-left-color:var(--accent2)}
+dd .impl b{color:var(--ink)}
+
+.formula{font-family:var(--mono);background:#1c1b1a;color:#f2eee9;padding:12px 16px;border-radius:10px;font-size:14px;margin:12px 0;overflow-x:auto}
+.formula em{color:#f0a5a5;font-style:normal}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:12px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:700}
+tbody tr:hover{background:#faf9f7}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 6px}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.kpi .v{font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12.5px;color:var(--ink3);margin-top:2px;line-height:1.35}
+
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:14px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.callout.teal{border-color:var(--accent2);background:#eef6f6}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout p:last-child{margin-bottom:0}
+.callout .h{font-weight:700;margin-bottom:4px;display:block}
+
+details.q{border:1px solid var(--line);background:var(--card);border-radius:12px;margin-bottom:10px;overflow:hidden}
+details.q summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style:none;display:flex;gap:10px;align-items:flex-start}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::before{content:"+";color:var(--accent);font-weight:700;font-size:18px;line-height:1.3;flex:0 0 auto}
+.module.amindis details.q summary::before{color:var(--accent2)}
+details.q[open] summary::before{content:"\2013"}
+details.q[open] summary{border-bottom:1px solid var(--line)}
+details.q .body{padding:14px 18px 18px;color:var(--ink2)}
+details.q .body strong{color:var(--ink)}
+
+/* ---------- QCM ---------- */
+.quizbar{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;position:sticky;top:49px;z-index:20}
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:inherit;transition:.15s}
+.filters button:hover{border-color:var(--ink3)}
+.filters button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.module.amindis .filters button.on{background:var(--accent2);border-color:var(--accent2)}
+.scorerow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar{flex:1;min-width:140px;height:8px;background:#eae7e3;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9b1c1c,#e50914);transition:width .35s}
+.module.amindis .bar i{background:linear-gradient(90deg,#0f5c63,#2aa5ad)}
+.scoretxt{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.scoretxt span{color:var(--ink3);font-weight:500}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink2)}
+.btn:hover{border-color:var(--ink3)}
+.verdictbox{margin-top:12px;padding:12px 15px;border-radius:11px;font-size:15px;font-weight:600;display:none;line-height:1.45}
+.verdictbox.show{display:block}
+.verdictbox.t0{background:#fdeeef;color:#8e1b28;border:1px solid #f3c9ce}
+.verdictbox.t1{background:#fdf5e6;color:#7a5000;border:1px solid #f0dcb4}
+.verdictbox.t2{background:#f4f1e8;color:#6a5c2e;border:1px solid #e4dcc4}
+.verdictbox.t3{background:#eef6f6;color:#0f5c63;border:1px solid #cbe4e4}
+.verdictbox.t4{background:#eaf6ef;color:#166b41;border:1px solid #c3e6d3}
+.verdictbox.t5{background:#0e0d0d;color:#ffd166;border:1px solid #000}
+.verdictbox small{display:block;font-weight:500;opacity:.8;margin-top:3px;font-size:13px}
+
+.q-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:14px}
+.q-head{display:flex;gap:10px;align-items:baseline;margin-bottom:12px}
+.q-idx{font-family:var(--mono);font-size:12.5px;color:var(--ink3);flex:0 0 auto;padding-top:2px}
+.q-txt{font-weight:600;font-size:16.5px;line-height:1.45}
+.q-cat{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:#efedea;color:var(--ink2);margin-bottom:9px}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 13px;cursor:pointer;transition:.13s;background:#fff;font-size:15px;text-align:left;font-family:inherit;color:var(--ink)}
+.opt:hover:not(.locked){border-color:var(--ink3);background:#faf9f7}
+.opt .k{font-family:var(--mono);font-size:12.5px;color:var(--ink3);flex:0 0 auto;padding-top:2px;font-weight:700}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)} .opt.good .k{color:var(--ok)}
+.opt.bad{border-color:var(--ko);background:var(--ko-soft)} .opt.bad .k{color:var(--ko)}
+.opt.locked{cursor:default}
+.expl{margin-top:12px;padding:12px 14px;border-radius:10px;background:#f7f6f4;border-left:3px solid var(--ink3);font-size:14.6px;color:var(--ink2);display:none}
+.expl.show{display:block} .expl b{color:var(--ink)}
+.expl .verdict{font-weight:700;display:block;margin-bottom:4px}
+.expl.right{border-left-color:var(--ok)} .expl.right .verdict{color:var(--ok)}
+.expl.wrong{border-left-color:var(--ko)} .expl.wrong .verdict{color:var(--ko)}
+
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--ink3);font-size:13.5px}
+footer a{color:var(--ink2)}
+.src{font-size:13px;color:var(--ink3)} .src li{margin-bottom:3px}
+/* ================= RESPONSIVE ================= */
+html{-webkit-text-size-adjust:100%}
+body{overflow-wrap:break-word}
+img,svg,video{max-width:100%;height:auto}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0;border-radius:10px}
+.tablewrap table{margin:0;min-width:520px}
+.tablewrap::-webkit-scrollbar{height:6px}
+.tablewrap::-webkit-scrollbar-thumb{background:#cfcbc6;border-radius:999px}
+
+@media(max-width:1024px){
+  .wrap{padding:0 18px}
+}
+
+@media(max-width:860px){
+  header.top{padding:30px 0 26px}
+  header.top h1{font-size:25px}
+  header.top .sub{font-size:14.5px}
+  .card{padding:18px 18px}
+  h2{font-size:21px}
+  h3{font-size:17px}
+}
+
+@media(max-width:640px){
+  body{font-size:15.5px;line-height:1.58}
+  .wrap{padding:0 14px}
+  main{padding:24px 0 64px}
+
+  .brandbar{padding:12px 0}
+  .brandbar .inner{gap:10px}
+  .logo{font-size:21px}
+  .slogan{font-size:11.5px;flex-basis:100%;order:3}
+  .brandbar .spacer{display:none}
+  .switch{width:100%;order:2}
+  .switch button{flex:1;padding:9px 10px;font-size:12.5px;min-height:38px}
+
+  header.top{padding:24px 0 22px}
+  header.top h1{font-size:21.5px;line-height:1.25}
+  header.top .sub{font-size:14px}
+  header.top .meta{gap:6px;margin-top:14px}
+  header.top .meta span{font-size:11.5px;padding:3px 9px}
+
+  nav.tabs .inner{gap:0}
+  nav.tabs button{padding:13px 12px 10px;font-size:13.5px;min-height:44px}
+
+  h2{font-size:19.5px}
+  h3{font-size:16.5px;margin:26px 0 8px;scroll-margin-top:56px}
+  h4{font-size:15px}
+  .lede{margin-bottom:20px}
+
+  .card{padding:15px 15px;border-radius:12px}
+  .card.tight{padding:13px 14px}
+  .grid2{gap:12px}
+
+  table{font-size:13.8px}
+  th,td{padding:8px 8px}
+  .tablewrap table{min-width:480px}
+
+  .kpis{grid-template-columns:repeat(2,1fr);gap:9px}
+  .kpi{padding:12px 12px}
+  .kpi .v{font-size:19px}
+  .kpi .l{font-size:11.8px}
+
+  .formula{font-size:13px;padding:11px 13px}
+  .callout{padding:12px 13px}
+
+  details.q summary{padding:13px 14px;font-size:15px}
+  details.q .body{padding:12px 14px 15px}
+
+  .quizbar{padding:13px 13px;top:44px;border-radius:12px}
+  .filters{gap:6px;margin-bottom:10px}
+  .filters button{padding:7px 11px;font-size:12.5px;min-height:36px}
+  .scorerow{gap:10px}
+  .bar{min-width:100%;order:3}
+  .scoretxt{font-size:13px}
+  .btn{padding:8px 13px;min-height:38px}
+
+  .q-card{padding:16px 15px}
+  .q-txt{font-size:15.5px}
+  .opt{padding:11px 12px;font-size:14.6px}
+  .expl{font-size:14px;padding:11px 12px}
+  .verdictbox{font-size:14.5px;padding:11px 13px}
+
+  dd .impl{font-size:14px}
+  footer{padding:22px 0 34px;font-size:13px}
+}
+
+@media(max-width:400px){
+  .wrap{padding:0 12px}
+  .logo{font-size:19px}
+  header.top h1{font-size:20px}
+  .kpis{grid-template-columns:1fr}
+  .q-head{gap:8px}
+}
+
+/* pointeur tactile : pas d'effets hover collants */
+@media(hover:none){
+  tbody tr:hover{background:transparent}
+  .opt:hover:not(.locked){border-color:var(--line);background:#fff}
+}
+
+@media print{nav.tabs,.brandbar .switch{display:none}section.pane{display:block!important}.module{display:block!important}}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <div class="wrap inner">
+    <div>
+      <div class="logo">JOB<span>FLIX</span></div>
+      <div class="slogan">L'académie des chômeurs d'élite · saison 2026</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="switch" id="switch">
+      <button class="on" data-m="belfius">Belfius</button>
+      <button data-m="amindis">Amindis</button>
+    </div>
+  </div>
+</div>
+<div class="module belfius on" id="m-belfius">
+
+<header class="top belfius">
+  <div class="wrap">
+    <div class="eyebrow">Dossier 01 · entretien</div>
+    <h1>Credit Risk Manager — Business Analysis &amp; Process Management</h1>
+    <p class="sub">Belfius · Credit Risk Management · Bruxelles (Rogier). Théorie du risque de crédit, chiffres clés Belfius, questions d'entretien et QCM d'auto-évaluation.</p>
+    <div class="meta">
+      <span>Focus : garanties &amp; valorisation du collatéral</span>
+      <span>RWA &amp; réglementation CRR3</span>
+      <span>Analyse de portefeuille &amp; reporting</span>
+      <span>Offre complète connue</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap inner">
+    <button class="on" data-p="b0">L'offre décodée</button>
+    <button data-p="b1">1 · Théorie credit risk</button>
+    <button data-p="b2">2 · Belfius</button>
+    <button data-p="b3">3 · Questions d'entretien</button>
+    <button data-p="b4">4 · QCM</button>
+    <button data-p="b5">Sources</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ B0 ============ -->
+<section class="pane on" id="b0">
+  <h2><span class="num">00</span>Ce que l'offre dit vraiment</h2>
+  <p class="lede">Avant la théorie : lire l'annonce comme un cahier des charges. Chaque phrase pointe vers un savoir précis. Voici la traduction.</p>
+
+  <div class="card">
+    <span class="tag">Positionnement du poste</span>
+    <p>Attention au vocabulaire : ce poste n'est <b>pas</b> du « credit management » au sens classique (recouvrement de créances commerciales, DSO, relances clients). C'est du <b>Credit Risk Management</b> bancaire, côté <b>2<sup>e</sup> ligne de défense</b>, dans une équipe transversale d'<b>analyse de portefeuille</b>. Vous ne décidez pas dossier par dossier : vous regardez le portefeuille dans son ensemble, vous expliquez pourquoi il bouge, et vous recommandez des ajustements de politique de crédit.</p>
+    <p style="margin-bottom:0">Le mot qui revient le plus dans l'annonce est <b>« garanties »</b> (collatéral). C'est le cœur technique du poste, sous deux angles explicitement cités : <b>économique</b> (position nette de risque) et <b>réglementaire</b> (RWA).</p>
+  </div>
+
+  <h3>Traduction ligne par ligne</h3>
+  <table>
+    <thead><tr><th style="width:44%">Ce que dit l'offre</th><th>Ce que ça implique concrètement</th></tr></thead>
+    <tbody>
+      <tr><td>« Suivi et pilotage du risque de crédit des portefeuilles Particuliers, Entreprises et Secteur Public »</td>
+        <td>Les 3 grands portefeuilles de Belfius : retail (≈40 % de crédits hypothécaires résidentiels), business/corporate (dont l'immobilier commercial — CRE), et le secteur public (≈20 %, héritage du Crédit Communal). Trois logiques de risque radicalement différentes : LTV/DSTI d'un côté, ratings et cash-flows corporate de l'autre, quasi-souverain pour le troisième.</td></tr>
+      <tr><td>« évolutions macroéconomiques et sociétales (ESG, prix de l'énergie, inflation, géopolitique) »</td>
+        <td>Il faut savoir relier une variable macro à un paramètre de risque : inflation → marges corporates → PD ; taux → capacité de remboursement et prix de l'immobilier → LGD ; PEB/EPC d'un bien → valeur de la garantie à 10 ans ; géopolitique → chaînes d'approvisionnement d'un secteur exportateur. C'est exactement la priorité n°1 du superviseur BCE pour 2026-2028.</td></tr>
+      <tr><td>« évaluations rétrospectives et projections de risque prospectives »</td>
+        <td>Backward looking : matrices de migration, taux de défaut réalisés, vintage analysis, backtesting. Forward looking : scénarios macro IFRS 9, stress tests, ICAAP, reverse stress test.</td></tr>
+      <tr><td>« recommandations à la direction pour optimiser le profil de risque, maîtriser les charges de risque, piloter la politique de crédit »</td>
+        <td>Vous produisez de la décision, pas du chiffre. Le triptyque : profil de risque (RWA, concentration, appétit) — charges de risque (cost of risk, provisions IFRS 9) — politique de crédit (critères d'octroi, limites, exigences de garanties).</td></tr>
+      <tr><td>« Risk Committees, Comité de direction, Conseil d'Administration, BCE/BNB, réviseurs »</td>
+        <td>Audience de très haut niveau + superviseur. Cela veut dire : rigueur des chiffres, traçabilité des sources, capacité à défendre une méthodologie devant une JST (Joint Supervisory Team) ou lors d'une inspection sur place (OSI).</td></tr>
+      <tr><td>« rapport trimestriel sur les risques, analyses sectorielles, qualité de la notation, early warning, volumes non-performing, valorisation des garanties »</td>
+        <td>Le livrable phare est le <b>Quarterly Risk Report</b>. Les 4 familles d'indicateurs cités : rating quality (migrations, override rate), early warning (watchlist, forbearance), NPE (stage 3, coverage, cure rate), collateral (LTV, réévaluations, haircuts).</td></tr>
+      <tr><td>« valorisation correcte des garanties, d'un point de vue économique (position nette de risque) et réglementaire (RWA) »</td>
+        <td>Deux référentiels distincts qui ne donnent pas le même chiffre : la valeur économique récupérable (nette de coûts, actualisée, sur un horizon de réalisation réaliste) vs. la valeur éligible au sens CRR (critères d'éligibilité, haircuts, plafonds, property value). Savoir expliquer l'écart est un vrai différenciateur en entretien.</td></tr>
+      <tr><td>« directives et processus pour les analystes de crédit et les banquiers »</td>
+        <td>Dimension <b>process management</b> : écrire la policy, la faire adopter par la 1<sup>re</sup> ligne, contrôler son application. D'où le profil « bridge builder » demandé.</td></tr>
+      <tr><td>« immobilier, portefeuilles d'investissement, fonds de commerce »</td>
+        <td>Trois types de sûretés aux comportements très différents : l'immobilier (valeur lente, illiquide, cyclique), le nantissement de portefeuille-titres (valeur quotidienne, volatile, haircuts, appels de marge), le fonds de commerce (valeur largement corrélée à la survie du débiteur → <i>wrong-way risk</i>, quasi jamais éligible au sens réglementaire).</td></tr>
+      <tr><td>« SQL, Business Objects, Python, AI » / « nouvelles sources de données »</td>
+        <td>Vous serez autonome sur la donnée : extraire (SQL / datamart risque), croiser (indices immobiliers, PEB, données sectorielles BNB/Statbel), industrialiser (Python), restituer (Business Objects / Power BI). Sous-jacent réglementaire : BCBS 239 / RDARR, un sujet chaud chez le superviseur.</td></tr>
+      <tr><td>« néerlandais, français et anglais »</td>
+        <td>Critère éliminatoire de fait chez Belfius (banque nationale, comités bilingues, reporting BCE en anglais). Préparez au minimum une présentation de vous-même dans les trois langues.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <span class="h">Les 3 messages à faire passer en entretien</span>
+    <p>1. Je sais lire un portefeuille, pas seulement un dossier. 2. Je comprends la différence entre valeur économique et valeur réglementaire d'une garantie, et je sais pourquoi elle existe. 3. Je sais transformer une analyse en une décision compréhensible pour un comité de direction en une slide.</p>
+  </div>
+</section>
+
+<!-- ============ B1 : THÉORIE ============ -->
+<section class="pane" id="b1">
+  <h2><span class="num">01</span>Théorie du risque de crédit</h2>
+  <p class="lede">Les concepts, les termes techniques en français et en anglais (le jargon interne est très anglicisé), et surtout <b>ce que chacun implique</b> dans le travail quotidien du poste.</p>
+
+  <h3>A. Les fondamentaux : décomposer la perte</h3>
+  <div class="card">
+    <p>Toute la discipline repose sur une idée : une perte de crédit se décompose en trois questions indépendantes. <b>Le client va-t-il faire défaut ?</b> (PD) — <b>Combien lui devra-t-on encore à ce moment-là ?</b> (EAD) — <b>Combien perdra-t-on réellement après recouvrement et réalisation des garanties ?</b> (LGD).</p>
+    <div class="formula">EL = PD × LGD × EAD &nbsp;&nbsp;<em>// Expected Loss — perte attendue, sur 12 mois ou à maturité</em></div>
+    <p style="margin-bottom:0">La perte <b>attendue</b> se couvre par des <b>provisions</b> et par le prix (marge de crédit). La perte <b>inattendue</b> (Unexpected Loss, la volatilité autour de l'EL) se couvre par des <b>fonds propres</b>. Cette phrase seule structure la moitié de la réglementation bancaire.</p>
+  </div>
+
+  <dl class="gloss">
+    <div><dt>PD — Probability of Default <span class="en">/ probabilité de défaut</span></dt>
+      <dd>Probabilité qu'une contrepartie fasse défaut sur un horizon donné (12 mois en Pilier 1, à maturité pour l'ECL lifetime). Sortie du modèle de notation interne.
+        <span class="impl"><b>Implication :</b> la PD dépend de la <i>contrepartie</i>, pas du crédit. Si la qualité de notation se dégrade (« rating quality » citée dans l'offre), l'ensemble du portefeuille de ce client migre — d'où le suivi des <b>matrices de migration</b>.</span></dd></div>
+
+    <div><dt>Point-in-Time (PIT) vs Through-the-Cycle (TTC)</dt>
+      <dd>Une PD PIT reflète les conditions économiques actuelles et bouge vite ; une PD TTC lisse le cycle et bouge lentement.
+        <span class="impl"><b>Implication :</b> le Pilier 1 (RWA) utilise plutôt du TTC pour éviter la pro-cyclicité du capital ; IFRS 9 exige du PIT et du <i>forward looking</i>. Deux PD différentes pour le même client dans deux systèmes : source classique de questions en comité — et un très bon point à mentionner en entretien.</span></dd></div>
+
+    <div><dt>LGD — Loss Given Default <span class="en">/ perte en cas de défaut</span></dt>
+      <dd>Part de l'exposition définitivement perdue après recouvrement, exprimée en %. C'est <b>ici</b> que les garanties agissent.
+        <span class="impl"><b>Implication :</b> LGD = 1 − taux de recouvrement, où le recouvrement est net des coûts de réalisation et <b>actualisé</b> sur la durée de la procédure. Une garantie qui vaut 100 mais qui met 4 ans à être réalisée avec 12 % de frais ne vaut pas 100 en LGD. Le cœur du poste.</span></dd></div>
+
+    <div><dt>Downturn LGD</dt>
+      <dd>LGD estimée en conditions économiques défavorables, obligatoire en approche IRB.
+        <span class="impl"><b>Implication :</b> reconnaît que défauts et chute de la valeur des garanties surviennent ensemble (corrélation défaut/collatéral). C'est précisément l'argument contre la reconnaissance des plus-values immobilières récentes dans la valorisation.</span></dd></div>
+
+    <div><dt>EAD — Exposure at Default <span class="en">/ exposition en cas de défaut</span></dt>
+      <dd>Montant exposé au moment du défaut : encours tiré + une fraction des engagements non tirés.
+        <span class="impl"><b>Implication :</b> un client en difficulté tire ses lignes avant de faire défaut. D'où le <b>CCF</b> (Credit Conversion Factor) qui convertit le hors-bilan (lignes confirmées, garanties données, crédits documentaires) en équivalent-bilan.</span></dd></div>
+
+    <div><dt>Maturité effective (M)</dt>
+      <dd>Durée moyenne pondérée des flux, plafonnée réglementairement (généralement 1 à 5 ans en IRB).
+        <span class="impl"><b>Implication :</b> plus l'exposition est longue, plus le risque de migration est élevé → RWA plus élevés à PD identique.</span></dd></div>
+
+    <div><dt>Définition du défaut <span class="en">/ default definition (EBA)</span></dt>
+      <dd>Défaut si <b>90 jours d'arriéré</b> au-delà de seuils de matérialité (100 € retail / 500 € non-retail <b>et</b> 1 % de l'exposition totale) <b>ou</b> improbabilité de paiement (<i>unlikeliness to pay</i>, UTP) : restructuration en perte, faillite, vente de créance avec décote économique significative, etc.
+        <span class="impl"><b>Implication :</b> le défaut n'est pas seulement comptable, il est aussi qualitatif. Il se contamine au niveau du débiteur et parfois du groupe. La sortie du défaut est soumise à une <b>période probatoire</b> (min. 3 mois, 1 an pour les expositions restructurées) — d'où le suivi du <b>cure rate</b>.</span></dd></div>
+
+    <div><dt>Cost of risk <span class="en">/ charge de risque, coût du risque</span></dt>
+      <dd>Dotation nette aux provisions pour risque de crédit sur la période, souvent exprimée en <b>points de base de l'encours moyen</b>.
+        <span class="impl"><b>Implication :</b> c'est le KPI qui remonte au comité de direction et aux analystes financiers. Chez Belfius, −80 M€ en 2025, soit un niveau historiquement très bas (2 bps au S1 2025 selon Fitch, attendu à 10-15 bps fin 2026). Toute la question de l'analyse de portefeuille : cette normalisation attendue, d'où viendra-t-elle ?</span></dd></div>
+
+    <div><dt>Capital économique vs capital réglementaire</dt>
+      <dd>Le capital réglementaire découle des formules du CRR ; le capital économique découle des modèles internes de la banque (ICAAP) et couvre aussi les risques du Pilier 2.
+        <span class="impl"><b>Implication :</b> quand l'offre parle de « position nette de risque » (économique) <i>et</i> de RWA (réglementaire), elle parle exactement de cette dualité.</span></dd></div>
+
+    <div><dt>RAROC / RoRWA</dt>
+      <dd>Rentabilité ajustée du risque : (marge − EL − coûts) / capital alloué, ou résultat / RWA.
+        <span class="impl"><b>Implication :</b> c'est le langage qui permet de dire « ce segment consomme trop de capital pour ce qu'il rapporte » — la forme concrète d'une recommandation d'optimisation du profil de risque.</span></dd></div>
+  </dl>
+
+  <h3>B. Le cadre réglementaire</h3>
+  <div class="card tight">
+    <p style="margin-bottom:0"><b>La chaîne à retenir :</b> Comité de Bâle (standards, non contraignants) → transposition européenne par le <b>CRR</b> (règlement, directement applicable) et la <b>CRD</b> (directive, transposée en droit belge) → supervision par la <b>BCE</b> (SSM, pour les institutions significatives comme Belfius) avec la <b>BNB</b> pour le macroprudentiel et la résolution → normes techniques et orientations de l'<b>EBA</b>.</p>
+  </div>
+
+  <dl class="gloss">
+    <div><dt>Les trois piliers de Bâle</dt>
+      <dd><b>Pilier 1</b> : exigences minimales de fonds propres calculées par formule (crédit, marché, opérationnel). <b>Pilier 2</b> : évaluation interne (ICAAP/ILAAP) + revue du superviseur (SREP) → exigence supplémentaire P2R et recommandation P2G. <b>Pilier 3</b> : discipline de marché par la publication d'informations.
+        <span class="impl"><b>Implication :</b> quand on dit « le superviseur a demandé du capital en plus », c'est du Pilier 2 (P2R contraignant, P2G indicatif mais scruté).</span></dd></div>
+
+    <div><dt>RWA — Risk-Weighted Assets <span class="en">/ actifs pondérés par les risques</span></dt>
+      <dd>Exposition × pondération de risque. Dénominateur des ratios de solvabilité.
+        <span class="impl"><b>Implication :</b> réduire les RWA sans réduire l'activité, c'est libérer du capital. Les garanties sont le principal levier légitime pour cela — d'où l'importance stratégique du poste. Suivre la <b>densité de RWA</b> (RWA / exposition) par segment est un indicateur de pilotage standard.</span></dd></div>
+
+    <div><dt>Approche standard (SA) vs notations internes (IRB)</dt>
+      <dd><b>SA</b> : pondérations fixées par le règlement. <b>F-IRB</b> (fondation) : la banque estime la PD, le régulateur impose LGD et CCF. <b>A-IRB</b> (avancée) : la banque estime PD, LGD et EAD.
+        <span class="impl"><b>Implication majeure pour le poste :</b> en SA et F-IRB, une garantie éligible agit par <b>effet de substitution</b> (on remplace le risque du débiteur par celui du garant) ou par ajustement de la valeur d'exposition ; en A-IRB, elle agit <b>via la LGD</b>. Le même contrat de sûreté n'a donc pas du tout le même effet capitalistique selon l'approche appliquée au portefeuille — une des réponses les plus « sénior » qu'on puisse donner en entretien.</span></dd></div>
+
+    <div><dt>CRR3 / CRD6 — « Bâle IV »</dt>
+      <dd>Le paquet bancaire européen appliqué depuis le <b>1<sup>er</sup> janvier 2025</b> (FRTB pour le risque de marché reporté). Il révise l'approche standard du risque de crédit, encadre plus strictement l'IRB (<i>input floors</i> sur PD/LGD), refond le risque opérationnel et introduit l'<b>output floor</b>.
+        <span class="impl"><b>Implication :</b> c'est LE sujet réglementaire du moment. Pour l'immobilier, CRR3 introduit une définition harmonisée de la <b>property value</b>, l'approche <b>loan-splitting</b> et un traitement défavorable des expositions <b>ADC</b>.</span></dd></div>
+
+    <div><dt>Output floor</dt>
+      <dd>Plancher qui empêche les RWA calculés en modèles internes de descendre sous <b>72,5 %</b> des RWA qui résulteraient de l'approche standard. Introduction progressive (50 % en 2025 → 72,5 % en 2030).
+        <span class="impl"><b>Implication :</b> pour une banque très IRB et très hypothécaire comme Belfius, le floor peut devenir la contrainte réellement mordante. Cela change la logique d'optimisation : il faut aussi optimiser les <b>RWA standards</b>, donc l'éligibilité SA des garanties, pas seulement le modèle interne.</span></dd></div>
+
+    <div><dt>Les coussins de fonds propres</dt>
+      <dd><b>CCB</b> conservation 2,5 % · <b>CCyB</b> contracyclique (Belgique : <b>1,25 %</b> depuis 2026) · <b>SyRB</b> pour le risque systémique, en Belgique appliqué de façon <b>sectorielle</b> aux expositions hypothécaires résidentielles belges · <b>O-SII</b> pour les établissements systémiques nationaux (Belfius en fait partie) · le tout au-dessus des exigences P2R.
+        <span class="impl"><b>Implication :</b> la somme définit le <b>MDA trigger</b> (Maximum Distributable Amount) — sous ce seuil, les distributions (dividendes, coupons AT1, bonus) sont automatiquement restreintes. C'est pour cela que la distance au MDA est suivie au CA. Belfius affiche un CET1 de 15,9 % fin 2025 pour une cible de 15-15,5 %, soit un coussin d'environ 500 bps au-dessus de l'exigence.</span></dd></div>
+
+    <div><dt>Grands risques <span class="en">/ large exposures</span></dt>
+      <dd>Une exposition sur un même client ou groupe de clients liés ne peut dépasser <b>25 %</b> du Tier 1.
+        <span class="impl"><b>Implication :</b> une garantie éligible peut réduire l'exposition au titre des grands risques, avec substitution vers le garant — qui peut lui-même saturer. Sujet typique du secteur public : les entités publiques liées.</span></dd></div>
+
+    <div><dt>ICAAP / ILAAP · SREP · stress tests</dt>
+      <dd><b>ICAAP</b> : évaluation interne de l'adéquation des fonds propres. <b>ILAAP</b> : idem pour la liquidité. <b>SREP</b> : revue annuelle du superviseur qui note la banque et fixe le P2R/P2G. <b>Reverse stress test</b> : partir de la perte inacceptable et chercher le scénario qui l'engendre.
+        <span class="impl"><b>Implication :</b> l'analyse de portefeuille alimente directement l'ICAAP et les stress tests. La BCE demande pour 2026-2028 des scénarios géopolitiques capables de consommer au moins 300 bps de CET1.</span></dd></div>
+
+    <div><dt>MREL · leverage ratio · LCR · NSFR</dt>
+      <dd><b>MREL</b> : minimum de fonds propres et engagements éligibles au bail-in. <b>Leverage ratio</b> : Tier 1 / exposition non pondérée (min. 3 %). <b>LCR</b> : survie à 30 jours de stress de liquidité. <b>NSFR</b> : financement stable à 1 an.
+        <span class="impl"><b>Implication :</b> à connaître pour ne pas confondre solvabilité et liquidité en entretien. Belfius 2025 : leverage 6,3 %, LCR 144 %, NSFR 130 %.</span></dd></div>
+
+    <div><dt>Reporting prudentiel : COREP · FINREP · AnaCredit · Pilier 3</dt>
+      <dd><b>COREP</b> (solvabilité), <b>FINREP</b> (états financiers), <b>AnaCredit</b> (base granulaire crédit par crédit transmise à la BNB/BCE), <b>Pilier 3</b> (publication, dont les tableaux ESG).
+        <span class="impl"><b>Implication :</b> AnaCredit est souvent la meilleure source interne unifiée pour une analyse transverse — elle contient notamment les données de <b>protection</b> (types et valeurs de garanties). Le mentionner montre qu'on connaît la plomberie.</span></dd></div>
+
+    <div><dt>BCBS 239 / RDARR</dt>
+      <dd>Principes d'agrégation des données de risque et de reporting : exhaustivité, exactitude, actualité, adaptabilité, traçabilité (<i>data lineage</i>).
+        <span class="impl"><b>Implication :</b> priorité récurrente du superviseur, et cadre qui justifie l'axe « innovation et nouvelles sources de données » de l'offre. Une analyse n'a de valeur que si sa donnée est traçable jusqu'au système source.</span></dd></div>
+  </dl>
+
+  <h3>C. IFRS 9 et le provisionnement</h3>
+  <dl class="gloss">
+    <div><dt>ECL — Expected Credit Loss <span class="en">/ pertes de crédit attendues</span></dt>
+      <dd>Depuis 2018, IFRS 9 remplace le modèle de la perte avérée (<i>incurred loss</i>) par un modèle de perte <b>attendue</b>, prospectif.
+        <span class="impl"><b>Implication :</b> on provisionne dès l'origination, avant tout incident. Le résultat devient sensible aux prévisions macroéconomiques — donc au travail d'analyse macro décrit dans l'offre.</span></dd></div>
+
+    <div><dt>Les trois stages</dt>
+      <dd><b>Stage 1</b> : pas de dégradation significative → ECL à 12 mois. <b>Stage 2</b> : dégradation significative depuis l'origination (<b>SICR</b>) mais pas de défaut → ECL <b>à maturité</b>. <b>Stage 3</b> : défaut / dépréciation avérée → ECL lifetime, intérêts calculés sur la valeur nette.
+        <span class="impl"><b>Implication clé :</b> le passage de stage 1 à stage 2 fait exploser la provision (12 mois → durée de vie) sans qu'aucun euro ne soit encore impayé. Le suivi du <b>volume et des flux stage 2</b> est donc un early warning majeur, systématiquement présenté en Risk Committee.</span></dd></div>
+
+    <div><dt>SICR — Significant Increase in Credit Risk</dt>
+      <dd>Critères combinés : variation de PD lifetime depuis l'octroi, présomption réfutable de <b>30 jours d'arriéré</b>, inscription en watchlist, mesure de forbearance, secteurs sous surveillance.
+        <span class="impl"><b>Implication :</b> les critères SICR sont un vrai levier de pilotage et un sujet de discussion permanent avec les auditeurs et le superviseur (« vos critères sont-ils suffisamment sensibles ? »).</span></dd></div>
+
+    <div><dt>Scénarios macro pondérés &amp; overlays</dt>
+      <dd>L'ECL est une moyenne pondérée d'au moins trois scénarios (base / adverse / favorable). Les <b>overlays</b> (post-model adjustments) corrigent manuellement l'ECL pour des risques que le modèle ne capte pas.
+        <span class="impl"><b>Implication :</b> les overlays sont très surveillés par la BCE (risque de « pot de réserve » discrétionnaire). Il faut les documenter, les justifier par une analyse sectorielle et prévoir leur reprise. C'est exactement le type de livrable que ce poste alimente.</span></dd></div>
+
+    <div><dt>NPE · forbearance · coverage ratio</dt>
+      <dd><b>NPE</b> (Non-Performing Exposure) : définition EBA, plus large que la seule notion comptable. <b>Forbearance</b> : concession accordée à un débiteur en difficulté financière — une exposition <i>forborne</i> peut être performante ou non. <b>Coverage ratio</b> : provisions / encours non performants.
+        <span class="impl"><b>Implication :</b> la forbearance est le meilleur early warning du portefeuille, parce qu'elle précède le défaut. Le coverage est l'indicateur que regardent les agences : Belfius couvre ≈69 % de ses <i>impaired loans</i> (Fitch, mi-2025), pour un ratio d'<i>impaired loans</i> de ≈2,2 %.</span></dd></div>
+
+    <div><dt>Calendar provisioning / NPE backstop <span class="en">(Pilier 1)</span></dt>
+      <dd>Mécanisme prudentiel imposant une déduction croissante des fonds propres si une exposition non performante n'est pas suffisamment provisionnée après un certain nombre d'années — calendrier <b>plus rapide pour la partie non garantie</b> que pour la partie garantie (plus lent encore pour l'immobilier).
+        <span class="impl"><b>Implication directe pour le poste :</b> la qualité et la documentation des garanties déterminent la vitesse à laquelle le capital est ponctionné sur un dossier en défaut. Une garantie mal enregistrée coûte du capital réel.</span></dd></div>
+
+    <div><dt>IRB shortfall / excess</dt>
+      <dd>Comparaison entre l'EL réglementaire IRB et les provisions comptables : si les provisions sont inférieures à l'EL, la différence (<i>shortfall</i>) est déduite du CET1.
+        <span class="impl"><b>Implication :</b> un des rares endroits où la comptabilité et le prudentiel se rejoignent explicitement. Bon exemple pour montrer qu'on maîtrise les deux référentiels.</span></dd></div>
+  </dl>
+
+  <h3>D. Les garanties : le cœur du poste</h3>
+  <div class="callout teal">
+    <span class="h">La question qui structure tout</span>
+    <p>Une garantie a <b>trois valeurs différentes</b> en même temps : sa <b>valeur de marché</b> (ce que dit l'expert aujourd'hui), sa <b>valeur économique récupérable</b> (ce que la banque encaissera vraiment, nette de frais et actualisée sur la durée de la procédure), et sa <b>valeur réglementaire éligible</b> (ce que le CRR autorise à reconnaître, après critères d'éligibilité, haircuts et plafonds). Savoir expliquer pourquoi ces trois chiffres diffèrent, c'est le poste en une phrase.</p>
+  </div>
+
+  <h4>Typologie</h4>
+  <table>
+    <thead><tr><th>Famille</th><th>Exemples</th><th>Points d'attention</th></tr></thead>
+    <tbody>
+      <tr><td><b>Sûretés réelles</b><br><span class="en">funded / real collateral</span></td>
+        <td>Hypothèque, mandat hypothécaire, gage sur fonds de commerce, nantissement de titres ou d'assurance-vie, gage sur créances, crédit-bail</td>
+        <td>Rang de l'inscription, montant inscrit vs montant du crédit, créanciers antérieurs, durée de validité de l'inscription (30 ans en Belgique, renouvelable)</td></tr>
+      <tr><td><b>Sûretés personnelles</b><br><span class="en">unfunded / guarantees</span></td>
+        <td>Caution solidaire, garantie autonome, lettre de patronage, garanties publiques (régions, fonds européens), assurance-crédit</td>
+        <td>Solvabilité du garant, caractère inconditionnel et à première demande, opposabilité, cohérence avec l'effet de substitution</td></tr>
+      <tr><td><b>Covenants &amp; clauses</b></td>
+        <td>Ratios financiers, negative pledge, pari passu, cross-default</td>
+        <td>Protection juridique, mais <b>pas</b> une garantie au sens du CRR : aucun effet direct sur les RWA, effet réel d'early warning</td></tr>
+    </tbody>
+  </table>
+
+  <dl class="gloss">
+    <div><dt>CRM — Credit Risk Mitigation <span class="en">/ atténuation du risque de crédit</span></dt>
+      <dd>Le chapitre du CRR qui définit ce qu'une banque peut reconnaître comme protection. Deux catégories : <b>FCP</b> (funded credit protection : droit sur un actif) et <b>UFCP</b> (unfunded : engagement d'un tiers).
+        <span class="impl"><b>Implication :</b> ce n'est pas parce qu'un contrat de sûreté existe qu'il est reconnu. L'écart entre le stock juridique de sûretés et le stock <i>éligible</i> est un chantier classique — et souvent un gisement de RWA.</span></dd></div>
+
+    <div><dt>Les conditions d'éligibilité (à savoir réciter)</dt>
+      <dd><b>1.</b> Certitude juridique : contrat valable, opposable aux tiers, exécutoire dans toutes les juridictions concernées. <b>2.</b> Faible corrélation avec la qualité de crédit du débiteur (pas de <i>wrong-way risk</i>). <b>3.</b> Valorisation initiale prudente + <b>réévaluation périodique</b> documentée. <b>4.</b> Capacité opérationnelle de réalisation dans un délai raisonnable. <b>5.</b> Traçabilité et enregistrement dans les systèmes.
+        <span class="impl"><b>Implication :</b> le point 2 explique pourquoi le <b>fonds de commerce</b> ou les actions de l'emprunteur sont de très mauvaises garanties : leur valeur s'effondre exactement quand on en a besoin. Le point 3 fonde le volet « suivi continu de la valeur des garanties » de l'offre.</span></dd></div>
+
+    <div><dt>Haircuts <span class="en">/ décotes, volatility adjustments</span></dt>
+      <dd>Décote appliquée à la valeur d'une sûreté financière pour couvrir la volatilité de son prix, la volatilité de change et la période de détention avant réalisation. Méthode <b>simple</b> (substitution de pondération) ou <b>globale</b> (ajustement de l'exposition).
+        <span class="impl"><b>Implication :</b> un nantissement de portefeuille-titres n'est jamais reconnu à 100 %. Plus le portefeuille est volatil, concentré ou en devise, plus le haircut est lourd. C'est ce qui justifie les seuils de couverture et les appels de marge côté private banking.</span></dd></div>
+
+    <div><dt>Property value &amp; principe de prudence (CRR3)</dt>
+      <dd>CRR3 harmonise la valeur de référence d'un bien immobilier : évaluation par un expert indépendant, critères prudents excluant les anticipations spéculatives, et surtout la valeur reconnue ne peut en principe <b>pas dépasser la valeur constatée à l'octroi</b>, sauf modifications matérielles améliorant le bien (rénovation, amélioration énergétique). Les baisses, elles, doivent être reflétées.
+        <span class="impl"><b>Implication très concrète :</b> le portefeuille est asymétrique. Une hausse de 20 % du marché n'améliore pas mécaniquement vos LTV réglementaires, mais une baisse de 20 % les dégrade. Cette asymétrie doit être expliquée en comité, sinon on vous demandera pourquoi les RWA ne baissent pas alors que « l'immobilier monte ».</span></dd></div>
+
+    <div><dt>Monitoring statistique &amp; réévaluation</dt>
+      <dd>Suivi indexé de la valeur des biens (indices régionaux, modèles AVM), avec réévaluation individuelle par expert déclenchée par seuils (baisse significative, exposition élevée, passage en défaut).
+        <span class="impl"><b>Implication :</b> c'est exactement le sujet « nouvelles sources de données » de l'offre : indices Statbel/notaires, PEB, données de transaction, données géospatiales (inondation). Un bon candidat arrive avec une idée de source à exploiter.</span></dd></div>
+
+    <div><dt>LTV · LTI · DSTI · DSCR · ICR</dt>
+      <dd><b>LTV</b> Loan-to-Value · <b>LTI</b> Loan-to-Income · <b>DSTI</b> Debt Service to Income · <b>DSCR</b> Debt Service Coverage Ratio (immobilier commercial, project finance) · <b>ICR</b> Interest Coverage Ratio.
+        <span class="impl"><b>Implication :</b> LTV et DSTI ne mesurent pas la même chose. Le DSTI prédit le <b>défaut</b> (capacité à payer → PD) ; le LTV prédit la <b>perte</b> (couverture → LGD). En Belgique, la BNB publie des attentes prudentielles sur les LTV à l'octroi : un bon exemple de macroprudentiel appliqué au retail.</span></dd></div>
+
+    <div><dt>Loan splitting (CRR3, immobilier)</dt>
+      <dd>Approche standard révisée : au lieu d'une pondération unique, on scinde l'exposition. La tranche couverte jusqu'à un pourcentage de la valeur du bien (55 % pour l'immobilier) bénéficie d'une pondération très favorable ; le solde est pondéré comme une exposition sur la contrepartie.
+        <span class="impl"><b>Implication :</b> avec l'output floor, cette mécanique standard devient déterminante même pour une banque IRB. Comprendre le loan splitting, c'est comprendre où se joue le RWA hypothécaire des prochaines années.</span></dd></div>
+
+    <div><dt>Expositions ADC <span class="en">(Acquisition, Development, Construction)</span></dt>
+      <dd>Financement d'acquisition de terrain, de développement et de construction : pondération punitive (jusqu'à 150 %), avec un régime allégé sous conditions strictes (préventes, fonds propres du promoteur).
+        <span class="impl"><b>Implication :</b> le promoteur immobilier n'est pas un emprunteur hypothécaire. La distinction ADC / immobilier fini est une des sources de reclassement les plus fréquentes lors des inspections.</span></dd></div>
+
+    <div><dt>Position nette de risque <span class="en">/ net risk position</span></dt>
+      <dd>Exposition − valeur récupérable des garanties (économiquement, pas réglementairement). Le montant réellement en risque.
+        <span class="impl"><b>Implication :</b> c'est la métrique que l'offre cite en premier. Indépendante de la réglementation, comparable dans le temps, compréhensible par un comité de direction. Souvent le meilleur axe de segmentation d'une analyse de portefeuille.</span></dd></div>
+
+    <div><dt>Wrong-way risk <span class="en">/ corrélation défavorable</span></dt>
+      <dd>Situation où l'exposition augmente ou la garantie se déprécie précisément quand la contrepartie se dégrade.
+        <span class="impl"><b>Implication :</b> gage sur les actions de la société emprunteuse, garantie de la maison-mère du même groupe, fonds de commerce, garantie d'un fournisseur du même secteur. Le signaler est un réflexe de risk manager sénior.</span></dd></div>
+
+    <div><dt>Time-to-recovery &amp; coûts de réalisation</dt>
+      <dd>Durée moyenne entre le défaut et l'encaissement du produit de la garantie, et frais associés (justice, expertise, agence, gestion).
+        <span class="impl"><b>Implication :</b> ces deux paramètres, combinés au taux d'actualisation, transforment une valeur d'expertise en valeur de LGD. Une amélioration des délais de réalisation vaut parfois plus, en LGD, qu'une hausse des valeurs.</span></dd></div>
+  </dl>
+
+  <h3>E. Analyser un portefeuille : la boîte à outils</h3>
+  <dl class="gloss">
+    <div><dt>Matrice de migration <span class="en">/ transition matrix</span></dt>
+      <dd>Tableau des passages d'une classe de rating à une autre entre deux dates.
+        <span class="impl"><b>Implication :</b> l'indicateur central de la « qualité de la notation » citée dans l'offre. On regarde la diagonale (stabilité), les migrations descendantes et surtout leur concentration sectorielle. Un net downward drift précède la hausse du cost of risk de plusieurs trimestres.</span></dd></div>
+
+    <div><dt>Vintage analysis · roll rates</dt>
+      <dd><b>Vintage</b> : comparer le comportement des crédits selon leur année d'octroi, à âge égal. <b>Roll rate</b> : probabilité de passer d'un bucket d'arriéré au suivant (0→30→60→90 jours).
+        <span class="impl"><b>Implication :</b> la vintage analysis est la seule façon propre de dire « nos critères d'octroi de 2023 sont-ils meilleurs que ceux de 2021 ? ». Argument imparable pour recommander un durcissement ou un assouplissement de la politique de crédit.</span></dd></div>
+
+    <div><dt>Concentration : single name, sectorielle, géographique</dt>
+      <dd>Mesurée par les top-N expositions, l'indice de <b>Herfindahl-Hirschman</b>, ou la charge en capital de concentration en Pilier 2.
+        <span class="impl"><b>Implication :</b> chez Belfius, la concentration structurelle est double — <b>immobilier résidentiel belge</b> (≈40 %) et <b>secteur public belge</b> (≈20 %). Une analyse pertinente ne dit pas « nous sommes concentrés » mais « voici quels chocs feraient réellement mal à cette concentration ».</span></dd></div>
+
+    <div><dt>Early Warning System (EWS) &amp; watchlist</dt>
+      <dd>Signaux comportementaux (usage des lignes, arriérés fugaces, mouvements du compte), financiers (ratios, retards de dépôt des comptes) et externes (jugements, ONSS, presse) qui déclenchent une revue anticipée.
+        <span class="impl"><b>Implication :</b> l'EWS est le pont entre l'analyse de portefeuille (2<sup>e</sup> ligne) et l'action commerciale (1<sup>re</sup> ligne). Sa valeur se mesure par le <b>taux de capture</b> (part des défauts précédés d'un signal) et le taux de faux positifs.</span></dd></div>
+
+    <div><dt>Backtesting · benchmarking · validation des modèles</dt>
+      <dd>Comparer les paramètres estimés aux réalisations (PD prédite vs taux de défaut observé), comparer aux pairs, faire revoir le modèle par une équipe indépendante.
+        <span class="impl"><b>Implication :</b> le <b>risque de modèle</b> est un risque à part entière (Pilier 2). En IRB, les modèles font l'objet d'inspections (IMI) et toute modification matérielle nécessite l'approbation de la BCE.</span></dd></div>
+
+    <div><dt>Risk Appetite Framework (RAF)</dt>
+      <dd>Déclaration d'appétit au risque approuvée par le Conseil d'Administration, déclinée en limites et indicateurs (KRI) par portefeuille, avec seuils d'alerte et procédure d'escalade.
+        <span class="impl"><b>Implication :</b> l'offre dit explicitement « dans le cadre de l'appétit au risque de la banque ». Toute recommandation doit être ancrée à une limite du RAF. C'est ce qui distingue une analyse d'un reporting.</span></dd></div>
+
+    <div><dt>Les trois lignes de défense</dt>
+      <dd><b>1<sup>re</sup></b> : le business (banquiers, analystes crédit) qui prend et gère le risque. <b>2<sup>e</sup></b> : les fonctions de contrôle (Risk, Compliance) qui cadrent, mesurent et challengent. <b>3<sup>e</sup></b> : l'audit interne.
+        <span class="impl"><b>Implication :</b> ce poste est en 2<sup>e</sup> ligne. Vous écrivez des directives que d'autres appliquent, sans autorité hiérarchique sur eux — d'où le « bridge builder » et la « force de persuasion » de l'annonce.</span></dd></div>
+  </dl>
+
+  <h3>F. ESG, macro et risque de crédit</h3>
+  <dl class="gloss">
+    <div><dt>Risque physique vs risque de transition</dt>
+      <dd><b>Physique</b> : dégâts directs (inondation, canicule, sécheresse), aigus ou chroniques. <b>Transition</b> : effets de la décarbonation (réglementation, prix du carbone, préférences, obsolescence technologique).
+        <span class="impl"><b>Implication garanties :</b> le risque physique frappe directement la valeur du collatéral (bien en zone inondable) ; le risque de transition frappe la PD des secteurs intensifs et, en immobilier, la valeur des biens à mauvaise performance énergétique. Le <b>PEB/EPC</b> devient un attribut de risque à part entière, à croiser avec le LTV.</span></dd></div>
+
+    <div><dt>Cadre ESG applicable</dt>
+      <dd>Guide BCE sur les risques climatiques et environnementaux, Pilier 3 ESG, <b>Green Asset Ratio</b> et taxonomie européenne, CSRD/ESRS, et pour 2027 un stress test climatique EBA à granularité contrepartie.
+        <span class="impl"><b>Implication :</b> l'ESG dans ce poste n'est pas de la communication : c'est une variable explicative supplémentaire dans l'analyse de portefeuille, et une exigence de données.</span></dd></div>
+
+    <div><dt>Canaux de transmission macro → risque de crédit</dt>
+      <dd>Taux → charge d'intérêt et prix des actifs. Inflation → marges, coûts de construction (donc valeur de reconstruction et primes d'assurance). Énergie → secteurs intensifs (chimie, métallurgie, horeca, serres). Emploi → retail. Géopolitique → secteurs exportateurs et chaînes d'approvisionnement.
+        <span class="impl"><b>Implication :</b> savoir tracer un tel chemin à voix haute, avec un exemple sectoriel belge, est probablement l'exercice le plus prédictif de la réussite à l'entretien.</span></dd></div>
+  </dl>
+
+  <h3>G. Annexe : le vocabulaire du « credit management » classique</h3>
+  <p>Utile si l'entretien glisse vers le crédit commercial — et pour montrer que vous savez distinguer les deux métiers.</p>
+  <table>
+    <thead><tr><th style="width:26%">Terme</th><th>Définition &amp; implication</th></tr></thead>
+    <tbody>
+      <tr><td><b>DSO</b><br><span class="en">Days Sales Outstanding</span></td><td>Délai moyen de paiement clients = (créances clients / CA TTC) × nb de jours. Un DSO qui s'allonge consomme du besoin en fonds de roulement avant même toute perte.</td></tr>
+      <tr><td><b>Balance âgée</b><br><span class="en">aging balance</span></td><td>Répartition des créances par ancienneté d'échéance. Base du provisionnement statistique et du pilotage du recouvrement.</td></tr>
+      <tr><td><b>BFR / working capital</b></td><td>Stocks + créances clients − dettes fournisseurs. Le crédit client est un financement gratuit accordé au client.</td></tr>
+      <tr><td><b>Factoring / affacturage</b></td><td>Cession de créances à un factor, <i>avec</i> ou <i>sans</i> recours — seule la version sans recours transfère réellement le risque.</td></tr>
+      <tr><td><b>Assurance-crédit</b></td><td>Couverture du risque d'impayé (Credendo pour l'export, assureurs privés). Côté bancaire, c'est une UFCP potentiellement éligible en CRM.</td></tr>
+      <tr><td><b>Réserve de propriété, compensation</b></td><td>Techniques de protection contractuelle du créancier. Leur opposabilité en cas de faillite conditionne toute leur valeur.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <span class="h">Piège à éviter</span>
+    <p>Ne pas parler de DSO ou de relance client comme si c'était le sujet. Si vous venez du credit management commercial, valorisez ce qui transfère : lecture d'états financiers, logique de garantie et d'opposabilité, recouvrement et taux de récupération réels, négociation avec des interlocuteurs internes.</p>
+  </div>
+</section>
+
+<!-- ============ B2 : BELFIUS ============ -->
+<section class="pane" id="b2">
+  <h2><span class="num">02</span>Belfius : ce qu'il faut savoir</h2>
+  <p class="lede">Chiffres de l'exercice <b>2025</b> (publiés le 27 février 2026) et actualité du groupe à l'été 2026. Les chiffres exacts impressionnent moins que la capacité à les interpréter — chaque bloc propose une lecture.</p>
+
+  <h3>Identité en une minute</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li><b>Bancassureur belge intégré</b>, 100 % de son activité en Belgique, détenu par l'<b>État fédéral belge</b> via la SFPI/FPIM.</li>
+      <li><b>Racines</b> : Crédit Communal de Belgique (1860), créé pour financer les investissements des pouvoirs locaux → fusion avec le Crédit Local de France en 1996 pour former <b>Dexia</b> → rachat de la filiale belge par l'État le <b>10 octobre 2011</b> → rebaptisée <b>Belfius</b> le 1<sup>er</sup> mars 2012.</li>
+      <li><b>Conséquence stratégique</b> : Belfius est <i>la</i> banque du secteur public et social belge (communes, CPAS, provinces, hôpitaux, écoles, logement social) — portefeuille à faible PD, forte maturité et forte consommation de bilan.</li>
+      <li><b>Modèle bancassurance</b> : Belfius Banque + Belfius Insurance, l'assurance apportant ≈25 % du résultat.</li>
+      <li><b>Supervision</b> : établissement <b>significatif</b> supervisé directement par la <b>BCE</b> (SSM) depuis 2014 ; la <b>BNB</b> intervient pour le macroprudentiel et la résolution. Belfius est un établissement <b>O-SII</b>.</li>
+    </ul>
+  </div>
+
+  <h3>Chiffres clés — exercice 2025</h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">1,160 Md€</div><div class="l">Résultat net (record)</div></div>
+    <div class="kpi"><div class="v">15,9 %</div><div class="l">Ratio CET1 (cible 15–15,5 %)</div></div>
+    <div class="kpi"><div class="v">192,9 Md€</div><div class="l">Total du bilan</div></div>
+    <div class="kpi"><div class="v">43,0 %</div><div class="l">Cost / income</div></div>
+    <div class="kpi"><div class="v">−80 M€</div><div class="l">Coût du risque</div></div>
+    <div class="kpi"><div class="v">123,4 Md€</div><div class="l">Encours de crédits</div></div>
+    <div class="kpi"><div class="v">207,7 Md€</div><div class="l">Avoirs de la clientèle</div></div>
+    <div class="kpi"><div class="v">3,8 M</div><div class="l">Clients (≈1 Belge sur 3)</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Indicateur</th><th style="width:22%">2025</th><th>Lecture</th></tr></thead>
+    <tbody>
+      <tr><td>Résultat net</td><td class="num">1 160 M€</td><td>Nouveau record ; franchit le cap du milliard.</td></tr>
+      <tr><td>Résultat avant impôts</td><td class="num">1 598 M€</td><td>Écart avec le net = charge fiscale élevée ; contribution fiscale totale de 817 M€.</td></tr>
+      <tr><td>Revenus</td><td class="num">4 295 M€</td><td>Marge d'intérêt + commissions + résultat assurance.</td></tr>
+      <tr><td>Répartition banque / assurance</td><td class="num">872 / 289 M€</td><td>75 % / 25 % : le modèle bancassurance n'est pas cosmétique.</td></tr>
+      <tr><td>Cost / income</td><td class="num">43,0 %</td><td>Très bon niveau européen ; laisse de la marge pour investir (technologie, UNLOCK 2030).</td></tr>
+      <tr><td>ROE / ROA</td><td class="num">9,5 % / 0,66 %</td><td>ROE solide pour une banque très hypothécaire et très secteur public (bilan lourd).</td></tr>
+      <tr><td>CET1 / Tier 1 / Total capital</td><td class="num">15,9 / 16,6 / 18,9 %</td><td>Coussin d'environ 500 bps au-dessus de l'exigence prudentielle.</td></tr>
+      <tr><td>Leverage ratio</td><td class="num">6,3 %</td><td>Très au-dessus du minimum de 3 %.</td></tr>
+      <tr><td>LCR / NSFR</td><td class="num">144 % / 130 %</td><td>Liquidité confortable, financement majoritairement par dépôts.</td></tr>
+      <tr><td>Fonds propres du groupe</td><td class="num">12,49 Md€</td><td>—</td></tr>
+      <tr><td>Nouveaux crédits long terme</td><td class="num">28,1 Md€</td><td>dont 15,9 Md€ aux entreprises et indépendants, 8,3 Md€ de crédits hypothécaires.</td></tr>
+      <tr><td>Dépôts sans maturité</td><td class="num">96,5 Md€</td><td>Base de financement stable et peu coûteuse.</td></tr>
+      <tr><td>Solvabilité II (assurance)</td><td class="num">201 %</td><td>Primes : 910 M€ non-vie, 2 063 M€ vie.</td></tr>
+      <tr><td>Dividende à l'État</td><td class="num">704,6 M€</td><td>Belfius est un actif majeur pour le budget fédéral — d'où le débat sur la privatisation.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Le portefeuille de crédit et sa qualité</h3>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag teal">Composition (ordre de grandeur, source Fitch)</span>
+      <ul style="margin-bottom:0">
+        <li><b>≈40 %</b> crédits hypothécaires résidentiels</li>
+        <li><b>≈20 %</b> secteur public</li>
+        <li>Le solde en entreprises / corporate, dont une part significative d'<b>immobilier commercial (CRE)</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag teal">Qualité d'actifs</span>
+      <ul style="margin-bottom:0">
+        <li>Ratio de créances dépréciées : <b>≈2,2 %</b> (mi-2025), en légère hausse</li>
+        <li>Taux de couverture : <b>≈69 %</b></li>
+        <li>Charges de dépréciation : <b>2 bps</b> au S1 2025, attendues à <b>10–15 bps</b> fin 2026</li>
+        <li>Ratio crédits/dépôts : <b>≈114 %</b> ; dépôts = 72 % du financement hors fonds propres</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="h">L'angle d'analyse à avoir en tête</span>
+    <p>Le portefeuille est très sain <i>aujourd'hui</i>, avec deux concentrations structurelles (immobilier résidentiel belge, secteur public belge) et un point de vigilance identifié par les agences et le superviseur : l'<b>immobilier commercial</b>, la construction et l'industrie manufacturière. Un coût du risque à 2 bps n'est pas un état d'équilibre : la normalisation attendue est exactement le sujet que ce poste doit anticiper, chiffrer et expliquer aux comités.</p>
+  </div>
+
+  <h3>Actualité 2025-2026 (à connaître impérativement)</h3>
+  <table>
+    <thead><tr><th style="width:24%">Sujet</th><th>Ce qu'il faut retenir</th></tr></thead>
+    <tbody>
+      <tr><td><b>Nouveau CEO</b></td><td><b>Olivier Onclin</b> est CEO depuis le <b>29 avril 2026</b>, succédant à <b>Marc Raisière</b>, devenu président du Conseil d'Administration. Renouvellement large du comité de direction (Wholesale &amp; Public Banking, People &amp; Corporate Affairs, Technology &amp; Operations, direction de Belfius Insurance).</td></tr>
+      <tr><td><b>UNLOCK 2030</b></td><td>Nouveau plan stratégique présenté le 29 avril 2026, horizon 5 ans. Axes : bancassureur unifié, rassemblement des marques du groupe, investissements technologiques majeurs, ambitions renforcées en Private Banking, expansion internationale de l'assurance. Signature « Unlocking potential with optimism », campagne « Be Unstoppable ».</td></tr>
+      <tr><td><b>Privatisation partielle</b></td><td>Le gouvernement fédéral a décidé fin 2025 de céder <b>20 %</b> du capital, opération envisagée à l'automne 2026 pour environ <b>2 milliards d'euros</b>, en lien avec le financement des dépenses de défense. Enjeux : gouvernance, dividende futur de l'État, discipline de marché accrue.</td></tr>
+      <tr><td><b>Croissance externe</b></td><td>Prise de participation de <b>33 % dans Candriam</b> (gestion d'actifs, mai 2025) ; acquisition de l'assureur français <b>Leocare</b> (juin 2026), première brique de l'internationalisation de l'assurance.</td></tr>
+      <tr><td><b>Notation</b></td><td>Fitch : IDR long terme <b>A</b>, perspective stable, Viability Rating <b>a</b>. Notation adossée à la solidité intrinsèque, sans hypothèse de soutien de l'État.</td></tr>
+      <tr><td><b>Contexte prudentiel belge</b></td><td>Coussin contracyclique porté à <b>1,25 %</b> ; coussin systémique <b>sectoriel</b> sur les expositions hypothécaires résidentielles belges. Deux mesures qui touchent directement le cœur du portefeuille Belfius.</td></tr>
+      <tr><td><b>Priorités BCE 2026-2028</b></td><td>(1) Résilience aux risques géopolitiques et macro-financiers — inspections ciblées sur l'octroi et la tarification du crédit, mise en œuvre cohérente de <b>CRR3</b>, revue des RWA en approche standard ; (2) résilience opérationnelle et TIC (DORA), remédiation <b>RDARR</b>, gouvernance de l'IA. Stress test climatique EBA 2027 à granularité contrepartie.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout teal">
+    <span class="h">Comment relier tout ça au poste</span>
+    <p><b>(1)</b> L'output floor et le loan splitting de CRR3 rendent la valorisation des garanties immobilières décisive pour une banque à 40 % de crédit hypothécaire. <b>(2)</b> La privatisation partielle apporte des actionnaires privés, donc plus d'exigence de transparence et de rentabilité ajustée du risque — le RoRWA devient un langage central. <b>(3)</b> UNLOCK 2030 et la croissance (Private Banking, entreprises) doivent se faire sans dégrader le profil de risque : c'est précisément la mission de l'équipe Business Analysis &amp; Process Management.</p>
+  </div>
+</section>
+
+<!-- ============ B3 : QUESTIONS ============ -->
+<section class="pane" id="b3">
+  <h2><span class="num">03</span>Questions d'entretien</h2>
+  <p class="lede">Questions techniques probables avec pistes de réponse, questions comportementales calibrées sur les critères de l'annonce, et les questions à poser en retour. Cliquez pour dérouler.</p>
+
+  <h3>Questions techniques — risque de crédit</h3>
+  <details class="q"><summary>Expliquez-moi la différence entre PD, LGD et EAD, et où interviennent les garanties.</summary>
+    <div class="body"><p><b>Structure de réponse :</b> commencez par EL = PD × LGD × EAD, puis la phrase qui compte : <i>la PD est une propriété de la contrepartie, la LGD une propriété de la transaction et de ses sûretés, l'EAD une propriété du produit et du comportement de tirage.</i> Les garanties n'ont en principe aucun effet sur la PD — sauf indirectement si une caution solidaire améliore la capacité de remboursement. Elles agissent sur la LGD (IRB avancée) ou par substitution / ajustement de l'exposition (approche standard et IRB fondation). Terminez sur le fait que la LGD doit être nette des coûts de réalisation et actualisée, et qu'en IRB une LGD <i>downturn</i> est requise.</p></div></details>
+
+  <details class="q"><summary>Une garantie hypothécaire de 500 k€ sur un crédit de 400 k€ : le risque est-il nul ?</summary>
+    <div class="body"><p><b>Réponse attendue : non</b>, et savoir énumérer pourquoi. La valeur de marché n'est pas la valeur de réalisation (décote de vente forcée, délai de procédure, frais). La valeur reconnue est plafonnée par le principe de prudence de CRR3. L'inscription hypothécaire peut être inférieure au crédit, de rang subordonné, ou partiellement en mandat non converti. Le bien peut se déprécier (marché, PEB, sinistre, zone inondable) précisément quand le débiteur fait défaut. Enfin, la garantie ne couvre pas les intérêts courus, pénalités et frais. Concluez : le risque n'est pas nul, il est <i>transformé</i> d'un risque de contrepartie en un risque de valeur, de liquidité et d'exécution juridique.</p></div></details>
+
+  <details class="q"><summary>Comment mesureriez-vous si nos garanties sont correctement valorisées à l'échelle du portefeuille ?</summary>
+    <div class="body"><p><b>Pistes :</b> (1) <b>Fraîcheur</b> — distribution de l'ancienneté des dernières valorisations, part des biens jamais réévalués, respect des seuils de déclenchement. (2) <b>Back-test</b> — comparer les prix de vente réellement obtenus sur les dossiers en défaut aux dernières valeurs en système : le seul test empirique honnête, et il donne directement un haircut implicite. (3) <b>Cohérence externe</b> — écart entre l'évolution des valeurs en portefeuille et les indices de marché régionaux. (4) <b>Qualité de données</b> — complétude des attributs (type de bien, adresse, PEB, rang, montant inscrit), doublons, garanties orphelines. (5) <b>Éligibilité</b> — écart entre sûretés juridiquement existantes et sûretés reconnues en CRM. Terminez par : je restituerais cela en un tableau de bord trimestriel avec un score par segment et une liste d'actions pour la première ligne.</p></div></details>
+
+  <details class="q"><summary>Le marché immobilier a monté de 15 % ; nos LTV ne s'améliorent presque pas. Comment l'expliquez-vous au comité de direction ?</summary>
+    <div class="body"><p><b>La question « garanties » par excellence.</b> Le cadre prudentiel est délibérément <b>asymétrique</b> : CRR3 impose une valorisation prudente excluant les anticipations spéculatives, et la valeur reconnue ne peut en principe excéder celle constatée à l'octroi (sauf améliorations matérielles du bien) ; en revanche les baisses doivent être répercutées. Ajoutez la mécanique : le monitoring statistique indexe à la baisse plus facilement qu'à la hausse, et les réévaluations individuelles sont déclenchées par des seuils de dégradation. Concluez sur le message managérial : <i>notre coussin économique s'est amélioré, notre coussin réglementaire non — et c'est voulu, parce que le régulateur ne veut pas que le capital devienne pro-cyclique.</i></p></div></details>
+
+  <details class="q"><summary>Qu'est-ce que l'output floor change pour nous concrètement ?</summary>
+    <div class="body"><p>Le plancher limite le bénéfice des modèles internes à 72,5 % des RWA standards, avec montée en charge jusqu'en 2030. Pour une banque à forte proportion de crédit hypothécaire et de secteur public — où les modèles internes donnent des pondérations très basses — le floor peut devenir la contrainte réellement mordante. Conséquence opérationnelle : il faut désormais piloter <b>aussi</b> les RWA en approche standard, donc s'intéresser au loan splitting, à la qualité des attributs immobiliers, à la classification ADC, et à l'éligibilité SA des sûretés. Excellent exemple d'analyse à porter au comité : montrer où le floor mord, par segment, et ce qui peut être fait.</p></div></details>
+
+  <details class="q"><summary>Le coût du risque est à un plus bas historique. Est-ce une bonne nouvelle ?</summary>
+    <div class="body"><p>Réponse nuancée attendue. Oui pour le résultat, mais 2 bps n'est pas un point d'équilibre de long terme : cycle porteur, reprises de provisions, effets d'amortissement des crises passées. Signaux à surveiller : volumes et flux d'entrée en <b>stage 2</b>, <b>forbearance</b>, migrations de rating descendantes, faillites par secteur, immobilier commercial, construction, industrie manufacturière. Et une remarque de risk manager : un coût du risque très bas s'accompagne souvent d'un relâchement des critères d'octroi — la vintage analysis dira si c'est le cas. Fitch anticipe une normalisation vers 10-15 bps.</p></div></details>
+
+  <details class="q"><summary>Comment intégreriez-vous l'ESG dans l'analyse du portefeuille et des garanties ?</summary>
+    <div class="body"><p>Séparez les deux canaux. <b>Risque physique</b> : croiser les adresses des biens hypothéqués avec les cartes d'aléa (inondation en priorité en Belgique), estimer l'exposition en valeur de garantie et la couverture assurantielle — Belfius, bancassureur, dispose d'une information rare des deux côtés du bilan, argument fort à faire valoir. <b>Risque de transition</b> : intégrer le <b>PEB/EPC</b> comme attribut de risque, tester le lien entre performance énergétique et prix de revente, modéliser l'effet d'un durcissement régional sur la valeur des biens mal classés. Côté corporate : intensité carbone sectorielle et sensibilité au prix de l'énergie. Ajoutez la contrainte réalité : le premier chantier est celui de la <b>donnée</b> (complétude du PEB, adresse normalisée, géocodage).</p></div></details>
+
+  <details class="q"><summary>Comment construiriez-vous le rapport trimestriel sur les risques ?</summary>
+    <div class="body"><p>Montrez que vous pensez « audience ». Une page de messages clés (3 à 5 phrases décisionnelles, pas descriptives), puis une structure stable pour permettre la comparaison : expositions par segment → qualité de notation et migrations → early warning (watchlist, forbearance, stage 2) → non-performing et couverture → garanties et LTV → coût du risque et provisions avec le pont entre trimestres → position par rapport aux limites du risk appetite → focus thématique. Trois principes : stabilité du format, traçabilité des chiffres jusqu'à la source, et chaque graphique répond à une question explicite. La phrase qui plaît : <i>si une slide n'appelle aucune décision ni aucune surveillance, elle sort du pack.</i></p></div></details>
+
+  <details class="q"><summary>Quelle différence entre provisions IFRS 9 et pertes attendues réglementaires ?</summary>
+    <div class="body"><p>Objectifs différents. IFRS 9 est comptable, point-in-time, forward looking, avec scénarios pondérés, et couvre 12 mois (stage 1) ou la durée de vie (stages 2 et 3). L'EL réglementaire IRB est prudentielle, calibrée sur 12 mois avec des paramètres plus conservateurs (LGD downturn, planchers d'inputs), et sert à calculer le capital. Point de contact : si les provisions comptables sont inférieures à l'EL réglementaire, le <b>shortfall</b> est déduit du CET1 ; l'excédent est partiellement admis en Tier 2.</p></div></details>
+
+  <details class="q"><summary>Un banquier de la première ligne conteste votre analyse et refuse d'appliquer une nouvelle directive. Que faites-vous ?</summary>
+    <div class="body"><p>C'est la question « bridge builder » — elle vaut autant que les questions techniques. Trame : comprendre l'objection (technique, opérationnelle, charge de travail ?) ; vérifier honnêtement si elle révèle un angle mort de l'analyse — cela arrive et le reconnaître vous crédibilise ; quantifier l'impact concret sur <i>son</i> portefeuille plutôt qu'invoquer la règle ; proposer un pilote sur un échantillon ; n'escalader qu'en dernier recours, avec les faits. La phrase à placer : <i>en deuxième ligne, on n'a pas de pouvoir hiérarchique, on n'a que la qualité de son analyse et la confiance qu'on a construite.</i></p></div></details>
+
+  <h3>Questions comportementales (format STAR)</h3>
+  <div class="card tight">
+    <p style="margin-bottom:0"><b>STAR</b> = Situation (contexte, 2 phrases) · Tâche (votre responsabilité précise) · Action (ce que <i>vous</i> avez fait, au « je ») · Résultat (chiffré si possible, plus l'enseignement). Préparez <b>5 histoires</b> réutilisables et adaptez-les à la question posée.</p>
+  </div>
+  <details class="q"><summary>Parlez-moi d'une analyse complexe que vous avez rendue compréhensible pour une direction.</summary>
+    <div class="body"><p>L'annonce demande explicitement « un talent créatif pour présenter des sujets complexes de manière compréhensible ». Choisissez un cas où vous êtes passé de la donnée brute à <b>une</b> recommandation. Décrivez le choix de visualisation, ce que vous avez délibérément <i>retiré</i>, et la décision prise à la suite.</p></div></details>
+  <details class="q"><summary>Une fois où vous avez pris une initiative sans qu'on vous le demande.</summary>
+    <div class="body"><p>Idéalement : vous avez repéré une anomalie dans une donnée ou un processus, creusé de votre propre chef, et cela a débouché sur une correction ou un nouveau contrôle. Terminez par comment vous avez embarqué les autres — l'initiative solitaire non adoptée ne compte pas.</p></div></details>
+  <details class="q"><summary>Une erreur que vous avez commise dans une analyse.</summary>
+    <div class="body"><p>Ne dites jamais « je n'en vois pas ». Choisissez une vraie erreur, de préférence méthodologique (périmètre mal défini, hypothèse non testée, donnée mal comprise), expliquez comment elle a été détectée, ce que vous avez fait immédiatement, et le contrôle mis en place depuis. Dans une fonction risque, l'honnêteté sur l'erreur est un critère de sélection, pas un aveu.</p></div></details>
+  <details class="q"><summary>Comment restez-vous à jour sur la réglementation et les tendances ?</summary>
+    <div class="body"><p>Soyez concret et citable : publications de la BCE (priorités prudentielles, guides), EBA (orientations, Q&amp;A, stress tests), <b>BNB</b> (Financial Stability Report, décisions macroprudentielles trimestrielles), rapports annuels et Pilier 3 des pairs belges, notes des agences. Mentionnez un sujet que vous suivez en ce moment et pourquoi.</p></div></details>
+  <details class="q"><summary>Pourquoi Belfius, et pourquoi ce poste ?</summary>
+    <div class="body"><p>Trois angles qui fonctionnent : <b>(1)</b> l'ancrage — une banque 100 % belge qui finance hôpitaux, écoles et communes, impact directement lisible ; <b>(2)</b> le moment — nouveau CEO, plan UNLOCK 2030, privatisation partielle, mise en œuvre de CRR3 : le sujet des garanties et des RWA est au centre de tout cela ; <b>(3)</b> le contenu du poste — la combinaison analyse quantitative + réglementation + communication vers le comité de direction est rare. Évitez les généralités sur la « culture d'entreprise » sans exemple.</p></div></details>
+
+  <h3>Les questions à poser (préparez-en 4 ou 5)</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li>Comment l'équipe Business Analysis &amp; Process Management se répartit-elle entre les trois portefeuilles — par portefeuille, ou par thème transversal ?</li>
+      <li>Sur la valorisation des garanties, où en est le chantier : cadrage méthodologique, industrialisation de la donnée, ou remédiation d'un constat prudentiel ?</li>
+      <li>Comment l'output floor de CRR3 se traduit-il concrètement dans vos priorités pour 2026-2027 ?</li>
+      <li>Quelle est la répartition réelle du temps entre analyse, reporting récurrent, et interaction avec la première ligne et les comités ?</li>
+      <li>Quel est le degré d'autonomie sur la donnée : accès direct aux datamarts et liberté d'outil, ou passage par une équipe data dédiée ?</li>
+      <li>À quoi ressemblerait une réussite dans ce poste au bout de douze mois, vue par vous ?</li>
+      <li>Comment UNLOCK 2030 et la privatisation partielle influencent-elles la façon dont le risque de crédit est piloté ?</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <span class="h">Deux détails pratiques</span>
+    <p>Le trilinguisme est un critère explicite : préparez votre présentation personnelle et deux ou trois réponses techniques en <b>néerlandais</b> et en <b>anglais</b>, pas seulement en français. Et l'annonce dit qu'« une expérience minimale des concepts de risque de crédit » suffit si vous êtes prêt à approfondir — si votre profil est plus data ou plus finance que risque pur, assumez-le et compensez en montrant votre méthode d'apprentissage et ce que vous avez déjà creusé seul.</p>
+  </div>
+</section>
+
+<!-- ============ B4 : QCM ============ -->
+<section class="pane" id="b4">
+  <h2><span class="num">04</span>QCM Belfius</h2>
+  <p class="lede">Une question, une bonne réponse, une explication à chaque fois — y compris sur les mauvaises réponses. Filtrez par thème pour travailler une zone précise.</p>
+  <div class="quizbar">
+    <div class="filters" data-filters="belfius"></div>
+    <div class="scorerow">
+      <div class="bar"><i data-bar="belfius"></i></div>
+      <div class="scoretxt" data-score="belfius">0 / 0</div>
+      <button class="btn" data-reset="belfius">Recommencer</button>
+    </div>
+    <div class="verdictbox" data-verdict="belfius"></div>
+  </div>
+  <div data-quiz="belfius"></div>
+</section>
+
+<!-- ============ B5 : SOURCES ============ -->
+<section class="pane" id="b5">
+  <h2><span class="num">05</span>Sources &amp; avertissements</h2>
+  <p class="lede">Les chiffres Belfius proviennent des publications officielles de la banque et du rapport de notation Fitch. Le cadre réglementaire est présenté de façon pédagogique — vérifiez toujours le texte du CRR pour un usage professionnel.</p>
+  <div class="card">
+    <span class="tag grey">Belfius</span>
+    <ul class="src">
+      <li><a href="https://www.belfius.be/about-us/dam/corporate/investors/results/fr/Resultats-2025.pdf" target="_blank" rel="noopener">Résultats annuels 2025 — communiqué (27 février 2026)</a></li>
+      <li><a href="https://www.belfius.be/about-us/fr/actualites/resultats-2025" target="_blank" rel="noopener">Belfius — page « Résultats annuels 2025 »</a></li>
+      <li><a href="https://www.belfius.be/about-us/dam/corporate/investors/ratios-en-rapporten/belfius-reports/fr/2025-Rapport-Annuel.pdf" target="_blank" rel="noopener">Rapport annuel 2025 (PDF)</a></li>
+      <li><a href="https://www.belfius.be/common/FR/multimedia/MMDownloadableFile/PressReleases/2026/260429-strategy-Unlock-2030.pdf" target="_blank" rel="noopener">Stratégie UNLOCK 2030 — communiqué (29 avril 2026)</a></li>
+      <li><a href="https://www.belfius.be/about-us/dam/corporate/investors/ratios-en-rapporten/rating-reports/en/recent/Fitch%20-%20Full%20rating%20report.pdf" target="_blank" rel="noopener">Fitch Ratings — rapport complet (4 décembre 2025)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Belfius" target="_blank" rel="noopener">Wikipédia — Belfius (histoire, actionnariat, opérations récentes)</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <span class="tag grey">Réglementation &amp; contexte</span>
+    <ul class="src">
+      <li><a href="https://www.nbb.be/en/financial-oversight/macroprudential-supervision/macroprudential-instruments/countercyclical-buffer" target="_blank" rel="noopener">BNB — coussin de fonds propres contracyclique (Belgique)</a></li>
+      <li><a href="https://www.forvismazars.com/group/en/insights/latest-insights/ecb-supervisory-priorities-2026-2028" target="_blank" rel="noopener">Priorités prudentielles BCE/SSM 2026-2028 (synthèse)</a></li>
+      <li><a href="https://www.rtbf.be/article/la-vente-de-20-de-belfius-actee-par-le-gouvernement-11643323" target="_blank" rel="noopener">RTBF — cession de 20 % de Belfius actée par le gouvernement</a></li>
+      <li><a href="https://www.rtbf.be/article/olivier-onclin-sera-le-nouveau-ceo-de-belfius-11648934" target="_blank" rel="noopener">RTBF — Olivier Onclin nommé CEO de Belfius</a></li>
+    </ul>
+  </div>
+  <div class="callout warn">
+    <span class="h">À vérifier avant l'entretien</span>
+    <p>Les montants et ratios cités sont ceux de l'exercice <b>2025</b> ; si des résultats semestriels 2026 sont publiés d'ici votre entretien, actualisez-les. Les pourcentages de composition du portefeuille (40 % hypothécaire, 20 % secteur public) sont des ordres de grandeur issus de l'analyse Fitch, pas des chiffres officiels Belfius. Le détail des règles CRR3 est simplifié à des fins pédagogiques : citez les principes, pas les chiffres exacts, si vous n'êtes pas certain.</p>
+  </div>
+</section>
+
+</main>
+</div>
+<div class="module amindis" id="m-amindis">
+
+<header class="top amindis">
+  <div class="wrap">
+    <div class="eyebrow">Dossier 02 · entretien</div>
+    <h1>AMINDIS — éditeur de logiciels d'investissement</h1>
+    <p class="sub">Louvain-la-Neuve · fintech B2B pour asset managers, investisseurs institutionnels et assureurs. Poste non encore communiqué : ce module couvre l'entreprise, le secteur et la théorie métier qui tombera quel que soit le rôle.</p>
+    <div class="meta">
+      <span>Fintech · ~29 personnes</span>
+      <span>Produits AMDIS &amp; INDIS</span>
+      <span>Performance, risque, ESG, compliance</span>
+      <span>Intitulé du poste inconnu</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap inner">
+    <button class="on" data-p="a0">L'entreprise décodée</button>
+    <button data-p="a1">1 · Théorie asset management</button>
+    <button data-p="a2">2 · Réglementation &amp; tech</button>
+    <button data-p="a3">3 · Questions d'entretien</button>
+    <button data-p="a4">4 · QCM</button>
+    <button data-p="a5">Sources</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ A0 ============ -->
+<section class="pane on" id="a0">
+  <h2><span class="num">00</span>Amindis en une page</h2>
+  <p class="lede">Pas d'offre d'emploi disponible pour l'instant. La bonne stratégie face à une PME technologique : maîtriser <b>ce qu'elle vend</b> et <b>à qui</b>, parce que dans une structure de cette taille, tout le monde parle au client final.</p>
+
+  <div class="card">
+    <span class="tag teal">Carte d'identité</span>
+    <table style="margin:0">
+      <tbody>
+        <tr><td style="width:38%"><b>Activité</b></td><td>Éditeur de logiciels pour la <b>gestion de portefeuille et l'analytique d'investissement</b>. Autrement dit : la plateforme qui calcule la performance, le risque, l'attribution, l'ESG et les rapports réglementaires des gérants d'actifs.</td></tr>
+        <tr><td><b>Siège</b></td><td>Rue du Bosquet 15A, 1348 Louvain-la-Neuve (parc scientifique, écosystème UCLouvain / Louvain School of Management)</td></tr>
+        <tr><td><b>Forme &amp; ancienneté</b></td><td>Société anonyme de droit belge, active depuis les années 1990 ; l'entreprise revendique 25+ ans d'expérience dans le logiciel d'investissement</td></tr>
+        <tr><td><b>Taille</b></td><td>≈ <b>29 ETP</b> — une PME. Structure plate, polyvalence attendue, contact direct avec les clients et la direction</td></tr>
+        <tr><td><b>Ordre de grandeur financier</b></td><td>Marge brute ≈ 3,9 M€, résultat ≈ 0,56 M€, fonds propres ≈ 3,7 M€ (données publiées pour 2025). Entreprise rentable, autofinancée, pas une start-up en levée de fonds</td></tr>
+        <tr><td><b>Certification</b></td><td><b>ISO 27001</b> (management de la sécurité de l'information) — indispensable pour vendre à des banques et des assureurs</td></tr>
+        <tr><td><b>Modèles de revenus</b></td><td>Licence / <b>SaaS</b>, prestations de <b>consulting</b>, <b>BPO</b> (la production du reporting est déléguée à Amindis), support, et une <b>Academy</b> de formation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Les deux produits</h3>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag teal">AMDIS — pour les gérants d'actifs</span>
+      <p>Plateforme intégrée qui centralise l'analytique, le pilotage de portefeuille, le reporting réglementaire et la communication client. Architecture modulaire, une dizaine de briques :</p>
+      <ul style="margin-bottom:0">
+        <li><b>Performance &amp; Risk</b> — mesure et suivi</li>
+        <li><b>Performance Attribution</b> — d'où vient le rendement</li>
+        <li><b>ESG</b> — intégration des données durables</li>
+        <li><b>Regulatory Reports</b> — automatisation de la conformité</li>
+        <li><b>GIPS</b> — conformité aux normes de présentation</li>
+        <li><b>PMS</b> — Portfolio Management System</li>
+        <li><b>Workflow</b>, <b>Connector</b> (intégration multi-sources), <b>Publisher</b> (reporting client automatisé), <b>Client Portal</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag teal">INDIS — pour les investisseurs institutionnels</span>
+      <p style="margin-bottom:0">Solution destinée aux <b>asset owners</b> : fonds de pension, assureurs, institutions. Cœur fonctionnel : <b>comptabilité d'investissement</b> (investment accounting), gestion des <b>fonds liés</b> (unit-linked, branche 23), automatisation des processus. Positionnée sur les enjeux <b>IFRS 9 / IFRS 17</b> et le reporting des assureurs.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag teal">Arguments commerciaux mis en avant</span>
+    <ul style="margin-bottom:0">
+      <li><b>1 500+ fonctions de calcul</b> intégrées — la profondeur analytique est le vrai actif de l'entreprise</li>
+      <li>Plateforme <b>100 % low-code</b> : le client (ou le consultant) configure sans développer, donc mise en production rapide et adaptabilité aux changements réglementaires</li>
+      <li>Couverture de bout en bout du cycle d'investissement, en une seule plateforme plutôt qu'un assemblage d'outils</li>
+      <li>Clients cités publiquement : gestionnaires d'actifs et institutions financières belges et suisses, dont des noms comme Degroof Petercam, Belfius, Securex, DKV/Ergo</li>
+    </ul>
+  </div>
+
+  <div class="callout teal">
+    <span class="h">Le clin d'œil à ne pas rater</span>
+    <p>Belfius apparaît parmi les clients d'Amindis. Si vous passez les deux entretiens, c'est un pont naturel : vous connaissez le donneur d'ordre <i>et</i> le fournisseur, et vous comprenez ce que la banque attend d'un outil d'analytique d'investissement. À manier avec tact — ne donnez jamais l'impression de jouer les deux l'un contre l'autre.</p>
+  </div>
+
+  <h3>Le marché et les concurrents</h3>
+  <p>Amindis évolue sur le segment des <b>plateformes intégrées d'investment management</b> — un marché dominé par de très gros acteurs, où les éditeurs de niche survivent par la spécialisation et la proximité client.</p>
+  <table>
+    <thead><tr><th style="width:30%">Concurrent / référence</th><th>Positionnement</th></tr></thead>
+    <tbody>
+      <tr><td><b>SimCorp</b> (Deutsche Börse)</td><td>La référence européenne du front-to-back pour les grands asset managers. Très complet, très cher, projets longs.</td></tr>
+      <tr><td><b>SS&amp;C Advent</b> (Geneva, APX)</td><td>Comptabilité de fonds et gestion de portefeuille, très implanté chez les gestionnaires et hedge funds.</td></tr>
+      <tr><td><b>BlackRock Aladdin</b></td><td>Risque et gestion de portefeuille, standard de fait chez les très grands institutionnels.</td></tr>
+      <tr><td><b>Bloomberg AIM · FactSet · MSCI · Clearwater</b></td><td>Briques spécialisées : ordre, données, risque, analytique, comptabilité d'investissement.</td></tr>
+      <tr><td><b>Le vrai concurrent</b></td><td>Souvent : <b>Excel + un ancien système maison</b>. Une part importante du marché mid-market fonctionne encore ainsi, et c'est précisément la cible d'un éditeur agile et low-code.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <span class="h">Comment se positionne une PME de 29 personnes face à ça</span>
+    <p>Trois leviers, à savoir formuler en entretien : <b>(1) la spécialisation</b> — l'analytique de performance et le reporting réglementaire poussés, pas le front-to-back complet ; <b>(2) l'agilité low-code</b> — livrer un rapport réglementaire nouveau en semaines plutôt qu'en trimestres ; <b>(3) la proximité</b> — un client mid-market belge ou suisse est un petit compte pour SimCorp et un compte stratégique pour Amindis. C'est le raisonnement classique du <i>challenger</i>, et le montrer prouve que vous comprenez le business, pas seulement la technique.</p>
+  </div>
+
+  <h3>Ce que ça implique pour votre candidature</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li><b>Polyvalence</b> : à 29 personnes, personne n'a un rôle purement défini. Les profils recherchés sont typiquement business analyst / consultant fonctionnel, implémentation, support applicatif, développement, ou pré-vente. Préparez-vous à être crédible sur plusieurs de ces axes.</li>
+      <li><b>Double compétence finance + IT</b> : c'est l'ADN de la maison. Ni un pur développeur, ni un pur financier — quelqu'un qui traduit un besoin réglementaire en configuration.</li>
+      <li><b>Le client est une institution financière</b> : rigueur, confidentialité, culture de l'audit, tolérance zéro sur un chiffre de performance publié.</li>
+      <li><b>Langues</b> : clientèle belge (FR/NL) et suisse, documentation et marché en anglais. Le trilinguisme est un atout net.</li>
+      <li><b>Le contexte</b> : Louvain-la-Neuve, pas Bruxelles. Vérifiez le trajet, et sachez dire pourquoi cet écosystème vous intéresse.</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <span class="h">Sans description de poste, faites ceci</span>
+    <p>Écrivez au recruteur ou à la personne de contact pour demander l'intitulé exact et les principales missions — cela se fait, et cela montre de la préparation. En attendant, travaillez ce module comme une base : la <b>théorie asset management</b> (onglet 1) et le <b>cadre réglementaire</b> (onglet 2) tomberont quel que soit le rôle, parce que c'est le domaine fonctionnel du produit. Dès que vous aurez l'annonce, ce module pourra être complété comme celui de Belfius.</p>
+  </div>
+</section>
+
+<!-- ============ A1 : THÉORIE ============ -->
+<section class="pane" id="a1">
+  <h2><span class="num">01</span>Théorie : le métier que le logiciel outille</h2>
+  <p class="lede">Le produit d'Amindis sert à mesurer, expliquer et publier la performance et le risque d'un portefeuille. Voici le vocabulaire de ce métier — c'est celui que parleront vos interlocuteurs et leurs clients.</p>
+
+  <h3>A. La chaîne de valeur de la gestion d'actifs</h3>
+  <div class="card">
+    <p>Comprendre qui fait quoi permet de situer où intervient le logiciel.</p>
+    <ul style="margin-bottom:0">
+      <li><b>Front office</b> — le gérant décide de l'allocation et des transactions ; l'analyste produit la recherche ; le trader exécute.</li>
+      <li><b>Middle office</b> — contrôle des risques, mesure de la performance, contrôle de conformité aux contraintes du mandat. <b>C'est le terrain de jeu principal d'AMDIS.</b></li>
+      <li><b>Back office</b> — règlement-livraison, comptabilité, calcul de la valeur nette d'inventaire, réconciliations. <b>C'est le terrain d'INDIS</b> côté investment accounting.</li>
+      <li><b>Acteurs externes</b> — le <b>dépositaire</b> (custodian) conserve les titres et contrôle ; l'<b>agent de transfert</b> gère le passif du fonds (souscriptions/rachats) ; le <b>réviseur</b> certifie ; le <b>régulateur</b> (FSMA en Belgique, BNB pour le prudentiel) supervise.</li>
+    </ul>
+  </div>
+
+  <dl class="gloss">
+    <div><dt>AUM — Assets under Management <span class="en">/ actifs sous gestion</span></dt>
+      <dd>Le volume géré. La métrique commerciale de référence du secteur, car les revenus sont essentiellement des commissions en pourcentage des encours.
+        <span class="impl"><b>Implication :</b> le modèle économique d'un asset manager est très sensible aux marchés — quand les marchés baissent, les revenus baissent mécaniquement. D'où la pression permanente sur les coûts, et donc sur l'automatisation. C'est l'argument de vente d'Amindis.</span></dd></div>
+
+    <div><dt>NAV — Net Asset Value <span class="en">/ valeur nette d'inventaire</span></dt>
+      <dd>Valeur d'une part de fonds = (actifs − passifs) / nombre de parts. Calculée quotidiennement pour la plupart des fonds.
+        <span class="impl"><b>Implication :</b> la NAV est le chiffre le plus sensible du secteur. Une erreur de NAV entraîne des indemnisations d'investisseurs et un incident réglementaire. Tout ce qui touche à la valorisation est donc audité et contrôlé quatre fois.</span></dd></div>
+
+    <div><dt>Mandat discrétionnaire vs conseil <span class="en">/ discretionary vs advisory</span></dt>
+      <dd>En gestion discrétionnaire, le gérant décide seul dans le cadre du mandat ; en conseil, le client valide chaque opération.
+        <span class="impl"><b>Implication :</b> deux logiques de contrôle très différentes. Le discrétionnaire exige un contrôle automatique des contraintes du mandat (limites d'allocation, exclusions, concentration) — un module classique de PMS.</span></dd></div>
+
+    <div><dt>Gestion active vs passive · benchmark</dt>
+      <dd>La gestion active vise à battre un indice de référence ; la gestion passive le réplique.
+        <span class="impl"><b>Implication :</b> la pression des ETF passifs sur les frais est <i>la</i> tendance de fond du secteur depuis quinze ans. Elle pousse les gérants actifs à justifier leur valeur ajoutée par des rapports de performance et d'attribution plus fins — ce qui alimente directement la demande pour un outil comme AMDIS.</span></dd></div>
+  </dl>
+
+  <h3>B. Mesurer la performance</h3>
+  <dl class="gloss">
+    <div><dt>TWR vs MWR (IRR)</dt>
+      <dd><b>TWR</b> (Time-Weighted Return) neutralise l'effet des apports et retraits : il mesure la performance <b>du gérant</b>. <b>MWR</b> (Money-Weighted Return, ou TRI/IRR) intègre le timing des flux : il mesure la performance <b>de l'investisseur</b>.
+        <span class="impl"><b>Implication :</b> c'est LA distinction fondamentale de la mesure de performance, et une question d'entretien quasi certaine dans ce domaine. Les normes GIPS imposent le TWR pour la présentation des composites, précisément parce que le gérant ne contrôle pas les flux de son client.</span></dd></div>
+
+    <div><dt>Performance brute vs nette</dt>
+      <dd>Avant ou après frais de gestion, frais de transaction, et éventuellement fiscalité.
+        <span class="impl"><b>Implication :</b> une source récurrente de malentendus commerciaux et de contentieux. Un bon outil de reporting doit pouvoir produire les deux, de façon traçable.</span></dd></div>
+
+    <div><dt>Attribution de performance <span class="en">/ performance attribution</span></dt>
+      <dd>Décomposition de l'écart de performance avec le benchmark. Le modèle classique (<b>Brinson</b>) sépare l'effet <b>allocation</b> (avoir surpondéré les bons secteurs) de l'effet <b>sélection</b> (avoir choisi les bonnes valeurs dans chaque secteur), plus un terme d'interaction. Sur l'obligataire, on décompose plutôt par <b>courbe de taux, spread de crédit, devise et portage</b>.
+        <span class="impl"><b>Implication :</b> c'est le module qui répond à la question du client « pourquoi ai-je gagné ou perdu ? ». Techniquement, c'est aussi l'un des calculs les plus délicats à industrialiser — d'où la valeur d'un moteur à 1 500 fonctions.</span></dd></div>
+
+    <div><dt>GIPS — Global Investment Performance Standards</dt>
+      <dd>Normes mondiales de présentation de la performance : construction de <b>composites</b> (regroupement de tous les portefeuilles gérés selon la même stratégie, y compris ceux qui ont fermé, pour éviter le biais du survivant), règles de calcul, obligations de publication et de conservation, vérification par un tiers.
+        <span class="impl"><b>Implication :</b> se dire « GIPS compliant » est un argument commercial majeur pour un gérant qui vise des clients institutionnels. Le module GIPS d'Amindis vend donc de la crédibilité commerciale, pas seulement de la conformité. À savoir expliquer.</span></dd></div>
+
+    <div><dt>Alpha · bêta · tracking error · ratio d'information</dt>
+      <dd><b>Bêta</b> : sensibilité au marché. <b>Alpha</b> : sur-performance non expliquée par l'exposition au marché. <b>Tracking error</b> : écart-type de la différence de rendement avec le benchmark. <b>Ratio d'information</b> = alpha / tracking error.
+        <span class="impl"><b>Implication :</b> le ratio d'information mesure la <i>régularité</i> de la surperformance, pas son ampleur. Un gérant avec +2 % d'alpha et 8 % de tracking error est moins convaincant qu'un gérant à +1 % et 2 %.</span></dd></div>
+
+    <div><dt>Ratio de Sharpe · Sortino · maximum drawdown</dt>
+      <dd><b>Sharpe</b> = (rendement − taux sans risque) / volatilité totale. <b>Sortino</b> ne pénalise que la volatilité à la baisse. <b>Max drawdown</b> : plus forte perte entre un sommet et un creux.
+        <span class="impl"><b>Implication :</b> le Sharpe pénalise la volatilité positive, ce qui est contre-intuitif pour un client ; le drawdown est ce que l'investisseur ressent réellement. Un bon reporting client montre les deux.</span></dd></div>
+  </dl>
+
+  <h3>C. Mesurer le risque</h3>
+  <dl class="gloss">
+    <div><dt>VaR — Value at Risk</dt>
+      <dd>Perte maximale attendue sur un horizon donné pour un niveau de confiance donné (« 1 % de chances de perdre plus de X sur 1 jour »). Trois méthodes : historique, paramétrique, Monte-Carlo.
+        <span class="impl"><b>Implication :</b> la VaR ne dit rien de ce qui se passe <i>au-delà</i> du seuil — d'où l'<b>Expected Shortfall</b> (perte moyenne dans la queue), qui l'a largement remplacée dans le cadre réglementaire.</span></dd></div>
+
+    <div><dt>Duration · duration modifiée · convexité</dt>
+      <dd><b>Duration</b> : durée de vie moyenne pondérée des flux d'une obligation. <b>Duration modifiée</b> : sensibilité approximative du prix à une variation de 1 % des taux. <b>Convexité</b> : correction du second ordre.
+        <span class="impl"><b>Implication :</b> pour un portefeuille obligataire ou un assureur vie, la duration est le paramètre de risque numéro un. Le pilotage actif-passif (ALM) consiste largement à aligner la duration des actifs sur celle des engagements.</span></dd></div>
+
+    <div><dt>Volatilité · corrélation · stress testing</dt>
+      <dd>Écart-type des rendements, lien statistique entre actifs, et simulation de scénarios de marché extrêmes.
+        <span class="impl"><b>Implication :</b> les corrélations historiques se rapprochent de 1 en période de crise — c'est-à-dire exactement quand la diversification devrait protéger. Le stress test existe parce que les modèles statistiques sous-estiment ce phénomène.</span></dd></div>
+
+    <div><dt>Risque de liquidité d'un fonds</dt>
+      <dd>Capacité à honorer les rachats sans brader les actifs. Outils : buckets de liquidité, swing pricing, gates, side pockets.
+        <span class="impl"><b>Implication :</b> sujet chaud depuis les crises de fonds immobiliers et obligataires. Le reporting réglementaire de liquidité est devenu un module attendu de toute plateforme.</span></dd></div>
+
+    <div><dt>Look-through <span class="en">/ transparisation</span></dt>
+      <dd>Décomposer un fonds détenu en ses positions sous-jacentes pour mesurer la véritable exposition (secteur, devise, émetteur, notation, carbone).
+        <span class="impl"><b>Implication :</b> exigence centrale pour les assureurs (Solvency II) et les fonds de pension, et un vrai défi de données : il faut collecter, normaliser et consolider les inventaires de dizaines de fonds tiers. C'est typiquement ce que résout un module « Connector ».</span></dd></div>
+  </dl>
+
+  <h3>D. Assurance et comptabilité d'investissement (le terrain d'INDIS)</h3>
+  <dl class="gloss">
+    <div><dt>Branche 21 vs branche 23</dt>
+      <dd>En Belgique, la <b>branche 21</b> est une assurance-vie à rendement garanti : le risque financier est porté par l'assureur. La <b>branche 23</b> est en unités de compte (<i>unit-linked</i>) : le risque est porté par le preneur d'assurance.
+        <span class="impl"><b>Implication :</b> la branche 23 exige un dispositif de valorisation, de reporting et de transparence proche de celui d'un fonds — c'est exactement le créneau « fonds liés » revendiqué par INDIS. La branche 21, elle, pose un problème d'ALM et de garantie de taux.</span></dd></div>
+
+    <div><dt>Solvency II</dt>
+      <dd>Cadre prudentiel des assureurs européens, en trois piliers comme Bâle. Exigence de capital <b>SCR</b> calibrée à 99,5 % sur un an, bilan en valeur économique, reporting <b>QRT</b>, et principe de <b>look-through</b> sur les fonds détenus.
+        <span class="impl"><b>Implication :</b> le module de marché du SCR dépend directement de la composition détaillée du portefeuille. Sans transparisation, l'assureur subit un traitement punitif. Voilà pourquoi un assureur achète une plateforme d'analytique d'investissement.</span></dd></div>
+
+    <div><dt>IFRS 9 — instruments financiers</dt>
+      <dd>Classification selon le modèle économique et la nature des flux (test <b>SPPI</b>) en coût amorti, juste valeur par OCI ou par résultat ; dépréciation en pertes de crédit attendues (<b>ECL</b>) à trois stages ; comptabilité de couverture.
+        <span class="impl"><b>Implication :</b> le classement conditionne la volatilité du compte de résultat. Un même titre peut produire un résultat lisse ou heurté selon sa catégorie. C'est un sujet de paramétrage produit à part entière.</span></dd></div>
+
+    <div><dt>IFRS 17 — contrats d'assurance</dt>
+      <dd>Applicable depuis 2023. Valorisation des engagements en blocs (estimation des flux futurs, ajustement pour risque, marge sur services contractuels — <b>CSM</b>), avec des modèles distincts (BBA/GMM, <b>VFA</b> pour les contrats participatifs, PAA pour les contrats courts).
+        <span class="impl"><b>Implication :</b> IFRS 17 a été un chantier informatique gigantesque pour les assureurs, et un marché entier pour les éditeurs. Il exige un couplage étroit entre données d'actif et données de passif — le positionnement d'INDIS.</span></dd></div>
+
+    <div><dt>Investment accounting <span class="en">/ comptabilité d'investissement</span></dt>
+      <dd>Comptabilisation des opérations sur titres : coupons courus, amortissement des primes et décotes, opérations sur titres (<i>corporate actions</i>), changes, plus- et moins-values réalisées vs latentes, méthodes de sortie (FIFO, coût moyen).
+        <span class="impl"><b>Implication :</b> c'est le socle silencieux de tout le reste. Une erreur de traitement d'une opération sur titre (split, fusion, dividende optionnel) contamine à la fois la performance, le risque et le résultat comptable. La robustesse sur ce point est un argument produit décisif.</span></dd></div>
+  </dl>
+</section>
+
+<!-- ============ A2 : RÉGLEMENTATION & TECH ============ -->
+<section class="pane" id="a2">
+  <h2><span class="num">02</span>Réglementation, données et delivery</h2>
+  <p class="lede">Ce que la plateforme doit produire (le réglementaire), avec quoi elle le produit (les données), et comment elle est livrée (le modèle de service). Trois sujets qui font la conversation dans une fintech B2B.</p>
+
+  <h3>A. Le paysage réglementaire de l'investissement</h3>
+  <table>
+    <thead><tr><th style="width:22%">Texte</th><th>Ce qu'il impose</th><th style="width:30%">Ce que ça implique pour un éditeur</th></tr></thead>
+    <tbody>
+      <tr><td><b>MiFID II</b></td><td>Protection de l'investisseur : test d'adéquation, profil de risque, gouvernance produit (marché cible), <b>transparence totale des coûts</b> ex ante et ex post, best execution, enregistrement des communications.</td><td>Le rapport client annuel de coûts et de performance est une obligation réglementaire — c'est un module de reporting à part entière.</td></tr>
+      <tr><td><b>UCITS</b> (OPCVM)</td><td>Fonds grand public harmonisés : règles de diversification (la fameuse règle 5/10/40), limites d'emprunt, encadrement des dérivés, calcul de l'exposition globale.</td><td>Contrôles de conformité automatiques avant et après transaction, avec piste d'audit.</td></tr>
+      <tr><td><b>AIFMD</b></td><td>Fonds alternatifs : dépositaire obligatoire, gestion des risques et de la liquidité, reporting régulateur (Annexe IV).</td><td>Reporting périodique standardisé à produire par le gestionnaire.</td></tr>
+      <tr><td><b>PRIIPs / KID</b></td><td>Document d'informations clés de 3 pages : indicateur de risque synthétique (SRI de 1 à 7), scénarios de performance, coûts agrégés.</td><td>Calculs très normés, mis à jour régulièrement — automatisation quasi obligatoire.</td></tr>
+      <tr><td><b>SFDR</b></td><td>Transparence durabilité : classification des produits en <b>article 6</b> (pas d'objectif durable), <b>article 8</b> (promotion de caractéristiques ESG) et <b>article 9</b> (objectif d'investissement durable), plus les indicateurs d'incidences négatives (<b>PAI</b>).</td><td>Nécessite d'ingérer des données ESG de fournisseurs tiers, de les rattacher aux positions et de les agréger — le module ESG.</td></tr>
+      <tr><td><b>Taxonomie UE</b></td><td>Classification des activités économiques durables ; alignement à publier.</td><td>Données d'émetteurs, couverture partielle, arbitrages méthodologiques à documenter.</td></tr>
+      <tr><td><b>EMIR</b></td><td>Dérivés : déclaration des transactions, compensation centrale, échange de collatéral.</td><td>Reporting transactionnel et suivi du collatéral.</td></tr>
+      <tr><td><b>Solvency II / IFRS 9 / IFRS 17</b></td><td>Voir onglet précédent — le cœur du besoin des clients assureurs.</td><td>Couplage actif-passif, look-through, QRT.</td></tr>
+      <tr><td><b>DORA</b></td><td>Résilience opérationnelle numérique du secteur financier, applicable depuis 2025 : gestion du risque TIC, tests, notification d'incidents, et surtout encadrement des <b>prestataires tiers critiques</b>.</td><td><b>Très important :</b> un éditeur SaaS qui sert des banques et des assureurs devient un prestataire TIC soumis aux exigences contractuelles et aux audits de ses clients. ISO 27001 est un prérequis commercial, pas un luxe.</td></tr>
+      <tr><td><b>RGPD</b></td><td>Données personnelles des investisseurs finaux.</td><td>Minimisation, anonymisation dans les environnements de test, localisation des données.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>B. La donnée : le vrai sujet</h3>
+  <dl class="gloss">
+    <div><dt>Référentiel titres <span class="en">/ security master</span></dt>
+      <dd>Base de référence des instruments : identifiants (ISIN, CUSIP, SEDOL, FIGI), caractéristiques, classifications sectorielles (GICS, NACE), notations.
+        <span class="impl"><b>Implication :</b> la qualité du référentiel conditionne tout le reste. Un instrument mal classé fausse l'attribution sectorielle, le contrôle de limites et le reporting ESG simultanément.</span></dd></div>
+
+    <div><dt>Corporate actions <span class="en">/ opérations sur titres</span></dt>
+      <dd>Dividendes, splits, fusions, offres publiques, remboursements, attributions de droits.
+        <span class="impl"><b>Implication :</b> la source d'erreur numéro un en comptabilité d'investissement et en performance. Le traitement automatisé et fiable des OST est un différenciateur produit majeur.</span></dd></div>
+
+    <div><dt>Réconciliation</dt>
+      <dd>Comparaison quotidienne des positions et des espèces entre le système du gérant et ceux du dépositaire et de l'administrateur de fonds.
+        <span class="impl"><b>Implication :</b> processus fastidieux, à fort volume, à faible valeur ajoutée perçue — donc candidat idéal à l'automatisation, et argument BPO évident.</span></dd></div>
+
+    <div><dt>Fournisseurs de données de marché et ESG</dt>
+      <dd>Bloomberg, Refinitiv/LSEG, SIX, ICE pour les prix ; MSCI, Sustainalytics, ISS pour l'ESG.
+        <span class="impl"><b>Implication :</b> ces données coûtent cher et leurs licences sont restrictives. La capacité d'un module <i>Connector</i> à absorber plusieurs sources et à gérer les écarts entre fournisseurs est une vraie fonctionnalité, pas de la plomberie.</span></dd></div>
+
+    <div><dt>Data quality &amp; lineage</dt>
+      <dd>Contrôles de complétude, de cohérence et de plausibilité ; traçabilité d'un chiffre publié jusqu'à sa source.
+        <span class="impl"><b>Implication :</b> quand un client conteste un chiffre de performance, la seule réponse acceptable est de remonter la chaîne. Le lineage est un argument de vente auprès des équipes d'audit et de conformité.</span></dd></div>
+  </dl>
+
+  <h3>C. Modèle de delivery et vocabulaire tech</h3>
+  <dl class="gloss">
+    <div><dt>Low-code</dt>
+      <dd>Configuration par paramétrage, règles et interfaces graphiques plutôt que par écriture de code.
+        <span class="impl"><b>Implication :</b> énorme avantage — délais courts, adaptation rapide à un nouveau texte réglementaire, moins de dépendance aux développeurs. Et une limite à connaître : la performance sur de très gros volumes et la gestion des versions de configuration. Savoir citer <i>les deux</i> faces est un signe de maturité.</span></dd></div>
+
+    <div><dt>SaaS · on-premise · BPO</dt>
+      <dd><b>SaaS</b> : le client utilise la plateforme hébergée, revenu récurrent. <b>On-premise</b> : installée chez le client (encore fréquent dans la finance pour des raisons de contrôle). <b>BPO</b> : Amindis exécute le processus pour le client, pas seulement l'outil.
+        <span class="impl"><b>Implication :</b> le BPO est le modèle le plus intéressant pour une PME — revenus récurrents plus élevés, relation plus profonde, et connaissance intime des processus client. Mais il demande des équipes opérationnelles et engage la responsabilité sur le résultat produit.</span></dd></div>
+
+    <div><dt>ISO 27001</dt>
+      <dd>Norme de système de management de la sécurité de l'information : analyse de risques, politiques, contrôles, audits de certification et de surveillance.
+        <span class="impl"><b>Implication :</b> sans elle, un fournisseur ne passe pas le due diligence d'une banque. Avec DORA, l'exigence est encore montée d'un cran. C'est un actif commercial autant qu'un dispositif de sécurité.</span></dd></div>
+
+    <div><dt>API · ETL · batch vs temps réel</dt>
+      <dd>Interfaces d'échange, chaînes d'extraction-transformation-chargement, et cadence de traitement.
+        <span class="impl"><b>Implication :</b> l'analytique d'investissement fonctionne largement en <b>batch de nuit</b> (valorisation à la clôture), ce qui structure toute l'exploitation : fenêtres de traitement, reprises en cas d'échec, délai de mise à disposition des rapports au matin.</span></dd></div>
+
+    <div><dt>UAT · recette · go-live · run</dt>
+      <dd>Cycle d'un projet d'implémentation : cadrage, configuration, tests d'acceptation par le client (UAT), bascule, puis support en régime de croisière.
+        <span class="impl"><b>Implication :</b> si le poste est côté consulting ou implémentation, c'est le vocabulaire quotidien. Savoir parler de reprise de données historiques (indispensable pour la performance : sans historique, pas de track record) est un plus très concret.</span></dd></div>
+  </dl>
+
+  <div class="callout teal">
+    <span class="h">Trois tendances à citer si on vous demande où va le secteur</span>
+    <p><b>(1) La pression sur les frais</b> due à la gestion passive, qui pousse à l'automatisation et à l'externalisation. <b>(2) L'explosion du reporting réglementaire et ESG</b>, qui rend intenable le pilotage sous Excel et crée le marché des éditeurs. <b>(3) La consolidation</b> du secteur des éditeurs, où l'IA générative commence à être utilisée pour la rédaction des commentaires de gestion et l'analyse des rapports — un terrain où une PME agile peut aller vite.</p>
+  </div>
+</section>
+
+<!-- ============ A3 : QUESTIONS ============ -->
+<section class="pane" id="a3">
+  <h2><span class="num">03</span>Questions d'entretien</h2>
+  <p class="lede">Sans intitulé de poste, préparez trois blocs : ce que vous savez de l'entreprise, la théorie métier, et votre capacité à apprendre. Plus les questions que vous poserez — dans une PME, elles comptent double.</p>
+
+  <h3>Questions probables — connaissance de l'entreprise</h3>
+  <details class="q"><summary>Que fait Amindis, selon vous ?</summary>
+    <div class="body"><p>Réponse courte et précise, en trois temps : <b>quoi</b> — un éditeur belge de logiciels pour la gestion de portefeuille et l'analytique d'investissement ; <b>pour qui</b> — deux produits, AMDIS pour les gérants d'actifs et INDIS pour les investisseurs institutionnels et les assureurs, notamment sur les fonds liés et les enjeux IFRS 9 / IFRS 17 ; <b>comment</b> — une plateforme modulaire et low-code, vendue en SaaS, en projet, ou en BPO, avec certification ISO 27001. Ajoutez une phrase qui montre que vous comprenez le business : <i>vous vendez essentiellement de la fiabilité de calcul et de la conformité, dans un domaine où une erreur de chiffre publié coûte très cher au client.</i></p></div></details>
+
+  <details class="q"><summary>Pourquoi une entreprise achète-t-elle ce type de plateforme plutôt que de rester sous Excel ?</summary>
+    <div class="body"><p>Quatre arguments : <b>volume et automatisation</b> (produire des centaines de rapports client par mois manuellement est impossible) ; <b>traçabilité et audit</b> (un chiffre publié doit pouvoir être remonté jusqu'à sa source, ce qu'Excel ne garantit pas) ; <b>rythme réglementaire</b> (chaque nouveau texte demande un nouveau rapport, et attendre six mois n'est pas une option) ; <b>risque opérationnel</b> (une erreur de NAV ou de performance publiée engage la responsabilité et le capital réputationnel). Terminez par la vraie objection du client : le coût et la peur du projet d'implémentation — d'où l'intérêt du low-code.</p></div></details>
+
+  <details class="q"><summary>Comment une PME de 29 personnes peut-elle rivaliser avec SimCorp ou BlackRock ?</summary>
+    <div class="body"><p>Ne dites pas « nous sommes meilleurs ». Dites : <b>on ne joue pas sur le même terrain</b>. Les grands acteurs visent les très grands portefeuilles avec des projets longs et coûteux ; Amindis vise un mid-market où le client veut de la profondeur analytique sans un chantier de trois ans. Les trois leviers sont la spécialisation (analytique et reporting, pas le front-to-back complet), l'agilité low-code, et la proximité — être le fournisseur qui décroche le téléphone. Ajoutez que le concurrent le plus fréquent n'est souvent ni SimCorp ni Aladdin, mais l'existant maison et Excel.</p></div></details>
+
+  <h3>Questions probables — métier et technique</h3>
+  <details class="q"><summary>Quelle différence entre TWR et MWR ? Laquelle utiliseriez-vous pour évaluer un gérant ?</summary>
+    <div class="body"><p>Le <b>TWR</b> neutralise l'effet des apports et retraits : il mesure la compétence du gérant, qui ne contrôle pas les flux décidés par son client. Le <b>MWR</b> (ou TRI) intègre le timing des flux : il mesure ce que l'investisseur a réellement gagné. Pour évaluer le gérant : <b>TWR</b>, et c'est aussi ce qu'imposent les normes GIPS pour les composites. Pour parler à un client de son propre résultat : MWR. Une remarque bonus : l'écart entre les deux est en soi une information — il dit si l'investisseur a bien ou mal choisi ses moments d'entrée.</p></div></details>
+
+  <details class="q"><summary>Expliquez l'attribution de performance à quelqu'un qui n'y connaît rien.</summary>
+    <div class="body"><p>Utilisez une image : le portefeuille a fait +7 %, l'indice +5 %. L'attribution répond à « d'où viennent ces 2 points ? ». Deux sources principales : <b>l'allocation</b> — j'ai mis plus d'argent que l'indice dans les secteurs qui ont bien marché ; et <b>la sélection</b> — dans chaque secteur, j'ai choisi de meilleures valeurs que la moyenne du secteur. Un gérant peut avoir raison sur l'un et tort sur l'autre, et l'attribution le révèle. Sur l'obligataire, on décompose autrement : mouvement de la courbe des taux, spread de crédit, devise, portage. Terminez en montrant l'enjeu : c'est le rapport qui permet au gérant de justifier ses frais.</p></div></details>
+
+  <details class="q"><summary>Qu'est-ce que le look-through et pourquoi un assureur en a-t-il besoin ?</summary>
+    <div class="body"><p>C'est le fait de décomposer un fonds détenu en ses positions sous-jacentes pour mesurer la véritable exposition (secteur, émetteur, devise, notation, empreinte carbone). Un assureur en a besoin parce que <b>Solvency II</b> calcule son exigence de capital sur la base des risques réellement portés : sans transparisation, le fonds est traité de façon punitive. Ajoutez le vrai problème : c'est un défi de <b>données</b> — il faut collecter les inventaires de dizaines de fonds tiers, à des formats et des fréquences différents, les normaliser et les consolider. C'est exactement ce que résout un module de connecteurs.</p></div></details>
+
+  <details class="q"><summary>Vous n'avez pas d'expérience dans notre domaine précis. Comment allez-vous monter en compétence ?</summary>
+    <div class="body"><p>Répondez par une <b>méthode</b>, pas par une promesse. Par exemple : commencer par le produit et un vrai cas client de bout en bout plutôt que par la documentation ; identifier deux ou trois personnes de référence en interne et leur poser des questions préparées et groupées ; me fixer un objectif vérifiable à 30, 60 et 90 jours ; et documenter au fur et à mesure ce que j'apprends, ce qui sert ensuite aux suivants. Puis donnez un exemple concret d'un domaine que vous avez appris vite dans le passé, avec le délai réel. C'est la preuve qui compte, pas l'intention.</p></div></details>
+
+  <details class="q"><summary>Un client vous dit que le chiffre de performance de son rapport est faux. Que faites-vous ?</summary>
+    <div class="body"><p>Excellent test de posture. Ordre : <b>(1)</b> ne jamais contredire d'emblée — noter précisément le portefeuille, la période, le chiffre attendu et le chiffre obtenu ; <b>(2)</b> reproduire le calcul et remonter la chaîne (données de marché, opérations sur titres, flux, méthode de calcul, paramétrage du composite) ; <b>(3)</b> déterminer s'il s'agit d'une erreur, d'une différence de méthode, ou d'une attente mal calibrée — les trois arrivent, et la troisième est la plus fréquente ; <b>(4)</b> communiquer vite même sans réponse définitive, avec un délai ferme ; <b>(5)</b> si c'est une erreur, mesurer la population impactée, corriger, et ajouter le contrôle qui l'aurait détectée. La phrase à placer : <i>dans ce métier, le pire n'est pas l'erreur, c'est de la découvrir par le client une deuxième fois.</i></p></div></details>
+
+  <h3>Questions comportementales — spécial PME</h3>
+  <details class="q"><summary>Comment travaillez-vous quand le périmètre de votre rôle n'est pas clairement défini ?</summary>
+    <div class="body"><p>À 29 personnes, c'est la réalité quotidienne. Montrez que vous savez : prioriser seul quand personne ne vous le dit, dire non proprement quand vous êtes saturé, et documenter ce que vous faites pour que d'autres puissent reprendre. Un exemple vécu vaut mieux qu'une déclaration de principe.</p></div></details>
+  <details class="q"><summary>Préférez-vous une grande structure ou une petite ? Pourquoi nous ?</summary>
+    <div class="body"><p>Piège classique quand on candidate aussi ailleurs. Soyez honnête et structuré : dans une PME, on voit l'impact de son travail directement, on touche à toute la chaîne, et on parle au client — mais il faut accepter moins de process et plus d'autonomie. Dites ce qui vous attire concrètement <i>ici</i> : le domaine (finance + tech), le fait que le produit soit une vraie profondeur analytique et pas un simple outil, et l'écosystème de Louvain-la-Neuve. Évitez de dire du mal des grandes structures.</p></div></details>
+  <details class="q"><summary>Parlez-moi d'une fois où vous avez dû expliquer quelque chose de technique à un non-technique.</summary>
+    <div class="body"><p>Compétence centrale dans une fintech B2B : les interlocuteurs client sont souvent des financiers, pas des informaticiens — ou l'inverse. Décrivez le contexte, la façon dont vous avez adapté le niveau, et surtout comment vous avez <i>vérifié</i> que le message était passé.</p></div></details>
+
+  <h3>Les questions à poser</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li>Quel est l'intitulé exact du poste et comment est-il né — remplacement, croissance, ou nouveau besoin ?</li>
+      <li>Comment se répartit le chiffre d'affaires entre licences/SaaS, projets et BPO, et où voulez-vous que ça aille ?</li>
+      <li>Quel est le profil type de vos clients aujourd'hui, et quel segment visez-vous en priorité pour les prochaines années ?</li>
+      <li>Comment DORA a-t-il changé vos relations contractuelles avec vos clients financiers ?</li>
+      <li>Comment s'organise une équipe de cette taille entre produit, implémentation et support — et où se situerait ce poste ?</li>
+      <li>Quelle est la part de l'international (Suisse, autres) dans votre activité et dans vos ambitions ?</li>
+      <li>À quoi ressemblerait une réussite dans ce poste au bout de six mois ?</li>
+      <li>Comment la plateforme évolue-t-elle sur l'IA — automatisation des commentaires de gestion, contrôle de qualité des données, autre chose ?</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <span class="h">Avant l'entretien, deux actions à faire</span>
+    <p><b>1.</b> Demandez l'intitulé et le descriptif du poste par écrit — c'est légitime et cela oriente toute votre préparation. <b>2.</b> Passez trente minutes sur le site produit d'Amindis, module par module, et arrivez avec <b>une question précise sur un module</b>. Rien ne signale mieux un candidat sérieux dans une PME que quelqu'un qui a réellement regardé le produit.</p>
+  </div>
+</section>
+
+<!-- ============ A4 : QCM ============ -->
+<section class="pane" id="a4">
+  <h2><span class="num">04</span>QCM Amindis</h2>
+  <p class="lede">Entreprise, secteur de la gestion d'actifs, performance et risque, réglementation, tech. Même principe : correction et explication immédiates.</p>
+  <div class="quizbar">
+    <div class="filters" data-filters="amindis"></div>
+    <div class="scorerow">
+      <div class="bar"><i data-bar="amindis"></i></div>
+      <div class="scoretxt" data-score="amindis">0 / 0</div>
+      <button class="btn" data-reset="amindis">Recommencer</button>
+    </div>
+    <div class="verdictbox" data-verdict="amindis"></div>
+  </div>
+  <div data-quiz="amindis"></div>
+</section>
+
+<!-- ============ A5 : SOURCES ============ -->
+<section class="pane" id="a5">
+  <h2><span class="num">05</span>Sources &amp; avertissements</h2>
+  <p class="lede">Les informations sur Amindis proviennent du site de l'entreprise et de registres publics. Aucune description de poste n'était disponible au moment de la rédaction.</p>
+  <div class="card">
+    <span class="tag grey">Amindis</span>
+    <ul class="src">
+      <li><a href="https://www.amindis.com" target="_blank" rel="noopener">Site officiel Amindis — présentation, produits AMDIS et INDIS</a></li>
+      <li><a href="https://www.companyweb.be/en/0441784223/amindis" target="_blank" rel="noopener">Companyweb — Amindis SA (forme juridique, effectif, données financières)</a></li>
+      <li><a href="https://www.digitalwallonia.be/fr/cartographie/amindis/" target="_blank" rel="noopener">Digital Wallonia — fiche Amindis (fintech, gestion d'actifs et assurance)</a></li>
+      <li><a href="https://www.finantrix.com/directory/amindis" target="_blank" rel="noopener">Finantrix Software Directory — positionnement et concurrents</a></li>
+      <li><a href="https://be.linkedin.com/company/amindis" target="_blank" rel="noopener">Page LinkedIn Amindis</a></li>
+    </ul>
+  </div>
+  <div class="callout warn">
+    <span class="h">À faire avant l'entretien</span>
+    <p>Obtenez l'intitulé et le descriptif du poste : ce module pourra alors être complété avec une section « offre décodée » et un QCM ciblé, comme pour Belfius. Vérifiez aussi les chiffres d'effectif et de résultat auprès de votre interlocuteur plutôt que de les citer comme des faits — les données de registre ont toujours un décalage. Enfin, la liste de clients citée ici est celle affichée publiquement par l'entreprise ; ne présumez pas de la nature ou de l'ampleur de chaque relation.</p>
+  </div>
+</section>
+
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <b>JOBFLIX</b> — L'académie des chômeurs d'élite · dossiers Belfius &amp; Amindis · août 2026.<br>
+    Document de travail personnel. Les contenus réglementaires sont pédagogiques et ne constituent pas un avis professionnel.
+  </div>
+</footer>
+
+<script>
+/* ================= DATA ================= */
+const DATA = {
+belfius: [
+{cat:"Fondamentaux",q:"Comment se décompose la perte attendue (Expected Loss) ?",o:["PD × LGD × EAD","PD + LGD + EAD","EAD / (PD × LGD)","RWA × 8 %"],a:0,e:"<b>EL = PD × LGD × EAD</b>. La PD est une propriété de la contrepartie, la LGD de la transaction et de ses sûretés, l'EAD du produit et du comportement de tirage. La perte attendue se couvre par les provisions, la perte inattendue par les fonds propres."},
+{cat:"Fondamentaux",q:"En approche IRB avancée, sur quel paramètre les garanties agissent-elles principalement ?",o:["La LGD","La PD","La maturité effective","Le CCF uniquement"],a:0,e:"Les garanties réduisent la <b>perte en cas de défaut</b>, pas la probabilité de défaut. En approche standard et en IRB fondation, elles agissent plutôt par effet de substitution ou par ajustement de la valeur d'exposition. Une caution solidaire peut influencer indirectement la PD, mais c'est l'exception."},
+{cat:"Fondamentaux",q:"À partir de combien de jours d'arriéré la définition EBA du défaut se déclenche-t-elle (au-delà des seuils de matérialité) ?",o:["90 jours","30 jours","60 jours","180 jours"],a:0,e:"<b>90 jours</b>, au-delà de seuils de matérialité (100 € retail / 500 € non-retail et 1 % de l'exposition). Attention : 30 jours correspond à la présomption réfutable de <b>SICR</b> sous IFRS 9 (passage en stage 2), pas au défaut. Le défaut peut aussi être déclenché sans arriéré, par improbabilité de paiement (UTP)."},
+{cat:"Fondamentaux",q:"Une PD point-in-time (PIT), par rapport à une PD through-the-cycle (TTC) :",o:["Reflète les conditions économiques actuelles et bouge davantage","Est toujours plus élevée","Est utilisée en Pilier 1 pour lisser le capital","Ne dépend pas de la conjoncture"],a:0,e:"La PD PIT reflète la conjoncture du moment et est exigée par IFRS 9 (forward looking). La PD TTC lisse le cycle et est privilégiée en Pilier 1 pour éviter la pro-cyclicité du capital. Résultat : deux PD différentes pour le même client dans deux systèmes — un classique des questions en comité."},
+{cat:"Fondamentaux",q:"À quoi sert le CCF (Credit Conversion Factor) ?",o:["Convertir le hors-bilan en équivalent-bilan pour calculer l'EAD","Convertir une PD en notation interne","Actualiser les flux de recouvrement","Convertir les RWA en exigence de fonds propres"],a:0,e:"Le CCF estime quelle fraction d'une ligne non tirée sera effectivement utilisée au moment du défaut. Il traduit un comportement bien réel : un client en difficulté tire ses lignes avant de faire défaut."},
+{cat:"Fondamentaux",q:"Pourquoi impose-t-on une LGD downturn en approche IRB ?",o:["Parce que défauts et baisse de valeur des garanties surviennent simultanément","Pour simplifier le calcul des RWA","Parce que la LGD moyenne est inconnue","Parce que la BCE l'a demandé à Belfius spécifiquement"],a:0,e:"Il existe une <b>corrélation</b> entre le cycle de défaut et la valeur des sûretés : quand les défauts augmentent, les prix des actifs baissent et les délais de réalisation s'allongent. Une LGD moyenne de long terme sous-estime donc la perte au pire moment."},
+{cat:"Fondamentaux",q:"La perte inattendue (Unexpected Loss) est couverte par :",o:["Les fonds propres","Les provisions","La marge d'intérêt","Le coussin de liquidité"],a:0,e:"Perte <b>attendue</b> → provisions et tarification. Perte <b>inattendue</b> (la volatilité autour de la moyenne) → fonds propres. Cette distinction structure toute l'architecture prudentielle."},
+{cat:"Fondamentaux",q:"Le coût du risque est généralement exprimé :",o:["En points de base de l'encours moyen","En pourcentage des fonds propres","En pourcentage du produit net bancaire","En euros par client"],a:0,e:"Le cost of risk s'exprime en <b>bps de l'encours moyen</b>, ce qui le rend comparable entre banques et dans le temps. Belfius : environ 2 bps au S1 2025, avec une normalisation attendue vers 10-15 bps fin 2026 selon Fitch."},
+{cat:"Fondamentaux",q:"Que mesure le cure rate ?",o:["La part des expositions qui sortent du défaut et redeviennent performantes","Le taux de recouvrement des garanties","La part des dossiers restructurés","La vitesse de traitement des dossiers"],a:0,e:"Le <b>cure rate</b> mesure les retours à bonne fin. Une sortie de défaut est soumise à une période probatoire (au moins 3 mois, 1 an pour les expositions restructurées). Un cure rate élevé peut signaler soit une bonne gestion, soit une définition du défaut trop sensible."},
+{cat:"Fondamentaux",q:"Le RoRWA sert principalement à :",o:["Comparer la rentabilité de segments à consommation de capital différente","Mesurer la liquidité d'un portefeuille","Calculer les provisions IFRS 9","Déterminer le coussin contracyclique"],a:0,e:"Résultat / RWA. C'est le langage qui permet de dire « ce segment consomme trop de capital pour ce qu'il rapporte » — la forme concrète d'une recommandation d'optimisation du profil de risque."},
+
+{cat:"Réglementation",q:"Le Pilier 2 de Bâle recouvre :",o:["L'ICAAP/ILAAP, le SREP, et les exigences P2R/P2G","Les exigences minimales calculées par formule","La publication d'informations au marché","Le calcul des RWA de crédit"],a:0,e:"Pilier 1 = exigences minimales par formule. <b>Pilier 2</b> = évaluation interne (ICAAP/ILAAP) + revue du superviseur (SREP), qui débouche sur le P2R (contraignant) et le P2G (recommandation). Pilier 3 = discipline de marché par la publication."},
+{cat:"Réglementation",q:"À quel niveau l'output floor plafonne-t-il le bénéfice des modèles internes ?",o:["72,5 % des RWA calculés en approche standard","50 % en permanence","85 % des RWA IRB","Il n'y a pas de plafond"],a:0,e:"L'output floor limite les RWA en modèles internes à <b>72,5 %</b> des RWA qui résulteraient de l'approche standard, avec une montée en charge progressive de 2025 à 2030. Pour une banque très IRB et très hypothécaire, c'est potentiellement la contrainte réellement mordante."},
+{cat:"Réglementation",q:"Depuis quand CRR3 (« Bâle IV ») s'applique-t-il dans l'Union européenne ?",o:["1er janvier 2025","1er janvier 2023","1er janvier 2027","Il n'est pas encore applicable"],a:0,e:"CRR3 s'applique depuis le <b>1er janvier 2025</b> (la partie FRTB sur le risque de marché ayant été reportée). Il révise l'approche standard du crédit, encadre l'IRB par des input floors, refond le risque opérationnel et introduit l'output floor."},
+{cat:"Réglementation",q:"La limite des grands risques (large exposures) est de :",o:["25 % du Tier 1 sur un client ou groupe de clients liés","10 % du total du bilan","25 % des fonds propres totaux par secteur","Il n'y a pas de limite en IRB"],a:0,e:"<b>25 % du Tier 1</b>, avec des limites plus strictes entre établissements systémiques. Une garantie éligible peut réduire l'exposition avec substitution vers le garant — qui peut alors lui-même saturer sa propre limite."},
+{cat:"Réglementation",q:"Le leverage ratio :",o:["Rapporte le Tier 1 à l'exposition totale non pondérée, minimum 3 %","Rapporte les RWA aux fonds propres","Mesure la liquidité à 30 jours","Est un coussin macroprudentiel"],a:0,e:"C'est un <b>filet de sécurité insensible au risque</b>, conçu pour limiter l'effet de levier même si les modèles internes donnent des pondérations très basses. Belfius affichait 6,3 % fin 2025, très au-dessus du minimum de 3 %."},
+{cat:"Réglementation",q:"Le LCR couvre un stress de liquidité de :",o:["30 jours","1 an","90 jours","7 jours"],a:0,e:"<b>LCR</b> = survie à 30 jours de stress. <b>NSFR</b> = financement stable à horizon 1 an. Ne pas confondre non plus avec les ratios de solvabilité (CET1) : solvabilité et liquidité sont deux dimensions distinctes."},
+{cat:"Réglementation",q:"Que se passe-t-il si une banque passe sous son MDA trigger ?",o:["Ses distributions (dividendes, coupons AT1, bonus) sont automatiquement restreintes","Sa licence est suspendue","Elle doit passer en approche standard","Elle doit augmenter son LCR"],a:0,e:"Le <b>MDA</b> (Maximum Distributable Amount) restreint automatiquement les distributions dès que les coussins ne sont plus respectés. C'est pour cela que la « distance au MDA » est un indicateur suivi au Conseil d'Administration."},
+{cat:"Réglementation",q:"En approche IRB fondation (F-IRB), la banque estime :",o:["La PD uniquement, la LGD et le CCF étant imposés par le régulateur","La PD, la LGD et l'EAD","Rien, tout est imposé","La LGD uniquement"],a:0,e:"F-IRB : la banque estime la <b>PD</b>, le régulateur impose LGD et CCF. A-IRB : la banque estime PD, LGD et EAD. Conséquence pour les garanties : en F-IRB et en SA, elles agissent par substitution ou ajustement de l'exposition ; en A-IRB, via la LGD."},
+{cat:"Réglementation",q:"Qui supervise directement Belfius au titre du mécanisme de surveillance unique ?",o:["La BCE, Belfius étant un établissement significatif","La BNB exclusivement","La FSMA","L'EBA"],a:0,e:"Belfius est un <b>établissement significatif</b> supervisé directement par la <b>BCE</b> depuis l'entrée en vigueur de la supervision bancaire européenne fin 2014. La BNB intervient pour le macroprudentiel et la résolution, la FSMA pour la protection du consommateur et les marchés."},
+{cat:"Réglementation",q:"AnaCredit, c'est :",o:["Une base de données granulaire crédit par crédit transmise aux banques centrales","Un modèle interne de notation","Un rapport de solvabilité trimestriel","Une norme comptable"],a:0,e:"AnaCredit collecte des données <b>crédit par crédit</b>, y compris les informations de protection (types et valeurs de garanties). C'est souvent la meilleure source interne unifiée pour une analyse transverse — le mentionner montre qu'on connaît la plomberie."},
+{cat:"Réglementation",q:"BCBS 239 / RDARR concerne :",o:["L'agrégation des données de risque et la qualité du reporting","Le calcul des RWA de marché","La définition du défaut","Les exigences de liquidité"],a:0,e:"Principes d'exhaustivité, d'exactitude, d'actualité, d'adaptabilité et de traçabilité (<i>data lineage</i>). C'est une priorité prudentielle récurrente, et le cadre qui justifie l'axe « innovation et nouvelles sources de données » de l'offre."},
+{cat:"Réglementation",q:"En Belgique, le coussin de fonds propres contracyclique est actuellement fixé à :",o:["1,25 %","0 %","2,5 %","5 %"],a:0,e:"La BNB a porté le <b>CCyB</b> à 1,25 % (décisions trimestrielles). À ne pas confondre avec le coussin de conservation (2,5 %) ni avec le coussin systémique <b>sectoriel</b> appliqué en Belgique aux expositions hypothécaires résidentielles."},
+
+{cat:"IFRS 9",q:"Une exposition classée en stage 2 sous IFRS 9 est provisionnée :",o:["À hauteur des pertes attendues sur toute la durée de vie (lifetime)","À hauteur des pertes attendues à 12 mois","À 100 %","Pas du tout tant qu'il n'y a pas d'impayé"],a:0,e:"Stage 1 → ECL 12 mois. <b>Stage 2 → ECL lifetime</b> dès qu'il y a dégradation significative (SICR), sans qu'un seul euro ne soit impayé. C'est pour cela que le suivi des <b>volumes et flux stage 2</b> est un early warning majeur présenté en Risk Committee."},
+{cat:"IFRS 9",q:"La présomption réfutable de SICR se déclenche à :",o:["30 jours d'arriéré","90 jours d'arriéré","Dès le premier jour d'arriéré","Uniquement sur décision du comité de crédit"],a:0,e:"<b>30 jours</b> pour le SICR (passage en stage 2), <b>90 jours</b> pour le défaut (stage 3). Le SICR combine aussi d'autres critères : variation de PD lifetime, watchlist, forbearance, secteurs sous surveillance."},
+{cat:"IFRS 9",q:"En stage 3, les intérêts sont calculés :",o:["Sur la valeur comptable nette de provision","Sur la valeur brute comme en stage 1 et 2","Ils ne sont plus comptabilisés","Sur la valeur de la garantie"],a:0,e:"En stage 3, le produit d'intérêt est calculé sur la valeur <b>nette</b> (après dépréciation), ce qui reflète le fait que la banque n'attend plus de percevoir l'intégralité des flux contractuels."},
+{cat:"IFRS 9",q:"Un « overlay » (post-model adjustment) est :",o:["Un ajustement manuel de l'ECL pour un risque que le modèle ne capte pas","Une réserve libre laissée à la discrétion de la direction financière","Un coussin réglementaire de Pilier 2","Une correction d'erreur comptable"],a:0,e:"Les overlays corrigent l'ECL pour des risques émergents non modélisés (choc énergétique, secteur spécifique, géopolitique). Ils sont très surveillés par la BCE, car ils peuvent servir de variable d'ajustement. Il faut les documenter, les justifier par une analyse sectorielle et prévoir leur reprise."},
+{cat:"IFRS 9",q:"Si les provisions comptables sont inférieures à l'EL réglementaire IRB, la différence :",o:["Est déduite du CET1 (IRB shortfall)","Est ajoutée aux RWA","Est ignorée","Est comptabilisée en produit"],a:0,e:"Le <b>shortfall</b> est déduit du CET1 ; à l'inverse, un excédent de provisions est partiellement admis en Tier 2. C'est un des rares endroits où comptabilité et prudentiel se rejoignent explicitement."},
+{cat:"IFRS 9",q:"Une exposition « forborne » (restructurée) est :",o:["Une exposition ayant fait l'objet d'une concession en raison de difficultés financières, performante ou non","Nécessairement en défaut","Toujours classée en stage 1","Une exposition cédée à un tiers"],a:0,e:"La forbearance est une <b>concession</b> (rééchelonnement, suspension, taux réduit) accordée à un débiteur en difficulté. Elle peut concerner une exposition encore performante — ce qui en fait le meilleur early warning du portefeuille, parce qu'elle précède le défaut."},
+{cat:"IFRS 9",q:"Le calendar provisioning (NPE backstop) impose une déduction de fonds propres :",o:["Plus rapide pour la part non garantie que pour la part garantie","Identique quelle que soit la garantie","Uniquement pour les expositions retail","Seulement après 10 ans"],a:0,e:"Le calendrier prudentiel est plus rapide sur la partie <b>non garantie</b>, plus lent sur la partie garantie, et plus lent encore pour l'immobilier. Conséquence directe pour ce poste : une garantie mal documentée ou mal enregistrée coûte du capital réel."},
+{cat:"IFRS 9",q:"Le coverage ratio se calcule comme :",o:["Provisions / encours non performants","Garanties / exposition","Fonds propres / RWA","Encours non performants / encours total"],a:0,e:"Provisions rapportées aux encours non performants. Belfius couvre environ <b>69 %</b> de ses <i>impaired loans</i> selon Fitch (mi-2025), pour un ratio d'<i>impaired loans</i> d'environ 2,2 %. À ne pas confondre avec le ratio NPL lui-même."},
+
+{cat:"Garanties",q:"Dans le vocabulaire CRM du CRR, une garantie donnée par un tiers est :",o:["Une UFCP (unfunded credit protection)","Une FCP (funded credit protection)","Un covenant","Un haircut"],a:0,e:"<b>UFCP</b> = protection non financée (engagement d'un tiers : caution, garantie publique, assurance-crédit). <b>FCP</b> = protection financée (droit sur un actif : hypothèque, gage, nantissement de titres)."},
+{cat:"Garanties",q:"Un haircut appliqué à une sûreté financière sert à couvrir :",o:["La volatilité du prix, le risque de change et le délai avant réalisation","Les frais de dossier","La marge commerciale de la banque","La fiscalité de la plus-value"],a:0,e:"Un nantissement de portefeuille-titres n'est <b>jamais</b> reconnu à 100 %. Plus le portefeuille est volatil, concentré ou libellé en devise étrangère, plus le haircut est lourd. C'est ce qui fonde les seuils de couverture et les appels de marge en private banking."},
+{cat:"Garanties",q:"Lequel de ces exemples illustre le mieux un wrong-way risk ?",o:["Un gage sur les actions de la société emprunteuse","Une hypothèque sur un immeuble de bureaux","Une garantie de la Région wallonne","Un nantissement d'assurance-vie chez un tiers"],a:0,e:"La valeur des actions de l'emprunteur s'effondre exactement au moment où l'on aurait besoin de la garantie. Même logique pour le fonds de commerce ou une caution donnée par une société du même groupe : la <b>corrélation défavorable</b> détruit la protection au pire moment."},
+{cat:"Garanties",q:"Sous CRR3, la valeur reconnue d'un bien immobilier :",o:["Ne peut en principe pas excéder la valeur constatée à l'octroi, sauf améliorations matérielles","Suit automatiquement l'indice de marché à la hausse comme à la baisse","Est réévaluée chaque année à la valeur de marché","Est fixée à 80 % du prix d'achat pour toujours"],a:0,e:"Principe de prudence : les anticipations spéculatives de hausse sont exclues et la valeur est en principe plafonnée à celle de l'octroi (sauf rénovation ou amélioration énergétique). En revanche, les <b>baisses doivent être répercutées</b>. Cette asymétrie explique pourquoi les LTV réglementaires ne s'améliorent pas quand le marché monte."},
+{cat:"Garanties",q:"L'approche loan splitting de CRR3 pour l'immobilier :",o:["Scinde l'exposition, la tranche jusqu'à 55 % de la valeur du bien étant traitée très favorablement","Interdit de reconnaître l'hypothèque","Applique une pondération unique à tout le crédit","Ne concerne que les expositions en défaut"],a:0,e:"On sépare la partie fortement couverte par le bien du solde, pondéré comme une exposition sur la contrepartie. Avec l'<b>output floor</b>, cette mécanique de l'approche standard devient déterminante même pour une banque en modèles internes."},
+{cat:"Garanties",q:"Les expositions ADC (Acquisition, Development, Construction) reçoivent :",o:["Une pondération punitive pouvant atteindre 150 %, avec un régime allégé sous conditions","Le même traitement qu'un crédit hypothécaire résidentiel","Une pondération de 0 %","Une exemption de fonds propres"],a:0,e:"Financer un promoteur n'est pas financer un ménage : le bien n'existe pas encore, les flux dépendent de la commercialisation. Un régime allégé existe sous conditions strictes (préventes, fonds propres du promoteur). La distinction ADC / immobilier fini est une source fréquente de reclassement lors des inspections."},
+{cat:"Garanties",q:"Le DSTI et le LTV mesurent :",o:["Le DSTI prédit plutôt le défaut, le LTV plutôt la perte","La même chose sous deux angles","Le DSTI la perte, le LTV le défaut","Uniquement des contraintes commerciales, sans lien avec le risque"],a:0,e:"Le <b>DSTI</b> (charge de remboursement / revenus) mesure la capacité à payer → il prédit la <b>PD</b>. Le <b>LTV</b> (crédit / valeur du bien) mesure la couverture → il prédit la <b>LGD</b>. Un dossier peut être bon sur l'un et mauvais sur l'autre."},
+{cat:"Garanties",q:"Parmi ces conditions, laquelle n'est PAS une condition d'éligibilité d'une sûreté au sens du CRR ?",o:["Que la garantie ait été obtenue avant l'octroi du crédit","La certitude juridique et l'opposabilité aux tiers","Une faible corrélation avec la qualité de crédit du débiteur","Une valorisation prudente et une réévaluation périodique"],a:0,e:"L'antériorité n'est pas un critère : une sûreté peut être prise ou renforcée en cours de vie du crédit. Les vrais critères sont la <b>certitude juridique</b>, la <b>faible corrélation</b> avec le débiteur, la <b>valorisation prudente et régulière</b>, la <b>capacité de réalisation</b> dans un délai raisonnable, et la traçabilité dans les systèmes."},
+{cat:"Garanties",q:"Un covenant financier (par exemple un ratio d'endettement maximal) :",o:["N'est pas une garantie au sens du CRR et n'a pas d'effet direct sur les RWA","Réduit les RWA au même titre qu'une hypothèque","Est une UFCP éligible","Remplace la nécessité d'une sûreté réelle"],a:0,e:"Un covenant est une protection <b>contractuelle</b>, pas une sûreté. Aucun effet direct sur le capital réglementaire — mais un effet réel d'<b>early warning</b>, puisque sa rupture déclenche une revue anticipée du dossier."},
+{cat:"Garanties",q:"La « position nette de risque » désigne :",o:["L'exposition diminuée de la valeur économique récupérable des garanties","Les RWA après application de l'output floor","L'exposition brute au bilan","La provision IFRS 9 nette d'impôt"],a:0,e:"C'est une métrique <b>économique</b>, indépendante de la réglementation : ce qui reste réellement en risque après recouvrement attendu. Comparable dans le temps et compréhensible par un comité de direction — souvent le meilleur axe de segmentation d'une analyse de portefeuille."},
+{cat:"Garanties",q:"Pourquoi une garantie qui met 4 ans à être réalisée vaut-elle moins qu'une garantie réalisable en 1 an, à valeur d'expertise identique ?",o:["Parce que le recouvrement est actualisé et amputé des coûts de réalisation","Parce que la valeur d'expertise est fausse","Parce que le CRR interdit les garanties longues","Parce que la PD augmente avec le temps"],a:0,e:"La LGD se calcule sur des flux de recouvrement <b>nets de frais</b> et <b>actualisés</b> sur la durée de la procédure. Améliorer le time-to-recovery vaut parfois plus, en LGD, qu'une hausse des valeurs de marché."},
+{cat:"Garanties",q:"Le fonds de commerce comme sûreté est problématique surtout parce que :",o:["Sa valeur est fortement corrélée à la survie du débiteur","Il est interdit en droit belge","Il ne peut pas être enregistré en système","Il n'a pas de valeur de marché du tout"],a:0,e:"Classique <b>wrong-way risk</b> : le fonds de commerce vaut quelque chose tant que l'entreprise tourne, et presque plus rien quand elle fait défaut. C'est exactement ce que le critère de faible corrélation du CRR cherche à écarter."},
+
+{cat:"Portefeuille",q:"Une matrice de migration sert à :",o:["Suivre les passages d'une classe de rating à une autre entre deux dates","Répartir les expositions par région","Convertir la PD en LGD","Calculer le LCR"],a:0,e:"C'est l'indicateur central de la « qualité de la notation » citée dans l'offre. On lit la diagonale (stabilité), les migrations descendantes et surtout leur concentration sectorielle. Un downward drift marqué précède la hausse du cost of risk de plusieurs trimestres."},
+{cat:"Portefeuille",q:"La vintage analysis permet de :",o:["Comparer le comportement des crédits selon leur année d'octroi, à âge égal","Analyser les garanties anciennes","Mesurer la durée résiduelle du portefeuille","Calculer le coussin contracyclique"],a:0,e:"C'est la seule façon propre de répondre à « nos critères d'octroi de 2023 sont-ils meilleurs que ceux de 2021 ? ». Argument imparable pour recommander un durcissement ou un assouplissement de la politique de crédit."},
+{cat:"Portefeuille",q:"L'indice de Herfindahl-Hirschman mesure :",o:["La concentration d'un portefeuille","La corrélation entre défauts","La qualité des données","La rentabilité ajustée du risque"],a:0,e:"Il synthétise la concentration (par contrepartie, secteur ou géographie). Une analyse pertinente ne se contente pas de dire « nous sommes concentrés » : elle montre quels chocs feraient réellement mal à cette concentration."},
+{cat:"Portefeuille",q:"L'efficacité d'un Early Warning System se mesure principalement par :",o:["Le taux de capture des défauts et le taux de faux positifs","Le nombre de règles implémentées","La fréquence de rafraîchissement","Le nombre de dossiers en watchlist"],a:0,e:"Un EWS qui alerte sur tout n'alerte sur rien. Les deux métriques qui comptent sont la part des défauts <b>précédés</b> d'un signal (capture) et le volume de fausses alertes, qui détruit la crédibilité auprès de la première ligne."},
+{cat:"Portefeuille",q:"Le Risk Appetite Framework est approuvé par :",o:["Le Conseil d'Administration","Le département Risk seul","La BCE","Les commissaires aux comptes"],a:0,e:"L'appétit au risque est une décision de <b>gouvernance</b>, prise au niveau du Conseil d'Administration, puis déclinée en limites et indicateurs (KRI) avec seuils d'alerte et procédure d'escalade. Toute recommandation d'analyse devrait s'y rattacher."},
+{cat:"Portefeuille",q:"Dans le modèle des trois lignes de défense, une équipe d'analyse de portefeuille au sein de Credit Risk Management est :",o:["En deuxième ligne","En première ligne","En troisième ligne","Hors du modèle"],a:0,e:"Première ligne = le business qui prend le risque. <b>Deuxième ligne</b> = les fonctions de contrôle qui cadrent, mesurent et challengent. Troisième ligne = l'audit interne. Conséquence pratique : pas d'autorité hiérarchique sur ceux qui appliquent vos directives — d'où le profil « bridge builder » demandé."},
+{cat:"Portefeuille",q:"Un reverse stress test consiste à :",o:["Partir de la perte inacceptable et chercher le scénario qui la produirait","Appliquer un scénario favorable","Refaire le stress test de l'année précédente","Tester la robustesse des systèmes informatiques"],a:0,e:"On inverse la logique : au lieu de projeter l'effet d'un scénario donné, on cherche quelles conditions rendraient le modèle d'affaires non viable. La BCE demande pour 2026-2028 des scénarios géopolitiques capables de consommer au moins 300 bps de CET1."},
+
+{cat:"Belfius",q:"Quel résultat net Belfius a-t-il publié pour l'exercice 2025 ?",o:["Environ 1,16 milliard d'euros","Environ 500 millions d'euros","Environ 2,5 milliards d'euros","Environ 800 millions d'euros"],a:0,e:"<b>1,160 milliard d'euros</b>, un nouveau record annoncé le 27 février 2026, pour un résultat avant impôts de 1,598 Md€ et des revenus de 4,295 Md€."},
+{cat:"Belfius",q:"Quel était le ratio CET1 de Belfius fin 2025 ?",o:["15,9 %","10,5 %","21,4 %","8,0 %"],a:0,e:"<b>15,9 %</b>, pour une cible interne de 15-15,5 % et un coussin d'environ 500 bps au-dessus de l'exigence prudentielle. Tier 1 : 16,6 % ; capital total : 18,9 % ; leverage : 6,3 %."},
+{cat:"Belfius",q:"Qui détient Belfius aujourd'hui ?",o:["L'État fédéral belge, via la SFPI/FPIM, avec une cession de 20 % décidée","Un consortium de banques européennes","Le groupe Dexia","Des actionnaires privés majoritaires depuis 2012"],a:0,e:"Belfius appartient à l'<b>État fédéral belge</b> depuis le rachat de Dexia Banque Belgique en octobre 2011. Le gouvernement a décidé fin 2025 de céder <b>20 %</b> du capital, opération envisagée à l'automne 2026 pour environ 2 milliards d'euros."},
+{cat:"Belfius",q:"Quelle est l'origine historique de Belfius ?",o:["Le Crédit Communal de Belgique, fondé en 1860 pour financer les pouvoirs locaux","Une filiale belge de BNP Paribas","La Caisse Générale d'Épargne et de Retraite uniquement","Une banque créée ex nihilo en 2012"],a:0,e:"Crédit Communal (1860) → fusion avec le Crédit Local de France en 1996 pour former <b>Dexia</b> → rachat de la filiale belge par l'État en 2011 → rebaptisée Belfius le 1er mars 2012. Cette histoire explique la position dominante de Belfius auprès des communes, CPAS, hôpitaux et écoles."},
+{cat:"Belfius",q:"Qui est CEO de Belfius depuis avril 2026 ?",o:["Olivier Onclin","Marc Raisière","Jos Clijsters","Johan Vankelecom"],a:0,e:"<b>Olivier Onclin</b> a pris ses fonctions le 29 avril 2026, succédant à <b>Marc Raisière</b>, devenu président du Conseil d'Administration. Le comité de direction a été largement renouvelé à cette occasion."},
+{cat:"Belfius",q:"Comment s'appelle le plan stratégique présenté par Belfius en avril 2026 ?",o:["UNLOCK 2030","INSPIRE 2025","NEXT 2028","BELFIUS FORWARD"],a:0,e:"<b>UNLOCK 2030</b>, horizon cinq ans : bancassureur unifié, rassemblement des marques, investissements technologiques, ambitions en Private Banking, expansion internationale de l'assurance. Signature « Unlocking potential with optimism », campagne « Be Unstoppable »."},
+{cat:"Belfius",q:"Quelle part du portefeuille de crédit de Belfius correspond approximativement aux crédits hypothécaires résidentiels ?",o:["Environ 40 %","Environ 10 %","Environ 70 %","Environ 5 %"],a:0,e:"Selon l'analyse Fitch : environ <b>40 %</b> de crédits hypothécaires résidentiels, environ 20 % de secteur public, le solde en entreprises/corporate dont une part significative d'immobilier commercial. Une double concentration structurelle très belge."},
+{cat:"Belfius",q:"Quel était le cost/income ratio de Belfius en 2025 ?",o:["43,0 %","62,5 %","28,0 %","55,0 %"],a:0,e:"<b>43,0 %</b>, un très bon niveau au regard des standards européens, qui laisse de la marge pour financer les investissements technologiques prévus par UNLOCK 2030. ROE 9,5 %, ROA 0,66 %."},
+{cat:"Belfius",q:"Quel ordre de grandeur pour le ratio de créances dépréciées (impaired loans) de Belfius ?",o:["Environ 2,2 %","Environ 8 %","Environ 0,1 %","Environ 15 %"],a:0,e:"Environ <b>2,2 %</b> à mi-2025 selon Fitch, en légère hausse, avec un taux de couverture d'environ 69 %. Points de vigilance identifiés : immobilier commercial, construction et industrie manufacturière."},
+{cat:"Belfius",q:"Quelle part du résultat de Belfius provient de l'activité assurance ?",o:["Environ 25 %","Environ 5 %","Environ 50 %","Aucune, Belfius n'a pas d'activité assurance"],a:0,e:"Environ <b>25 %</b> (289 M€ sur 1 160 M€ en 2025, contre 872 M€ pour la banque). Le modèle bancassurance n'est pas cosmétique — et il donne à Belfius une vue rare sur les deux côtés du bilan, notamment pour l'analyse du risque physique climatique."},
+{cat:"Belfius",q:"En 2025, Belfius a versé à son actionnaire un dividende d'environ :",o:["705 millions d'euros","50 millions d'euros","2 milliards d'euros","Aucun dividende"],a:0,e:"<b>704,6 M€</b>, auxquels s'ajoute une contribution fiscale de 817 M€. Belfius est un actif financier majeur pour le budget fédéral — c'est un des arguments du débat sur la privatisation partielle."}
+],
+
+amindis: [
+{cat:"Amindis",q:"Quelle est l'activité principale d'Amindis ?",o:["Éditeur de logiciels de gestion de portefeuille et d'analytique d'investissement","Société de gestion d'actifs","Cabinet d'audit financier","Courtier en assurances"],a:0,e:"Amindis vend un <b>logiciel</b>, pas de la gestion. Sa plateforme calcule la performance, le risque, l'attribution, l'ESG et produit les rapports réglementaires et clients de ses clients institutionnels."},
+{cat:"Amindis",q:"Où se trouve le siège d'Amindis ?",o:["Louvain-la-Neuve","Bruxelles","Anvers","Luxembourg"],a:0,e:"Rue du Bosquet, à <b>Louvain-la-Neuve</b> — dans l'écosystème du parc scientifique et de l'UCLouvain. Un détail à ne pas rater : ce n'est pas Bruxelles, pensez au trajet."},
+{cat:"Amindis",q:"À qui s'adresse le produit AMDIS ?",o:["Aux gestionnaires d'actifs","Aux particuliers investisseurs","Aux banques centrales","Aux services comptables des PME"],a:0,e:"<b>AMDIS</b> cible les <i>asset managers</i> : performance, risque, attribution, ESG, GIPS, PMS, workflow, reporting client. <b>INDIS</b> cible les investisseurs institutionnels et assureurs : comptabilité d'investissement, fonds liés, IFRS 9/17."},
+{cat:"Amindis",q:"Que couvre principalement le produit INDIS ?",o:["La comptabilité d'investissement et les fonds liés pour les investisseurs institutionnels","Le trading haute fréquence","La gestion de la relation client bancaire","La paie et les ressources humaines"],a:0,e:"INDIS est positionné sur l'<i>investment accounting</i>, les fonds <b>unit-linked</b> (branche 23) et les enjeux <b>IFRS 9 / IFRS 17</b> des assureurs et des fonds de pension."},
+{cat:"Amindis",q:"La certification ISO 27001 détenue par Amindis concerne :",o:["Le management de la sécurité de l'information","La qualité des processus de production","L'impact environnemental","La sécurité alimentaire"],a:0,e:"ISO 27001 est le référentiel du <b>système de management de la sécurité de l'information</b>. Pour un éditeur qui vend à des banques et des assureurs, c'est un prérequis commercial : sans elle, on ne passe pas le due diligence du client — d'autant plus depuis DORA."},
+{cat:"Amindis",q:"Quel est l'ordre de grandeur de l'effectif d'Amindis ?",o:["Environ 30 personnes","Environ 300 personnes","Environ 3 000 personnes","Moins de 5 personnes"],a:0,e:"Environ <b>29 ETP</b> selon les données de registre. C'est une PME : structure plate, polyvalence attendue, contact direct avec les clients et la direction. À anticiper dans vos réponses sur l'autonomie et le périmètre de rôle."},
+{cat:"Amindis",q:"Que signifie le fait que la plateforme soit « low-code » ?",o:["Elle se configure par paramétrage plutôt que par développement","Elle contient peu de fonctionnalités","Son code source est public","Elle ne nécessite aucune maintenance"],a:0,e:"Avantage : délais courts, adaptation rapide à un nouveau texte réglementaire, moins de dépendance aux développeurs. Limites à connaître aussi : performance sur de très gros volumes et gestion des versions de configuration. Savoir citer les <b>deux</b> faces est un signe de maturité."},
+{cat:"Amindis",q:"Parmi ces acteurs, lequel est un concurrent direct sur le marché des plateformes d'investment management ?",o:["SimCorp","Salesforce","SAP HR","Shopify"],a:0,e:"<b>SimCorp</b> (groupe Deutsche Börse) est la référence européenne du front-to-back pour les grands gérants. Autres références : SS&C Advent, BlackRock Aladdin, Bloomberg AIM, Clearwater. Et le concurrent le plus fréquent en réalité : <b>Excel et l'existant maison</b>."},
+{cat:"Amindis",q:"Le modèle BPO, pour un éditeur comme Amindis, signifie :",o:["Exécuter le processus pour le client, pas seulement lui fournir l'outil","Vendre le logiciel une seule fois sans support","Sous-traiter le développement à l'étranger","Distribuer via des revendeurs"],a:0,e:"<b>Business Process Outsourcing</b> : Amindis produit le reporting à la place du client. Revenus récurrents plus élevés, relation plus profonde, meilleure connaissance des processus — mais responsabilité engagée sur le résultat produit."},
+
+{cat:"Asset management",q:"Que désigne l'acronyme AUM ?",o:["Assets under Management, les actifs sous gestion","Average Underlying Margin","Annual Update Model","Asset Utilisation Metric"],a:0,e:"Les revenus d'un gérant sont essentiellement des commissions en pourcentage des <b>encours</b>. Conséquence : quand les marchés baissent, les revenus baissent mécaniquement — d'où la pression permanente sur les coûts et la demande d'automatisation."},
+{cat:"Asset management",q:"La NAV (Net Asset Value) d'un fonds correspond à :",o:["(Actifs − passifs) / nombre de parts","La performance annuelle du fonds","Le total des souscriptions","La valeur de marché du gestionnaire"],a:0,e:"C'est le chiffre le plus sensible du secteur : une erreur de NAV entraîne des indemnisations d'investisseurs et un incident réglementaire. Tout ce qui touche à la valorisation est donc contrôlé plusieurs fois."},
+{cat:"Asset management",q:"En Belgique, un produit d'assurance-vie de branche 23 se caractérise par :",o:["Un rendement non garanti, le risque financier étant porté par le preneur","Un rendement garanti par l'assureur","Une garantie de l'État","Une exonération totale de taxes"],a:0,e:"<b>Branche 23</b> = unités de compte (unit-linked), risque porté par le preneur. <b>Branche 21</b> = rendement garanti, risque porté par l'assureur (et donc un enjeu d'ALM majeur). La branche 23 exige un dispositif de valorisation et de transparence proche de celui d'un fonds — le créneau d'INDIS."},
+{cat:"Asset management",q:"Dans un mandat de gestion discrétionnaire :",o:["Le gérant décide seul dans le cadre défini par le mandat","Le client valide chaque opération","Le dépositaire décide des investissements","Aucun contrôle n'est requis"],a:0,e:"En discrétionnaire, le gérant agit sans validation transaction par transaction — ce qui impose un <b>contrôle automatique des contraintes du mandat</b> (limites d'allocation, exclusions, concentration). En conseil, le client valide chaque opération."},
+{cat:"Asset management",q:"Qui conserve les titres d'un fonds et exerce une fonction de contrôle indépendante ?",o:["Le dépositaire (custodian)","Le gérant de portefeuille","Le commissaire aux comptes","L'agent de transfert"],a:0,e:"Le <b>dépositaire</b> conserve les actifs et contrôle la conformité. L'<b>agent de transfert</b> gère le passif du fonds (souscriptions et rachats). Cette séparation des rôles est une protection structurelle pour l'investisseur."},
+{cat:"Asset management",q:"La montée de la gestion passive (ETF) a pour principal effet sur le secteur :",o:["Une pression à la baisse sur les frais, qui pousse à l'automatisation","Une hausse des frais de gestion","La disparition des contraintes réglementaires","Une baisse du besoin de reporting"],a:0,e:"C'est <i>la</i> tendance de fond depuis quinze ans. Elle oblige les gérants actifs à justifier leur valeur ajoutée par un reporting de performance et d'attribution plus fin, tout en réduisant leurs coûts — ce qui alimente directement la demande pour une plateforme d'analytique."},
+
+{cat:"Performance & risque",q:"Pour évaluer la compétence d'un gérant, on utilise :",o:["Le TWR (Time-Weighted Return)","Le MWR / TRI","Le rendement brut de frais uniquement","Le maximum drawdown"],a:0,e:"Le <b>TWR</b> neutralise l'effet des apports et retraits, que le gérant ne contrôle pas — c'est aussi ce qu'imposent les normes GIPS pour les composites. Le <b>MWR</b> (ou TRI) intègre le timing des flux et mesure ce que l'<i>investisseur</i> a réellement gagné. L'écart entre les deux est une information en soi."},
+{cat:"Performance & risque",q:"Dans le modèle de Brinson, l'effet « sélection » mesure :",o:["La capacité à choisir les bonnes valeurs à l'intérieur de chaque secteur","La capacité à surpondérer les bons secteurs","L'effet des frais de transaction","L'effet de change"],a:0,e:"<b>Allocation</b> = avoir surpondéré les bons secteurs. <b>Sélection</b> = avoir choisi les bonnes valeurs dans chaque secteur. Plus un terme d'interaction. Un gérant peut avoir raison sur l'un et tort sur l'autre — c'est précisément ce que l'attribution révèle."},
+{cat:"Performance & risque",q:"Les normes GIPS imposent notamment :",o:["La construction de composites incluant tous les portefeuilles d'une même stratégie","La publication du nom des clients","L'utilisation exclusive du MWR","Un rendement minimal garanti"],a:0,e:"Les <b>composites</b> regroupent tous les portefeuilles gérés selon la même stratégie, y compris ceux qui ont été clôturés, pour éviter le <b>biais du survivant</b>. Se dire GIPS compliant est un argument commercial fort auprès des clients institutionnels."},
+{cat:"Performance & risque",q:"Le ratio d'information se calcule comme :",o:["Alpha / tracking error","Rendement / volatilité totale","Rendement − taux sans risque","Bêta × volatilité du marché"],a:0,e:"Il mesure la <b>régularité</b> de la surperformance, pas son ampleur. +2 % d'alpha avec 8 % de tracking error est moins convaincant que +1 % avec 2 %. À distinguer du <b>Sharpe</b> = (rendement − taux sans risque) / volatilité totale."},
+{cat:"Performance & risque",q:"La VaR (Value at Risk) a pour principale limite :",o:["Elle ne dit rien de l'ampleur des pertes au-delà du seuil de confiance","Elle est impossible à calculer sur des actions","Elle ne s'applique qu'aux obligations","Elle est interdite par la réglementation"],a:0,e:"C'est pourquoi l'<b>Expected Shortfall</b> (perte moyenne dans la queue de distribution) l'a largement remplacée dans le cadre réglementaire : la VaR décrit le seuil, pas la catastrophe qui se cache derrière."},
+{cat:"Performance & risque",q:"La duration modifiée d'une obligation mesure :",o:["La sensibilité approximative de son prix à une variation des taux","Sa durée de vie contractuelle","Son risque de crédit","Son rendement à l'échéance"],a:0,e:"Sensibilité du prix à une variation de 1 % des taux, complétée au second ordre par la <b>convexité</b>. Pour un portefeuille obligataire ou un assureur vie, c'est le paramètre de risque numéro un — le pilotage ALM consiste largement à aligner la duration de l'actif sur celle des engagements."},
+{cat:"Performance & risque",q:"Le look-through (transparisation) consiste à :",o:["Décomposer un fonds détenu en ses positions sous-jacentes","Publier le nom des investisseurs du fonds","Auditer le gestionnaire","Simuler un scénario de crise"],a:0,e:"Indispensable pour mesurer l'exposition réelle (secteur, émetteur, devise, notation, carbone), et exigé par <b>Solvency II</b> : sans transparisation, l'assureur subit un traitement de capital punitif. Techniquement, c'est surtout un défi de collecte et de normalisation de données."},
+{cat:"Performance & risque",q:"En période de crise, les corrélations entre classes d'actifs ont tendance à :",o:["Se rapprocher de 1, réduisant l'effet de la diversification","Tomber à zéro","Devenir négatives","Rester stables"],a:0,e:"C'est le paradoxe central de la gestion du risque : la diversification cesse de protéger exactement quand on en aurait besoin. C'est la raison d'être du <b>stress testing</b>, qui ne dépend pas des corrélations historiques."},
+
+{cat:"Réglementation",q:"La classification SFDR d'un fonds ayant un objectif d'investissement durable est :",o:["Article 9","Article 8","Article 6","Article 3"],a:0,e:"<b>Article 6</b> = pas d'objectif durable · <b>Article 8</b> = promotion de caractéristiques environnementales ou sociales · <b>Article 9</b> = objectif d'investissement durable. S'y ajoutent les indicateurs d'incidences négatives (<b>PAI</b>)."},
+{cat:"Réglementation",q:"MiFID II impose notamment :",o:["Une transparence totale des coûts, ex ante et ex post","Un rendement minimum garanti aux clients","L'interdiction des fonds actifs","Une limite de 25 % par émetteur"],a:0,e:"MiFID II est un texte de <b>protection de l'investisseur</b> : test d'adéquation, profil de risque, gouvernance produit (marché cible), transparence des coûts, best execution. Le rapport annuel de coûts et de performance est une obligation — donc un module de reporting à part entière."},
+{cat:"Réglementation",q:"Le KID PRIIPs contient notamment :",o:["Un indicateur de risque synthétique de 1 à 7 et des scénarios de performance","Le nom du gérant et sa biographie","La liste complète des positions","Le montant des commissions du distributeur uniquement"],a:0,e:"Document normalisé de trois pages destiné au client de détail : <b>SRI</b> de 1 à 7, scénarios de performance, coûts agrégés. Calculs très normés et mis à jour régulièrement, donc quasi impossibles à produire manuellement à l'échelle."},
+{cat:"Réglementation",q:"Sous Solvency II, le SCR est calibré à :",o:["Un niveau de confiance de 99,5 % sur un horizon d'un an","95 % sur dix ans","99,9 % sur un jour","Il n'y a pas de calibrage explicite"],a:0,e:"Le <b>Solvency Capital Requirement</b> correspond au capital permettant d'absorber un choc bicentenaire à un an. Le module de risque de marché dépend directement de la composition détaillée du portefeuille, d'où l'importance du look-through."},
+{cat:"Réglementation",q:"IFRS 17 concerne :",o:["Les contrats d'assurance","Les instruments financiers","Les immobilisations incorporelles","La consolidation"],a:0,e:"<b>IFRS 17</b> (contrats d'assurance, applicable depuis 2023) introduit notamment la <b>CSM</b> (marge sur services contractuels) et plusieurs modèles de valorisation (GMM, VFA, PAA). <b>IFRS 9</b> traite des instruments financiers (test SPPI, ECL). Les deux doivent être articulés côté assureur."},
+{cat:"Réglementation",q:"Le test SPPI, sous IFRS 9, sert à déterminer :",o:["Si les flux d'un instrument correspondent uniquement à des paiements de principal et d'intérêts","Le niveau de provisionnement d'un crédit","La liquidité d'un titre","La performance ajustée du risque"],a:0,e:"<b>Solely Payments of Principal and Interest</b>. Combiné au modèle économique de détention, il détermine la classification (coût amorti, juste valeur par OCI, juste valeur par résultat) — donc la volatilité du compte de résultat."},
+{cat:"Réglementation",q:"DORA impose notamment aux institutions financières :",o:["Un encadrement contractuel et un suivi de leurs prestataires TIC critiques","Un ratio de fonds propres supplémentaire","La suppression du cloud","Une notation ESG obligatoire"],a:0,e:"Le règlement sur la résilience opérationnelle numérique (applicable depuis 2025) couvre la gestion du risque TIC, les tests, la notification d'incidents et surtout le <b>risque tiers</b>. Conséquence directe pour un éditeur SaaS : il devient un prestataire soumis aux exigences contractuelles et aux audits de ses clients."},
+{cat:"Réglementation",q:"La règle dite 5/10/40 concerne :",o:["Les limites de diversification des fonds UCITS","Le calcul du SCR de marché","Les seuils de matérialité du défaut","La classification SFDR"],a:0,e:"Règle classique de diversification des OPCVM : pas plus de 5 % sur un même émetteur (extensible à 10 % sous conditions), l'ensemble des positions supérieures à 5 % ne dépassant pas 40 % de l'actif. Un contrôle typiquement automatisé avant et après transaction."},
+
+{cat:"Tech & data",q:"Les corporate actions (opérations sur titres) sont un enjeu majeur parce que :",o:["Un traitement erroné fausse simultanément la performance, le risque et la comptabilité","Elles sont rares et peu documentées","Elles ne concernent que les obligations","Elles sont calculées par le régulateur"],a:0,e:"Splits, fusions, dividendes optionnels, remboursements, attributions de droits : c'est la source d'erreur numéro un en comptabilité d'investissement. Un traitement automatisé et fiable des OST est un différenciateur produit majeur."},
+{cat:"Tech & data",q:"Un security master (référentiel titres) contient :",o:["Les identifiants et caractéristiques de référence des instruments","Les mots de passe des utilisateurs","Les positions clients","Les scénarios de stress test"],a:0,e:"ISIN, CUSIP, SEDOL, FIGI, classifications sectorielles, notations. Sa qualité conditionne tout le reste : un instrument mal classé fausse simultanément l'attribution sectorielle, le contrôle de limites et le reporting ESG."},
+{cat:"Tech & data",q:"La réconciliation quotidienne consiste à :",o:["Comparer les positions et espèces avec celles du dépositaire et de l'administrateur","Recalculer la performance depuis l'origine","Valider les ordres avant exécution","Réconcilier les clients mécontents"],a:0,e:"Processus à fort volume et à faible valeur ajoutée perçue — donc candidat idéal à l'automatisation, et argument commercial évident pour une offre <b>BPO</b>."},
+{cat:"Tech & data",q:"Le data lineage désigne :",o:["La traçabilité d'un chiffre publié jusqu'à sa source","Le volume de données stockées","La vitesse de traitement","Le format d'échange des fichiers"],a:0,e:"Quand un client conteste un chiffre de performance, la seule réponse acceptable est de remonter la chaîne complète. Le lineage se vend autant aux équipes d'audit et de conformité qu'aux équipes opérationnelles."},
+{cat:"Tech & data",q:"L'analytique d'investissement fonctionne largement en batch de nuit parce que :",o:["La valorisation se fait à la clôture des marchés","Les serveurs sont moins chers la nuit","Les régulateurs l'imposent","Les utilisateurs travaillent la nuit"],a:0,e:"La valorisation s'appuie sur les cours de clôture, ce qui structure toute l'exploitation : fenêtres de traitement, procédures de reprise en cas d'échec, et délai de mise à disposition des rapports au matin. Un vrai sujet d'organisation, pas seulement de technique."},
+{cat:"Tech & data",q:"Lors d'une implémentation, la reprise des données historiques est critique surtout parce que :",o:["Sans historique, il n'y a ni track record ni composite GIPS exploitable","Elle réduit le coût de la licence","Elle est imposée par le RGPD","Elle accélère les calculs futurs"],a:0,e:"Un gérant vend son <b>track record</b>. Perdre l'historique de performance à l'occasion d'un changement d'outil est inacceptable commercialement — la migration des données est donc souvent le chantier le plus sensible d'un projet."}
+]
+};
+
+/* ---- mélange déterministe des propositions (sinon la réponse est toujours en A) ---- */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+Object.keys(DATA).forEach(function(k){
+  var salt=0; for(var c=0;c<k.length;c++) salt=(salt*31+k.charCodeAt(c))|0;
+  DATA[k].forEach(function(q,i){
+    var rnd=mulberry((i+1)*2654435761 ^ salt);
+    var idx=[0,1,2,3];
+    for(var n=3;n>0;n--){var m=Math.floor(rnd()*(n+1));var tmp=idx[n];idx[n]=idx[m];idx[m]=tmp;}
+    q.o=idx.map(function(x){return q.o[x];});
+    q.a=idx.indexOf(q.a);
+  });
+});
+
+/* ================= VERDICTS ================= */
+const TIERS = [
+  {min:0,  cls:"t0", msg:"Arrête de fumer gros et concentre-toi.", sub:"Sérieusement. Retourne dans l'onglet théorie, on en reparle après."},
+  {min:40, cls:"t1", msg:"Bon. T'as compris qu'il y avait des lettres A, B, C et D.", sub:"C'est un début. Techniquement."},
+  {min:55, cls:"t2", msg:"T'es dans le dur, mais ça se soigne.", sub:"Relis la partie théorie, refais le QCM, et là on pourra discuter."},
+  {min:70, cls:"t3", msg:"Pas mal Brieuc. Ça commence à ressembler à quelque chose.", sub:"Encore un petit effort et on parle contrat."},
+  {min:80, cls:"t4", msg:"Bien joué Brieuc, tu vas pouvoir avoir un taff et payer une bière à Simon.", sub:"Une vraie bière hein. Pas une Jupiler en promo."},
+  {min:95, cls:"t5", msg:"Monstre. Simon prendra une Duvel.", sub:"À ce niveau-là tu peux négocier le salaire ET la voiture de société."}
+];
+function tierFor(pct){ let t=TIERS[0]; for(const x of TIERS) if(pct>=x.min) t=x; return t; }
+
+/* ================= ENGINE ================= */
+const state = {};
+Object.keys(DATA).forEach(k=>state[k]={filter:"Tous",answered:{}});
+
+function initQuiz(key){
+  const qs = DATA[key];
+  const fEl = document.querySelector('[data-filters="'+key+'"]');
+  const cats = ["Tous", ...new Set(qs.map(q=>q.cat))];
+  fEl.innerHTML='';
+  cats.forEach(c=>{
+    const b=document.createElement('button');
+    b.textContent = c==="Tous" ? "Tous ("+qs.length+")" : c+" ("+qs.filter(q=>q.cat===c).length+")";
+    if(c===state[key].filter) b.classList.add('on');
+    b.onclick=()=>{state[key].filter=c;[...fEl.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');render(key);};
+    fEl.appendChild(b);
+  });
+  document.querySelector('[data-reset="'+key+'"]').onclick=()=>{state[key].answered={};render(key);};
+  render(key);
+}
+
+function updateScore(key){
+  const qs=DATA[key], ans=state[key].answered;
+  const n=Object.keys(ans).length;
+  const good=Object.keys(ans).filter(k=>ans[k].ok).length;
+  document.querySelector('[data-score="'+key+'"]').innerHTML = good+" / "+n+" <span>· "+qs.length+" au total</span>";
+  document.querySelector('[data-bar="'+key+'"]').style.width = n ? (good/qs.length*100)+"%" : "0%";
+  const vb=document.querySelector('[data-verdict="'+key+'"]');
+  if(n<5){ vb.className="verdictbox"; vb.innerHTML=""; return; }
+  const pct=Math.round(good/n*100);
+  const t=tierFor(pct);
+  vb.className="verdictbox show "+t.cls;
+  vb.innerHTML = pct+" % de bonnes réponses — "+t.msg+"<small>"+t.sub+"</small>";
+}
+
+function render(key){
+  const qs=DATA[key], ans=state[key].answered;
+  const box=document.querySelector('[data-quiz="'+key+'"]');
+  box.innerHTML='';
+  qs.map((q,i)=>({q,i})).filter(o=>state[key].filter==="Tous"||o.q.cat===state[key].filter).forEach(({q,i})=>{
+    const card=document.createElement('div'); card.className='q-card';
+    const cat=document.createElement('div'); cat.className='q-cat'; cat.textContent=q.cat; card.appendChild(cat);
+    const head=document.createElement('div'); head.className='q-head';
+    head.innerHTML='<div class="q-idx">Q'+String(i+1).padStart(2,'0')+'</div><div class="q-txt"></div>';
+    head.querySelector('.q-txt').textContent=q.q; card.appendChild(head);
+    const opts=document.createElement('div'); opts.className='opts';
+    q.o.forEach((txt,j)=>{
+      const btn=document.createElement('button'); btn.className='opt';
+      btn.innerHTML='<span class="k">'+"ABCD"[j]+'</span><span></span>';
+      btn.querySelector('span:last-child').textContent=txt;
+      btn.onclick=()=>{ if(ans[i])return; ans[i]={pick:j,ok:j===q.a}; render(key); updateScore(key); };
+      if(ans[i]){ btn.classList.add('locked');
+        if(j===q.a) btn.classList.add('good');
+        else if(j===ans[i].pick) btn.classList.add('bad'); }
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);
+    const ex=document.createElement('div'); ex.className='expl';
+    if(ans[i]){
+      ex.classList.add('show', ans[i].ok?'right':'wrong');
+      ex.innerHTML='<span class="verdict">'+(ans[i].ok?'Correct':'Incorrect — bonne réponse : '+"ABCD"[q.a])+'</span><div>'+q.e+'</div>';
+    }
+    card.appendChild(ex);
+    box.appendChild(card);
+  });
+  updateScore(key);
+}
+
+/* ================= NAV ================= */
+document.querySelectorAll('.module').forEach(mod=>{
+  mod.querySelectorAll('nav.tabs button').forEach(b=>{
+    b.onclick=()=>{
+      mod.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+      mod.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      mod.querySelector('#'+b.dataset.p).classList.add('on');
+      window.scrollTo({top:0,behavior:'instant'});
+    };
+  });
+});
+document.querySelectorAll('#switch button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#switch button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.module').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById('m-'+b.dataset.m).classList.add('on');
+    window.scrollTo({top:0,behavior:'instant'});
+  };
+});
+
+Object.keys(DATA).forEach(initQuiz);
+
+/* --- responsive: tables scrollables sur mobile --- */
+document.querySelectorAll('table').forEach(t=>{
+  if(t.parentElement && t.parentElement.classList.contains('tablewrap')) return;
+  const w=document.createElement('div'); w.className='tablewrap';
+  t.parentNode.insertBefore(w,t); w.appendChild(t);
+});
+/* --- responsive: offset sticky de la barre de quiz selon la hauteur des onglets --- */
+(function(){
+  function sync(){
+    document.querySelectorAll('.module.on nav.tabs').forEach(n=>{
+      const h=Math.round(n.getBoundingClientRect().height);
+      document.querySelectorAll('.module.on .quizbar').forEach(q=>{q.style.top=h+'px';});
+    });
+  }
+  window.addEventListener('resize',sync); window.addEventListener('orientationchange',sync);
+  document.addEventListener('click',()=>setTimeout(sync,60),true);
+  sync();
+})();
+
+</script>
+</body>
+</html>
