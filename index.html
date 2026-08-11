@@ -1,6 +1,46 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Believe me, I know you're here</h1>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello human world</title>
+  <style>
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      height: 100dvh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    h1 {
+      flex: none;
+      margin: 0;
+      padding: 5vh 16px 0;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: #fff;
+      text-shadow: 0 0 28px rgba(255, 255, 255, .35);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .7; }
+    }
+    img {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello human world</h1>
+  <img src="cat-dance.gif" alt="Dancing cat">
+</body>
 </html>
