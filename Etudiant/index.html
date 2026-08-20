@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prépa entretien — Junior Insurance Transformation Consultant · EY</title>
+<meta name="description" content="Coaching complet pour décrocher le poste de Junior Insurance Transformation Consultant (Financial Services) chez EY Belgique : syllabus, flashcards FR/EN/NL, QCM.">
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --ey-yellow:#ffe600;
+  --ink:#0f1116;
+  --ink-2:#2a2d38;
+  --paper:#ffffff;
+  --paper-2:#f6f7f9;
+  --paper-3:#eceef2;
+  --line:#dfe2e8;
+  --text:#22252e;
+  --muted:#61667a;
+  --accent:#1f3ad6;
+  --ok:#0f7a4d;
+  --ok-bg:#e6f5ee;
+  --ko:#b3261e;
+  --ko-bg:#fdeceb;
+  --warn:#8a5a00;
+  --warn-bg:#fff6dd;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(16,18,24,.06),0 8px 24px rgba(16,18,24,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#14161c;--paper-2:#191c24;--paper-3:#22262f;--line:#2e333f;
+    --text:#e6e8ee;--muted:#9aa1b4;--ink:#0b0d11;--ink-2:#0f1116;
+    --accent:#8fa4ff;--ok:#5fd39b;--ok-bg:#0f2a20;--ko:#ff8a80;--ko-bg:#2c1412;
+    --warn:#ffcf5c;--warn-bg:#2b2312;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--paper-2);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+header.top{background:var(--ink);color:#fff;padding:34px 0 26px;border-bottom:4px solid var(--ey-yellow)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink);background:var(--ey-yellow);padding:5px 10px;border-radius:999px}
+header.top h1{margin:14px 0 6px;font-size:clamp(1.6rem,4.4vw,2.5rem);line-height:1.15;letter-spacing:-.02em;font-weight:800}
+header.top p{margin:0;color:#b9bdca;max-width:62ch}
+header.top .meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+header.top .meta span{font-size:12.5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  padding:4px 10px;border-radius:999px;color:#e7e9f0}
+
+/* ---------- tabs ---------- */
+nav.tabs{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(0,0,0,.02)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.tabs .wrap::-webkit-scrollbar{display:none}
+nav.tabs button{
+  appearance:none;border:0;background:none;color:var(--muted);font:inherit;font-weight:650;
+  padding:15px 14px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+}
+nav.tabs button:hover{color:var(--text)}
+nav.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--ey-yellow)}
+nav.tabs button .num{display:inline-block;min-width:20px;height:20px;line-height:20px;text-align:center;
+  background:var(--paper-3);border-radius:6px;font-size:12px;margin-right:8px;color:var(--muted)}
+nav.tabs button[aria-selected="true"] .num{background:var(--ey-yellow);color:#000}
+
+main{padding:34px 0 90px}
+section[role="tabpanel"][hidden]{display:none}
+
+/* ---------- typography ---------- */
+h2{font-size:clamp(1.25rem,3vw,1.6rem);letter-spacing:-.015em;margin:0 0 6px;font-weight:800}
+h3{font-size:1.08rem;margin:0 0 10px;font-weight:750;letter-spacing:-.01em}
+h4{font-size:.95rem;margin:18px 0 6px;font-weight:750}
+p{margin:0 0 12px}
+a{color:var(--accent)}
+.lead{color:var(--muted);font-size:1.02rem;margin-bottom:22px}
+.part{margin:0 0 14px;display:flex;align-items:baseline;gap:12px;padding-top:8px}
+.part .n{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+hr.sep{border:0;border-top:1px solid var(--line);margin:38px 0 30px}
+
+/* ---------- cards ---------- */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  margin:0 0 18px;box-shadow:var(--shadow);scroll-margin-top:100px}
+.card > :last-child{margin-bottom:0}
+.card.flash{animation:flashon 1.6s ease}
+@keyframes flashon{0%,55%{box-shadow:0 0 0 3px var(--ey-yellow),var(--shadow)}100%{box-shadow:var(--shadow)}}
+.chapno{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px;margin-bottom:10px}
+.note{border-left:3px solid var(--ey-yellow);background:var(--warn-bg);color:var(--text);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.note strong{color:var(--warn)}
+.note.blue{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.note.blue strong{color:var(--accent)}
+
+/* ---------- lists & tables ---------- */
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin:5px 0}
+li::marker{color:var(--muted)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px;background:var(--paper)}
+th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--paper-3);font-weight:750;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:750;background:var(--paper-2)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat b{display:block;font-size:1.45rem;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.stat span{font-size:12.5px;color:var(--muted);display:block;margin-top:2px}
+
+/* ---------- glossary ---------- */
+.gloss{display:grid;gap:0;margin:14px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gloss div{display:grid;grid-template-columns:200px 1fr;gap:14px;padding:11px 14px;border-bottom:1px solid var(--line);
+  font-size:14.7px;background:var(--paper)}
+.gloss div:last-child{border-bottom:0}
+.gloss dt,.gloss b{font-weight:750}
+.gloss em{color:var(--muted);font-style:normal;font-size:13px;display:block}
+@media(max-width:640px){.gloss div{grid-template-columns:1fr;gap:2px}}
+
+/* ---------- pipeline ---------- */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0}
+.flow .step{background:var(--paper-2);border:1px solid var(--line);border-left:3px solid var(--ey-yellow);
+  border-radius:0 10px 10px 0;padding:12px 14px}
+.flow .step b{display:block;font-size:14px}
+.flow .step span{font-size:13px;color:var(--muted)}
+
+/* ---------- buttons ---------- */
+.btn{appearance:none;font:inherit;font-weight:650;cursor:pointer;border-radius:10px;padding:9px 15px;
+  border:1px solid var(--line);background:var(--paper);color:var(--text);transition:transform .06s ease}
+.btn:hover{background:var(--paper-3)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ey-yellow);border-color:#e0ca00;color:#111}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{background:none}
+.btn.sm{padding:6px 11px;font-size:13.5px}
+.btn.danger{color:var(--ko);border-color:color-mix(in srgb,var(--ko) 35%,var(--line))}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 18px}
+.spacer{flex:1}
+
+/* ---------- lang radios ---------- */
+.langpick{display:inline-flex;background:var(--paper-3);border-radius:10px;padding:3px;gap:2px;border:1px solid var(--line)}
+.langpick label{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;cursor:pointer;
+  font-size:14px;font-weight:650;color:var(--muted)}
+.langpick input{accent-color:var(--ink-2);margin:0}
+.langpick label:has(input:checked){background:var(--paper);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---------- flashcards ---------- */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.fc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;overflow:hidden}
+.fc header{padding:16px 18px 0;display:flex;align-items:flex-start;gap:10px}
+.fc .tag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fc .q{padding:6px 18px 14px;font-weight:700;font-size:1.02rem;line-height:1.45}
+.fc .a{padding:0 18px 16px;border-top:1px dashed var(--line);margin-top:auto}
+.fc .a[hidden]{display:none}
+.fc .a .lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  margin:14px 0 6px}
+.fc .a p{font-size:14.6px;margin:0 0 10px;white-space:pre-wrap}
+.fc .tip{background:var(--warn-bg);border-radius:8px;padding:9px 12px;font-size:13.4px;color:var(--text)}
+.fc .tip b{color:var(--warn)}
+.fc footer{display:flex;gap:8px;padding:0 18px 16px;flex-wrap:wrap}
+.fc .missing{color:var(--muted);font-style:italic}
+
+/* ---------- modal ---------- */
+dialog{border:0;padding:0;border-radius:16px;max-width:680px;width:calc(100% - 32px);
+  background:var(--paper);color:var(--text);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(8,10,14,.55)}
+dialog .dlg-head{padding:20px 22px 0}
+dialog h3{margin:0 0 4px}
+dialog form{padding:0 22px 20px;max-height:min(74vh,700px);overflow:auto}
+.field{margin:14px 0}
+.field label{display:block;font-size:12.5px;font-weight:750;letter-spacing:.03em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:5px}
+.field textarea,.field input{width:100%;font:inherit;font-size:15px;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--line);background:var(--paper-2);color:var(--text);resize:vertical}
+.field textarea:focus,.field input:focus{outline:2px solid var(--ey-yellow);outline-offset:-1px}
+.dlg-foot{display:flex;gap:10px;padding:14px 22px 20px;border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
+
+/* ---------- quiz ---------- */
+.qz{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;
+  margin:0 0 16px;box-shadow:var(--shadow)}
+.qz .qtitle{font-weight:700;margin:0 0 14px;display:flex;gap:10px}
+.qz .qtitle .idx{flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:var(--ey-yellow);
+  display:grid;place-items:center;font-size:13px;font-weight:800}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+  cursor:pointer;background:var(--paper-2);font-size:15px;transition:border-color .12s ease,background .12s ease}
+.opt:hover{border-color:var(--muted)}
+.opt input{margin:3px 0 0;accent-color:var(--ink-2);flex:none}
+.opt.correct{background:var(--ok-bg);border-color:var(--ok)}
+.opt.wrong{background:var(--ko-bg);border-color:var(--ko)}
+.opt.locked{cursor:default}
+.verdict{margin-top:14px;border-radius:10px;padding:13px 15px;font-size:14.8px}
+.verdict.ok{background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.verdict.ko{background:var(--ko-bg);border:1px solid color-mix(in srgb,var(--ko) 40%,transparent)}
+.verdict .vhead{font-weight:800;margin-bottom:4px}
+.verdict.ok .vhead{color:var(--ok)}
+.verdict.ko .vhead{color:var(--ko)}
+.verdict a{font-weight:700}
+.scorebar{position:sticky;bottom:0;z-index:30;background:var(--paper);border:1px solid var(--line);
+  border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);margin-top:22px;flex-wrap:wrap}
+.scorebar .bar{flex:1;min-width:120px;height:8px;border-radius:99px;background:var(--paper-3);overflow:hidden}
+.scorebar .bar i{display:block;height:100%;background:var(--ey-yellow);width:0;transition:width .35s ease}
+.scorebar b{font-variant-numeric:tabular-nums}
+
+footer.foot{border-top:1px solid var(--line);padding:26px 0 50px;color:var(--muted);font-size:13.5px;background:var(--paper)}
+footer.foot a{color:var(--muted)}
+.srcs{font-size:12.6px;color:var(--muted);margin-top:10px}
+
+/* ---------- quiz : menu, catégories, dots ---------- */
+.startgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 18px}
+.startbtn{display:flex;flex-direction:column;gap:3px;text-align:left;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius);padding:17px 19px;cursor:pointer;font:inherit;color:var(--text);
+  box-shadow:var(--shadow);transition:transform .12s ease,border-color .12s ease}
+.startbtn:hover{transform:translateY(-1px);border-color:var(--muted)}
+.startbtn.gold{background:linear-gradient(180deg,var(--paper),var(--warn-bg));border-color:color-mix(in srgb,var(--ey-yellow) 55%,var(--line))}
+.startbtn .bt{font-size:15.5px;font-weight:750;letter-spacing:-.01em}
+.startbtn .bs{font-size:12.8px;color:var(--muted)}
+.qz.panel{padding:16px 20px}
+.qz .ph{font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.qz .ps{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.catrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.catrow:last-child{border-bottom:0}
+.catrow .cn{flex:none;width:140px;font-size:13.6px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.catrow .accbar{flex:1;min-width:40px;height:8px;border-radius:99px;background:var(--paper-3);overflow:hidden}
+.catrow .accbar>i{display:block;height:100%;border-radius:99px;transition:width .35s ease}
+.catrow .cp{flex:none;width:104px;text-align:right;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media(max-width:560px){.catrow{flex-wrap:wrap}.catrow .cn{width:100%}.catrow .cp{width:auto}}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.dots i{width:10px;height:10px;border-radius:99px;background:var(--paper-3);cursor:pointer;border:1px solid var(--line)}
+.dots i.ok{background:var(--ok);border-color:var(--ok)}
+.dots i.no{background:var(--ko);border-color:var(--ko)}
+.dots i.cur{outline:2px solid var(--ey-yellow);outline-offset:2px}
+.opt input:disabled{opacity:.85}
+@media print{nav.tabs,.toolbar,.scorebar{display:none}section[role="tabpanel"][hidden]{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">Prépa entretien · EY Belgique</div>
+    <h1>Junior Insurance Transformation Consultant<br>— Financial Services</h1>
+    <p>Tout ce qu'il faut savoir, apprendre par cœur et répéter à voix haute avant de passer les entretiens. Diegem, démarrage septembre 2026.</p>
+    <div class="meta">
+      <span>Service line : Consulting</span>
+      <span>Practice : FSO (Financial Services)</span>
+      <span>Job ID 1643952BEL-Diegem</span>
+      <span>NL et/ou FR + English</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-btn-syllabus" aria-controls="panel-syllabus" aria-selected="true"><span class="num">1</span>Le syllabus</button>
+    <button role="tab" id="tab-btn-flash" aria-controls="panel-flash" aria-selected="false"><span class="num">2</span>Flashcards entretien</button>
+    <button role="tab" id="tab-btn-qcm" aria-controls="panel-qcm" aria-selected="false"><span class="num">3</span>QCM de contrôle</button>
+  </div>
+</nav>
+
+<main>
+<!-- ============================ ONGLET 1 ============================ -->
+<section role="tabpanel" id="panel-syllabus" aria-labelledby="tab-btn-syllabus">
+  <div class="wrap">
+
+    <h2>Le syllabus</h2>
+    <p class="lead">Lis-le une fois en entier, puis reviens sur les chapitres 5, 13 et 18 : ce sont eux qui font la différence entre « il a lu la fiche de poste » et « il a compris le métier ».</p>
+
+    <div class="note">
+      <strong>La règle d'or.</strong> Un junior n'est pas recruté pour ce qu'il sait, mais pour la vitesse à laquelle il apprend et pour le fait qu'on puisse le mettre devant un client sans stresser. Tout ce qui suit sert à prouver ces deux choses.
+    </div>
+
+    <hr class="sep">
+    <div class="part"><span class="n">Partie I</span><h2>La fonction</h2></div>
+
+    <!-- 1 -->
+    <article class="card" id="ch-role">
+      <h3><span class="chapno">Chapitre 1</span><br>Décoder l'intitulé du poste, mot par mot</h3>
+      <p>« Junior Insurance Transformation Consultant — Financial Services ». Cinq mots, cinq informations. Si on te demande « tu as compris le job ? », c'est cette grille que tu déroules.</p>
+      <div class="gloss">
+        <div><b>Junior</b><span>Premier échelon. Tu ne vends pas, tu ne diriges pas : tu produis. On te confie des morceaux d'analyse, des slides, des ateliers à préparer, des comptes rendus. Ton livrable est relu avant d'aller chez le client.</span></div>
+        <div><b>Insurance</b><span>Ton secteur : les compagnies d'assurance (Vie, Non-Vie, courtiers, mutuelles). Pas les banques, pas l'industrie. C'est une spécialisation, et elle a son vocabulaire propre — voir le chapitre 4.</span></div>
+        <div><b>Transformation</b><span>Le cœur du job. On ne te demande pas de faire tourner l'assureur, mais de le faire <em>changer</em> : remplacer un système vieux de 25 ans, digitaliser la déclaration de sinistre, réorganiser un service, intégrer de l'IA dans la gestion des dossiers.</span></div>
+        <div><b>Consultant</b><span>Tu es un externe, facturé à l'heure ou au jour, présent pour un temps limité. Tu n'as aucune autorité hiérarchique chez le client : tu obtiens les choses par la clarté et la crédibilité, jamais par le pouvoir.</span></div>
+        <div><b>Financial Services</b><span>La practice sectorielle d'EY dédiée à la finance — banque, assurance, asset management. Chez EY, elle porte un nom : <b>FSO</b>. Voir le chapitre 12.</span></div>
+      </div>
+      <p class="note blue"><strong>Phrase à placer :</strong> « Ce que je comprends du rôle, c'est que je serai l'externe qui aide un assureur à passer d'un fonctionnement A à un fonctionnement B, en travaillant surtout sur la partie technologique et opérationnelle du changement — et qu'en tant que junior, ma valeur c'est la rigueur de l'analyse et la qualité de ce que je produis pour l'équipe. »</p>
+    </article>
+
+    <!-- 2 -->
+    <article class="card" id="ch-journee">
+      <h3><span class="chapno">Chapitre 2</span><br>Ce que tu feras vraiment : les 4 phases d'une mission</h3>
+      <p>L'offre les nomme explicitement. Retiens-les dans l'ordre, avec ton rôle de junior dans chacune.</p>
+      <div class="flow">
+        <div class="step"><b>1 · Discovery</b><span>On récolte le besoin : interviews, ateliers, lecture des processus existants. <em>Toi :</em> tu prends les notes, tu rédiges le compte rendu, tu construis la liste des questions ouvertes.</span></div>
+        <div class="step"><b>2 · Analysis</b><span>On construit la solution : analyse des données, comparaison d'options, chiffrage. <em>Toi :</em> Excel, benchmark, cartographie du processus « as-is » puis « to-be ».</span></div>
+        <div class="step"><b>3 · Alignment</b><span>On embarque les parties prenantes : IT, métier, direction. <em>Toi :</em> tu prépares le support, tu suis les décisions et les points en suspens.</span></div>
+        <div class="step"><b>4 · Outcome</b><span>On présente et on met en œuvre. <em>Toi :</em> tu finalises le livrable, tu participes au déploiement, tu documentes.</span></div>
+      </div>
+      <h4>Une semaine type de junior</h4>
+      <ul>
+        <li>2 à 4 jours chez le client ou en visio avec lui (souvent Bruxelles / périphérie), le reste au bureau de Diegem ou à domicile ;</li>
+        <li>un <b>stand-up</b> quotidien de 15 minutes avec ton équipe de mission ;</li>
+        <li>beaucoup d'Excel et de PowerPoint — c'est la réalité du grade, assume-le sans mépris ;</li>
+        <li>ton <b>timesheet</b> à encoder chaque semaine (le cabinet facture ces heures : ce n'est pas de la bureaucratie, c'est le chiffre d'affaires) ;</li>
+        <li>des formations : EY impose un volume d'heures de formation par an et pousse ses certifications internes.</li>
+      </ul>
+      <p class="note"><strong>Attention au piège classique.</strong> Beaucoup de candidats juniors décrivent le consulting comme « conseiller les dirigeants sur la stratégie ». Faux à ton grade. Dis plutôt : « je sais que la première année, c'est de l'analyse, de la documentation et du support à l'équipe — et c'est comme ça qu'on apprend le métier. » Cette lucidité rassure énormément un manager.</p>
+    </article>
+
+    <!-- 3 -->
+    <article class="card" id="ch-lexique-conseil">
+      <h3><span class="chapno">Chapitre 3</span><br>Le lexique du consultant</h3>
+      <p>Ces mots vont tomber dans la conversation. Ne pas les comprendre te fait passer pour un touriste ; les employer naturellement te fait gagner deux ans d'ancienneté aux yeux de l'interlocuteur.</p>
+      <div class="gloss">
+        <div><b>Engagement</b><span>Le nom d'une mission chez un client. « Je suis staffé sur un engagement chez un assureur Vie. »</span></div>
+        <div><b>Staffing / être staffé</b><span>L'affectation d'un consultant à une mission. Le staffing est le nerf de la guerre : sans mission, tu es « on the bench ».</span></div>
+        <div><b>Deliverable / livrable</b><span>Ce que le client reçoit concrètement : un rapport, un modèle, une roadmap, une application.</span></div>
+        <div><b>Scope</b><span>Le périmètre convenu. Le <b>scope creep</b>, c'est quand la demande grossit sans que le budget bouge — la maladie mortelle des projets.</span></div>
+        <div><b>SoW / Statement of Work</b><span>Le contrat de mission : périmètre, livrables, délais, prix. Ce qui n'y est pas n'est pas dû.</span></div>
+        <div><b>RFP</b><span>Request For Proposal — l'appel d'offres. Le client consulte plusieurs cabinets, chacun remet une proposition ; c'est la compétition entre Big 4.</span></div>
+        <div><b>Chargeability / utilization</b><span>Le pourcentage de ton temps facturé au client. C'est <em>l'indicateur</em> qui te suit toute ta carrière en cabinet.</span></div>
+        <div><b>Steerco</b><span>Steering committee, le comité de pilotage. Les décisions s'y prennent ; les slides de steerco sont les plus relues du projet.</span></div>
+        <div><b>Stakeholder</b><span>Partie prenante : toute personne impactée par le projet. « Stakeholder management » = obtenir l'adhésion des gens sur qui tu n'as aucun pouvoir.</span></div>
+        <div><b>As-is / To-be</b><span>Le processus tel qu'il existe aujourd'hui / tel qu'il devrait être demain. L'écart entre les deux s'appelle le <b>gap</b>, et le plan pour le combler la <b>roadmap</b>.</span></div>
+        <div><b>Quick win</b><span>Une amélioration rapide, peu coûteuse et visible, qu'on livre tôt pour crédibiliser le projet.</span></div>
+        <div><b>PMO</b><span>Project Management Office : la fonction qui tient le planning, les risques, les budgets et les comptes rendus. Un junior y passe très souvent.</span></div>
+        <div><b>Counselor / counselee</b><span>Chez EY, chaque collaborateur a un « counselor » : un parrain plus expérimenté qui suit sa carrière et son évaluation.</span></div>
+        <div><b>GDS</b><span>Global Delivery Services : les centres EY (Inde, Pologne, Philippines…) qui produisent une partie du travail à distance, à coût réduit.</span></div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="card" id="ch-lexique-assurance">
+      <h3><span class="chapno">Chapitre 4</span><br>Le lexique de l'assurance</h3>
+      <p>Tu n'as pas besoin d'être actuaire. Tu as besoin de comprendre de quoi parle le client sans qu'on doive t'expliquer les bases.</p>
+      <h4>Les fondamentaux du métier</h4>
+      <div class="gloss">
+        <div><b>Vie / Non-Vie</b><span>Les deux grandes familles. <b>Vie</b> : épargne, pension, décès (branche 21 à taux garanti, branche 23 liée à des fonds). <b>Non-Vie</b> : auto, incendie, RC, santé, accidents du travail.</span></div>
+        <div><b>Prime</b><span>Ce que l'assuré paie. Le chiffre d'affaires d'un assureur, c'est son encaissement de primes.</span></div>
+        <div><b>Sinistre / claim</b><span>L'événement couvert qui déclenche l'indemnisation. La « gestion des sinistres » est le processus le plus visible pour le client final — donc la première cible de digitalisation.</span></div>
+        <div><b>Souscription / underwriting</b><span>La décision d'accepter ou non un risque, et à quel prix. Cœur du métier, gros sujet d'automatisation et d'IA.</span></div>
+        <div><b>Provisions techniques</b><span>L'argent mis de côté pour payer les sinistres futurs. Le plus gros poste du bilan d'un assureur.</span></div>
+        <div><b>Réassurance</b><span>L'assurance des assureurs : céder une partie du risque à un réassureur (Munich Re, Swiss Re…).</span></div>
+        <div><b>Courtier / broker</b><span>L'intermédiaire qui vend la police. En Belgique, le courtage reste un canal de distribution majeur — d'où l'importance des portails destinés aux courtiers.</span></div>
+        <div><b>Ratio combiné</b><span>(sinistres + frais) ÷ primes, en Non-Vie. Sous 100 % l'activité est rentable ; au-dessus, elle perd de l'argent avant produits financiers.</span></div>
+      </div>
+      <h4>Les réglementations qui financent la moitié des projets</h4>
+      <div class="gloss">
+        <div><b>Solvabilité II</b><span>Le cadre prudentiel européen : combien de capital un assureur doit détenir face à ses risques. Trois piliers : exigences quantitatives, gouvernance, reporting. Sa révision est en cours de transposition.</span></div>
+        <div><b>IFRS 17</b><span>La norme comptable des contrats d'assurance, applicable depuis 2023. Elle a forcé une refonte massive des systèmes financiers et actuariels.</span></div>
+        <div><b>IDD (DDA)</b><span>Insurance Distribution Directive : les règles de conduite à la vente — devoir de conseil, transparence des frais, formation des intermédiaires.</span></div>
+        <div><b>DORA</b><span>Digital Operational Resilience Act : résilience informatique du secteur financier (gestion des incidents, tests, surveillance des prestataires TIC). Applicable depuis janvier 2025 — un générateur de missions à lui seul.</span></div>
+        <div><b>CSRD</b><span>Le reporting de durabilité. Concerne aussi les assureurs, en tant qu'entreprises et qu'investisseurs.</span></div>
+        <div><b>AI Act</b><span>Le règlement européen sur l'IA. En assurance, la tarification Vie/santé et le scoring sont classés à haut risque : gouvernance obligatoire.</span></div>
+      </div>
+      <p class="note blue"><strong>À retenir absolument :</strong> chaque nouvelle règle européenne se traduit par un chantier de mise en conformité, donc par des missions de conseil. Quand on te demande « pourquoi le conseil en services financiers est-il un secteur porteur ? », la réponse est là — pas dans « parce que j'aime les défis ».</p>
+    </article>
+
+    <!-- 5 -->
+    <article class="card" id="ch-police">
+      <h3><span class="chapno">Chapitre 5</span><br>Le cycle de vie d'une police — le schéma qui fait la différence</h3>
+      <p>Si tu ne retiens qu'une chose de tout ce syllabus, retiens ceci. C'est la chaîne de valeur d'un assureur, et <em>tout</em> projet de transformation vient s'y greffer quelque part. Savoir dire « votre projet touche l'étape 4 » te fait passer pour quelqu'un qui a déjà travaillé dans le secteur.</p>
+      <div class="flow">
+        <div class="step"><b>1 · Distribution</b><span>Un courtier, une agence ou un site web propose le produit. <em>Projets :</em> portail courtier, parcours de vente en ligne, comparateurs.</span></div>
+        <div class="step"><b>2 · Souscription</b><span>On évalue le risque et on fixe le prix. <em>Projets :</em> règles d'acceptation automatiques, tarification par la donnée, IA.</span></div>
+        <div class="step"><b>3 · Émission de la police</b><span>Le contrat est créé dans le système. <em>Projets :</em> remplacement du <b>policy administration system</b> — les plus gros budgets du secteur.</span></div>
+        <div class="step"><b>4 · Encaissement</b><span>Primes, quittances, relances, commissions du courtier. <em>Projets :</em> automatisation comptable, recouvrement.</span></div>
+        <div class="step"><b>5 · Gestion du contrat</b><span>Avenants, changement d'adresse, résiliation. <em>Projets :</em> self-service client, réduction des appels au call center.</span></div>
+        <div class="step"><b>6 · Sinistre</b><span>Déclaration, expertise, indemnisation, lutte contre la fraude. <em>Projets :</em> déclaration mobile, tri automatique, détection de fraude.</span></div>
+        <div class="step"><b>7 · Comptabilité & reporting</b><span>Provisions, clôture, Solvabilité II, IFRS 17. <em>Projets :</em> refonte des chaînes de reporting, qualité des données.</span></div>
+      </div>
+      <p><b>Le vocabulaire technique associé :</b> on appelle <b>core system</b> (ou système cœur) le logiciel qui porte les étapes 3 à 6. Les éditeurs qu'on croise en Belgique et au Benelux sont <b>Guidewire</b>, <b>Keylane</b>, <b>Sapiens</b>, <b>Duck Creek</b>, souvent en coexistence avec des systèmes maison écrits il y a trente ans (le fameux <b>legacy</b>). Un projet de « transformation » est très souvent un remplacement de core system, ou la construction d'une couche moderne par-dessus.</p>
+    </article>
+
+    <!-- 6 -->
+    <article class="card" id="ch-transfo">
+      <h3><span class="chapno">Chapitre 6</span><br>« Transformation », concrètement : les 5 chantiers du moment</h3>
+      <ol>
+        <li><b>Le remplacement du legacy.</b> Sortir d'un système central vieillissant, migrer des millions de contrats sans rien perdre. Long, cher, risqué — et permanent dans le secteur.</li>
+        <li><b>La donnée.</b> Les assureurs sont assis sur des données éparpillées entre dix systèmes. Les rassembler conditionne tout le reste : tarification, reporting réglementaire, IA.</li>
+        <li><b>L'IA générative.</b> Résumé automatique de dossiers de sinistre, assistance aux gestionnaires, extraction de documents. C'est l'axe n° 1 de la stratégie d'EY aujourd'hui (voir chapitre 9) : sache en parler.</li>
+        <li><b>Le réglementaire.</b> DORA, révision de Solvabilité II, AI Act, CSRD — la conformité n'est pas optionnelle, donc son budget est protégé même en période de vaches maigres.</li>
+        <li><b>L'expérience client et le coût de gestion.</b> Le marché belge est mature et très concurrentiel : la croissance vient de la réduction du ratio de frais et de la fidélisation, pas de nouveaux clients tombés du ciel.</li>
+      </ol>
+      <p class="note"><strong>Question probable en entretien :</strong> « Quel défi vois-tu pour un assureur belge aujourd'hui ? » Ne réponds pas « le digital ». Réponds par un chantier précis : « la coexistence entre un core system historique et les exigences de résilience de DORA », ou « l'intégration de l'IA dans la gestion des sinistres, avec la contrainte de l'AI Act ». Précision = crédibilité.</p>
+    </article>
+
+    <!-- 7 -->
+    <article class="card" id="ch-attentes">
+      <h3><span class="chapno">Chapitre 7</span><br>Ce qu'on attend vraiment d'un junior</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Ce qui te fait remarquer (en bien)</th><th>Ce qui te coule</th></tr></thead>
+        <tbody>
+          <tr><td>Rendre un travail propre, relu, sans faute, au format demandé</td><td>Rendre en retard sans avoir prévenu</td></tr>
+          <tr><td>Dire « je ne sais pas, je vérifie et je reviens vers toi »</td><td>Inventer une réponse devant le client</td></tr>
+          <tr><td>Poser tes questions groupées, une fois, au bon moment</td><td>Interrompre ton manager toutes les dix minutes — ou ne jamais rien demander et partir trois jours dans la mauvaise direction</td></tr>
+          <tr><td>Prendre des notes en réunion et envoyer le compte rendu le jour même</td><td>Arriver en réunion client sans savoir qui est autour de la table</td></tr>
+          <tr><td>Encoder ton timesheet à temps</td><td>Traiter l'administratif comme un détail</td></tr>
+          <tr><td>Être ponctuel, sobre dans la tenue, discret sur les infos client</td><td>Parler d'un client dans le train ou sur LinkedIn</td></tr>
+        </tbody>
+      </table></div>
+      <p>Ces six lignes de gauche sont, littéralement, ce qui détermine ton évaluation de fin d'année la première année. Aucune ne demande un diplôme : elles demandent de la fiabilité. C'est ton argument principal si ton parcours académique est plus court que celui des autres candidats (chapitre 18).</p>
+    </article>
+
+    <hr class="sep">
+    <div class="part"><span class="n">Partie II</span><h2>La société</h2></div>
+
+    <!-- 8 -->
+    <article class="card" id="ch-big4">
+      <h3><span class="chapno">Chapitre 8</span><br>Le Big 4, c'est quoi exactement</h3>
+      <p>Quatre réseaux mondiaux de services professionnels — <b>Deloitte, PwC, EY, KPMG</b> — nés du métier de l'audit des comptes et devenus des cabinets généralistes : audit, fiscalité, conseil, transactions, droit. Ensemble : environ <b>220 milliards de dollars</b> de chiffre d'affaires et plus de <b>1,5 million de personnes</b> sur l'exercice 2025.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Cabinet</th><th class="num">CA mondial FY2025</th><th class="num">Effectif</th><th>Position</th></tr></thead>
+        <tbody>
+          <tr><td>Deloitte</td><td class="num">70,5 Md$</td><td class="num">≈ 470 000</td><td>Le plus gros, le plus orienté conseil</td></tr>
+          <tr><td>PwC</td><td class="num">56,9 Md$</td><td class="num">≈ 365 000</td><td>Très fort en audit et en <em>deals</em></td></tr>
+          <tr><td><b>EY</b></td><td class="num"><b>53,2 Md$</b></td><td class="num"><b>406 209</b></td><td>Le seul avec une practice services financiers intégrée à l'échelle EMEIA</td></tr>
+          <tr><td>KPMG</td><td class="num">39,8 Md$</td><td class="num">≈ 276 000</td><td>Le plus petit des quatre</td></tr>
+        </tbody>
+      </table></div>
+      <p><b>Point de structure important :</b> aucun des quatre n'est une entreprise unique. Ce sont des <b>réseaux de sociétés membres</b>, juridiquement indépendantes pays par pays, qui partagent une marque, une méthodologie et des standards de qualité. « EY Belgique » n'est donc pas une filiale de « EY monde » : c'est un ensemble de sociétés belges membres du réseau. Le cabinet appartient à ses <b>associés</b> (partners) : il n'est pas coté en bourse.</p>
+      <p class="note"><strong>Anecdote qui fait mouche.</strong> En 2023, EY a tenté de séparer son audit de son conseil dans le monde entier — le <em>Project Everest</em> — puis y a renoncé. Pourquoi vouloir séparer ? Précisément à cause du conflit entre audit et conseil que gèrent les « channels » du chapitre 13. Si tu places ça correctement, tu montres que tu comprends la tension structurelle du modèle, pas juste le nom des services.</p>
+    </article>
+
+    <!-- 9 -->
+    <article class="card" id="ch-ey">
+      <h3><span class="chapno">Chapitre 9</span><br>EY en chiffres (monde, exercice clos le 30 juin 2025)</h3>
+      <div class="stats">
+        <div class="stat"><b>53,2 Md$</b><span>Chiffre d'affaires FY2025 (+4,0 % à devises constantes)</span></div>
+        <div class="stat"><b>406 209</b><span>Collaborateurs (+3,4 %)</span></div>
+        <div class="stat"><b>150+</b><span>Pays et territoires</span></div>
+        <div class="stat"><b>&gt; 1 Md$</b><span>Investis par an dans l'IA</span></div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Service line</th><th class="num">CA FY2025</th><th class="num">Effectif</th></tr></thead>
+        <tbody>
+          <tr><td>Assurance (audit)</td><td class="num">17,9 Md$</td><td class="num">130 898</td></tr>
+          <tr><td><b>Consulting</b> — ton service line</td><td class="num"><b>16,4 Md$</b></td><td class="num"><b>124 238</b></td></tr>
+          <tr><td>Tax</td><td class="num">12,7 Md$</td><td class="num">75 314</td></tr>
+          <tr><td>Strategy and Transactions</td><td class="num">6,2 Md$</td><td class="num">25 036</td></tr>
+        </tbody>
+      </table></div>
+      <p>Par zone : Amériques 24,7 Md$ · EMEIA 21,1 Md$ · Asie-Pacifique 7,4 Md$. La Belgique fait partie de la zone <b>EMEIA</b> (Europe, Moyen-Orient, Inde, Afrique) et, depuis la réorganisation du 1<sup>er</sup> juillet 2025, de la région <b>« Europe West »</b>.</p>
+      <h4>Les trois choses à savoir sur l'identité de la maison</h4>
+      <ul>
+        <li><b>Raison d'être :</b> « <em>Building a better working world</em> », et depuis 2024 la signature « <em>Shape the future with confidence</em> ».</li>
+        <li><b>Stratégie mondiale :</b> « <b>All in</b> », lancée en 2024, articulée autour de l'IA, des alliances technologiques sectorielles et de la formation continue. Les revenus liés à l'IA ont progressé de 30 % sur FY2025, avec plus de 15 000 professionnels sur des projets IA.</li>
+        <li><b>Direction mondiale :</b> <b>Janet Truncale</b>, Global Chair and CEO.</li>
+      </ul>
+    </article>
+
+    <!-- 10 -->
+    <article class="card" id="ch-eybe">
+      <h3><span class="chapno">Chapitre 10</span><br>EY Belgique en chiffres</h3>
+      <p>Source : rapport de transparence 2025 d'EY Belgique, exercice clos le 30 juin 2025. Ces chiffres sont publics et vérifiables — les citer de mémoire en entretien est un signal très fort.</p>
+      <div class="stats">
+        <div class="stat"><b>483,6 M€</b><span>CA de l'ensemble des entités belges</span></div>
+        <div class="stat"><b>135,7 M€</b><span>dont EY Réviseurs d'Entreprises (l'audit)</span></div>
+        <div class="stat"><b>347,9 M€</b><span>dont les services non-audit des autres entités</span></div>
+        <div class="stat"><b>8</b><span>Bureaux en Belgique</span></div>
+      </div>
+      <ul>
+        <li><b>Bureaux :</b> Diegem (siège, et ton lieu de travail), Bruxelles, Anvers, Gand, Hasselt, Liège, Nivelles, Tournai.</li>
+        <li><b>Country Managing Partner :</b> Steven Claes. <b>Présidente d'EY Réviseurs d'Entreprises :</b> Eef Naessens.</li>
+        <li><b>Entités juridiques belges :</b> EY Réviseurs d'Entreprises SRL (audit légal), EY Assurance Services, <b>EY Consulting BV</b> et EY Advisory Services BV (le conseil — c'est là que tu signerais), EY Tax Consultants BV, EY Strategy and Transactions BV, EY Law SRL (par alliance stratégique).</li>
+        <li>L'effectif belge n'est pas publié dans le rapport de transparence ; l'ordre de grandeur annoncé publiquement par le cabinet est de plusieurs milliers de personnes. Ne cite pas de chiffre précis que tu ne pourrais pas justifier.</li>
+      </ul>
+      <p class="note blue"><strong>Le détail qui tue :</strong> l'audit ne pèse que ~28 % du chiffre d'affaires belge du réseau. Les services non-audit — conseil, fiscalité, transactions, droit — pèsent près de 72 %. C'est exactement pour cela que la structure en channels existe.</p>
+    </article>
+
+    <!-- 11 -->
+    <article class="card" id="ch-servicelines">
+      <h3><span class="chapno">Chapitre 11</span><br>Les quatre service lines, et où tu atterris</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Service line</th><th>Ce qu'on y fait</th><th>Qui paie</th></tr></thead>
+        <tbody>
+          <tr><td><b>Assurance</b></td><td>Audit légal des comptes, audit de durabilité, Forensic, Financial Accounting Advisory</td><td>L'entreprise auditée, sur mandat légal (le commissaire est nommé par l'assemblée générale)</td></tr>
+          <tr><td><b>Consulting</b> ← toi</td><td>Transformation métier, technologie, données et IA, cybersécurité, risque et réglementaire</td><td>Le client, sur projet, au forfait ou en régie</td></tr>
+          <tr><td><b>Tax</b></td><td>Fiscalité des entreprises, TVA, prix de transfert, mobilité internationale, droit (EY Law)</td><td>Le client, en conseil récurrent ou ponctuel</td></tr>
+          <tr><td><b>Strategy and Transactions (SaT)</b></td><td>Fusions-acquisitions, due diligence, évaluation, stratégie de croissance</td><td>L'acheteur ou le vendeur, sur opération</td></tr>
+        </tbody>
+      </table></div>
+      <p>Ton poste est dans <b>Consulting</b>, dans la practice sectorielle <b>Financial Services</b>, sur le segment <b>Insurance</b>. Autrement dit : ton service line est le conseil, ton industrie est l'assurance. Cette double appartenance (service line × secteur) est la matrice d'organisation de tous les Big 4 — sache la nommer.</p>
+    </article>
+
+    <!-- 12 -->
+    <article class="card" id="ch-fso">
+      <h3><span class="chapno">Chapitre 12</span><br>FSO : la particularité qui répond à « pourquoi EY ? »</h3>
+      <p>Chez les autres Big 4, un consultant en services financiers appartient d'abord à son pays. Chez EY, la <b>Financial Services Organisation (FSO)</b> est une organisation dédiée, transversale et <b>intégrée à l'échelle de toute la zone EMEIA</b> : plus de <b>11 000 professionnels</b> qui travaillent par-delà les frontières pour les banques, les assureurs et les gestionnaires d'actifs, dans <em>toutes</em> les service lines à la fois.</p>
+      <p>Concrètement, pour toi :</p>
+      <ul>
+        <li>tu es entouré uniquement de gens qui font de l'assurance et de la banque — tu montes en compétence sectorielle beaucoup plus vite ;</li>
+        <li>les missions sont souvent multi-pays (un assureur belge appartient fréquemment à un groupe européen : Ageas, Allianz, AXA, Baloise, NN…) ;</li>
+        <li>tu peux être exposé tôt à des équipes internationales, ce qui explique l'exigence d'anglais professionnel.</li>
+      </ul>
+      <p class="note blue"><strong>C'est ton meilleur argument « pourquoi EY et pas un autre Big 4 ».</strong> Il est factuel, spécifique à EY, et il montre que tu as cherché au-delà de la page d'accueil. Voir la flashcard correspondante dans l'onglet 2.</p>
+    </article>
+
+    <!-- 13 -->
+    <article class="card" id="ch-channels">
+      <h3><span class="chapno">Chapitre 13</span><br>Channel 1 et Channel 2 — la structure à comprendre</h3>
+      <p>C'est le concept le plus mal compris par les candidats, et celui qui te distingue immédiatement si tu l'expliques juste.</p>
+      <p><b>Le principe.</b> Un cabinet qui audite les comptes d'une entreprise doit être <b>indépendant</b> d'elle. Il ne peut donc pas lui vendre tout et n'importe quoi : lui construire le système informatique qu'il devra ensuite auditer, ou décider à sa place, détruirait l'objectivité de l'audit. La loi européenne et belge encadre strictement les services non-audit vendus à un client d'audit (liste de services interdits, plafond d'honoraires, validation par le comité d'audit).</p>
+      <p>D'où le classement interne des clients :</p>
+      <div class="tw"><table>
+        <thead><tr><th>&nbsp;</th><th>Channel 1</th><th>Channel 2</th></tr></thead>
+        <tbody>
+          <tr><td><b>Définition</b></td><td>Le client <b>est</b> un client d'audit du cabinet (ou appartient à son groupe)</td><td>Le client <b>n'est pas</b> audité par le cabinet</td></tr>
+          <tr><td><b>Ce qu'on peut vendre</b></td><td>Uniquement des services autorisés, encadrés, validés au cas par cas — typiquement des travaux proches de l'audit</td><td>Toute la palette du conseil, en concurrence frontale avec Accenture, Capgemini, McKinsey…</td></tr>
+          <tr><td><b>Contrainte</b></td><td>Indépendance : chaque mission passe par une validation formelle avant d'être acceptée</td><td>Pas de contrainte d'indépendance liée à l'audit</td></tr>
+          <tr><td><b>Conséquence pour toi</b></td><td>Missions plus cadrées, sujets souvent financiers ou de contrôle</td><td>Missions de transformation « pleines », les plus larges — <b>c'est là que tu travailleras le plus souvent</b></td></tr>
+        </tbody>
+      </table></div>
+      <h4>La preuve par les chiffres belges</h4>
+      <p>Le rapport de transparence 2025 d'EY Belgique publie exactement cette ventilation pour l'entité d'audit (exercice clos le 30/06/2025) :</p>
+      <div class="tw"><table>
+        <thead><tr><th>Nature des revenus d'EY Réviseurs d'Entreprises</th><th class="num">M€</th><th class="num">%</th></tr></thead>
+        <tbody>
+          <tr><td>Contrôle légal des comptes d'entités d'intérêt public (EIP)</td><td class="num">36,5</td><td class="num">27 %</td></tr>
+          <tr><td>Contrôle légal des comptes d'autres entités</td><td class="num">71,5</td><td class="num">53 %</td></tr>
+          <tr><td>Services non-audit à des entités <b>auditées par le cabinet</b> → <b>Channel 1</b></td><td class="num">9,9</td><td class="num">7 %</td></tr>
+          <tr><td>Services non-audit à <b>d'autres entités</b> → <b>Channel 2</b></td><td class="num">17,8</td><td class="num">13 %</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total de l'entité d'audit</td><td class="num">135,7</td><td class="num">100 %</td></tr></tfoot>
+      </table></div>
+      <p>Deux fois plus de conseil vendu à des non-clients d'audit qu'à des clients d'audit : la règle d'indépendance se lit directement dans les comptes.</p>
+      <p class="note"><strong>Comment le dire en entretien, en trois phrases.</strong> « Channel 1, ce sont les clients dont EY est l'auditeur : on ne peut leur vendre que des services autorisés, parce que l'indépendance de l'audit prime. Channel 2, ce sont les clients non audités par EY : là, tout le conseil est ouvert, et c'est le terrain de la transformation. Cette séparation explique aussi pourquoi les Big 4 ont régulièrement envisagé de scinder leurs activités, comme EY avec le Project Everest en 2023. »</p>
+      <p><em>Nuance à connaître :</em> certains parlent aussi d'un « channel 3 » ou de clients « non-channel » pour les prospects sans lien d'audit. Ne t'aventure pas là-dessus : maîtrise 1 et 2, c'est déjà plus que la plupart des candidats.</p>
+    </article>
+
+    <!-- 14 -->
+    <article class="card" id="ch-carriere">
+      <h3><span class="chapno">Chapitre 14</span><br>La pyramide : grades, évaluation, up-or-out</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Grade</th><th>Durée indicative</th><th>Rôle dominant</th></tr></thead>
+        <tbody>
+          <tr><td><b>Consultant / Analyst</b> ← ton entrée</td><td>2 à 3 ans</td><td>Produire : analyses, livrables, support</td></tr>
+          <tr><td>Senior Consultant</td><td>2 à 3 ans</td><td>Piloter un chantier, encadrer des juniors</td></tr>
+          <tr><td>Manager</td><td>3 à 4 ans</td><td>Diriger la mission, tenir le budget, la relation client</td></tr>
+          <tr><td>Senior Manager</td><td>3 à 4 ans</td><td>Plusieurs missions, développement commercial</td></tr>
+          <tr><td>Director / Associate Partner</td><td>variable</td><td>Portefeuille de clients, offres</td></tr>
+          <tr><td>Partner (associé)</td><td>—</td><td>Co-propriétaire du cabinet : vendre, signer, assumer le risque</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Évaluation annuelle</b> : objectifs, retours des managers de mission, entretien avec ton <b>counselor</b>.</li>
+        <li><b>Up-or-out</b> : le modèle historique veut qu'on progresse ou qu'on parte. Il s'est beaucoup assoupli, mais l'esprit reste : la progression est la norme attendue, pas une faveur.</li>
+        <li><b>Le départ n'est pas un échec</b> : une grande partie des juniors part après 3 à 5 ans vers l'industrie — chez un assureur, précisément. C'est un débouché reconnu et parfaitement assumable en entretien… à condition de ne pas l'annoncer comme ton plan (chapitre 19).</li>
+      </ul>
+    </article>
+
+    <!-- 15 -->
+    <article class="card" id="ch-bizmodel">
+      <h3><span class="chapno">Chapitre 15</span><br>Comment le cabinet gagne de l'argent (et pourquoi ça te concerne)</h3>
+      <p>Le modèle tient en une ligne : <b>chiffre d'affaires = nombre de consultants × taux journalier × taux d'utilisation</b>.</p>
+      <ul>
+        <li>Le <b>taux journalier</b> croît fortement avec le grade — d'où la pyramide : beaucoup de juniors sous peu de seniors.</li>
+        <li>Le <b>taux d'utilisation</b> (chargeability) est la part de tes heures facturables. C'est pour ça que le timesheet est sacré.</li>
+        <li>Un projet mal cadré (scope creep) mange la marge : d'où l'obsession du périmètre et du changement de périmètre formalisé.</li>
+        <li>Tu es un <b>coût</b> la première année et un <b>investissement</b> : le cabinet parie que tu deviendras rentable en 12 à 18 mois. Le montrer vite, c'est le vrai enjeu de ton début.</li>
+      </ul>
+      <p class="note blue"><strong>Question de manager :</strong> « Sais-tu comment on gagne de l'argent ici ? » Réponds par cette formule. Peu de juniors savent le faire, et cela prouve que tu comprends l'entreprise, pas seulement le métier.</p>
+    </article>
+
+    <!-- 16 -->
+    <article class="card" id="ch-marche">
+      <h3><span class="chapno">Chapitre 16</span><br>Le marché belge de l'assurance : tes futurs clients</h3>
+      <ul>
+        <li><b>Les acteurs.</b> Trois compagnies pèsent à elles seules près de la moitié du marché : <b>AG Insurance</b> (leader, environ 20 % de part de marché fin 2024), <b>AXA</b> et <b>KBC Assurances</b>. Viennent ensuite <b>Ethias</b>, <b>Belfius Assurances</b>, <b>Baloise</b> et <b>Allianz</b>. Ajoute <b>Ageas</b>, groupe belge coté et actionnaire principal d'AG, ainsi que <b>P&amp;V</b> et <b>NN</b>.</li>
+        <li><b>La fédération professionnelle :</b> <b>Assuralia</b>. Elle publie les chiffres clés du secteur — une source à citer.</li>
+        <li><b>Les deux régulateurs belges</b>, et il faut savoir les distinguer :
+          <ul>
+            <li>la <b>BNB</b> (Banque nationale de Belgique) → supervision <em>prudentielle</em> : solvabilité, capital, gouvernance ;</li>
+            <li>la <b>FSMA</b> → supervision de la <em>conduite</em> : protection du consommateur, information, règles de vente.</li>
+          </ul>
+        </li>
+        <li><b>Les spécificités locales.</b> Marché mature, faible croissance, très intermédié (les courtiers restent puissants), forte présence de la bancassurance (KBC, Belfius), trois langues officielles, et une pression réglementaire européenne constante.</li>
+      </ul>
+      <p>Savoir citer trois assureurs belges et les deux régulateurs suffit à te placer au-dessus de la moyenne des candidats juniors. Personne n'attend de toi une analyse de marché.</p>
+    </article>
+
+    <hr class="sep">
+    <div class="part"><span class="n">Partie III</span><h2>Le plan de bataille</h2></div>
+
+    <!-- 17 -->
+    <article class="card" id="ch-process">
+      <h3><span class="chapno">Chapitre 17</span><br>Le process de recrutement : à quoi t'attendre</h3>
+      <p>EY Belgique annonce un parcours mêlant « évaluations en ligne, écrites ou en face-à-face » et des entretiens en présentiel, par téléphone et en visio. Dans les faits, pour un profil junior, la séquence ressemble à ceci — compte 4 à 8 semaines au total :</p>
+      <ol>
+        <li><b>Candidature en ligne</b> (portail careers.ey.com / Yello) : CV en anglais, une page, sans faute.</li>
+        <li><b>Screening RH</b> par téléphone : motivation, langues, disponibilité en septembre 2026, prétentions. Court, mais éliminatoire.</li>
+        <li><b>Évaluations en ligne</b> : tests de raisonnement (numérique, verbal, logique) et/ou évaluation comportementale gamifiée. Entraîne-toi : ces tests se travaillent, et beaucoup de candidats les découvrent le jour même.</li>
+        <li><b>Entretien(s) métier</b> avec un manager / senior manager de la practice Insurance : motivation, compréhension du secteur, mise en situation ou petit cas.</li>
+        <li><b>Entretien final</b> avec un partner ou un director : personnalité, potentiel commercial, fit avec la maison.</li>
+        <li><b>Offre</b> puis onboarding (induction, formations d'intégration).</li>
+      </ol>
+      <h4>Le mini-cas : la méthode en 4 temps</h4>
+      <p>Si on te donne une situation (« un assureur veut réduire de 20 % le délai de traitement des sinistres, par où commences-tu ? ») :</p>
+      <ol>
+        <li><b>Reformule</b> et vérifie l'objectif : « le but, c'est le délai, ou la satisfaction client ? »</li>
+        <li><b>Structure à voix haute</b> avant de répondre : « je regarderais trois choses : le processus, les outils, les personnes. »</li>
+        <li><b>Creuse un axe</b> avec des exemples concrets (voir le cycle de vie de la police, chapitre 5).</li>
+        <li><b>Conclus</b> par une recommandation et ce qu'il te manque comme information.</li>
+      </ol>
+      <p>On n'attend pas la bonne réponse. On teste si ton raisonnement est audible par un client.</p>
+    </article>
+
+    <!-- 18 -->
+    <article class="card" id="ch-gap">
+      <h3><span class="chapno">Chapitre 18</span><br>Ton profil face à l'offre : traiter le sujet du diplôme</h3>
+      <p>Sois lucide : l'annonce demande un <b>master</b> (économie appliquée, gestion, ingénieur de gestion, finance ou domaine proche). Tu sors de haute école. Ce n'est pas rédhibitoire — les Big 4 recrutent des bacheliers, surtout sur les profils technologiques et sur les fonctions où l'exécution prime — mais tu dois avoir traité la question <em>avant</em> qu'on te la pose.</p>
+      <h4>Les trois leviers, dans l'ordre d'efficacité</h4>
+      <ol>
+        <li><b>Le concret contre l'académique.</b> Stages, jobs étudiants, travail de fin d'études, projets associatifs : tout ce qui prouve que tu as déjà livré quelque chose dans un délai, avec d'autres. Un stage bien raconté vaut mieux qu'un semestre théorique.</li>
+        <li><b>Les langues.</b> L'offre demande le néerlandais <em>et/ou</em> le français, plus un anglais professionnel. Diegem est en Flandre : chaque mot de néerlandais que tu poses est un avantage direct et mesurable sur les autres candidats francophones. Si tu es à l'aise, propose toi-même de basculer quelques minutes en néerlandais — l'effet est considérable. Répète les flashcards de l'onglet 2 dans les trois langues.</li>
+        <li><b>La trajectoire.</b> Montre que la montée en diplôme t'intéresse : master en horaire décalé, certification sectorielle, formations internes EY. Formulation : « je sais que mon parcours est plus court que celui de certains candidats ; c'est aussi pour ça que je choisis un cabinet où la formation est structurée, et je suis prêt à compléter par un master en cours du soir. »</li>
+      </ol>
+      <p class="note"><strong>Ce qu'il ne faut jamais faire :</strong> s'excuser, ou au contraire faire comme si de rien n'était. Le bon registre est factuel et sans complexe : tu poses le fait, tu poses ce qui le compense, tu passes à la suite. Trois phrases, pas plus.</p>
+    </article>
+
+    <!-- 19 -->
+    <article class="card" id="ch-questions">
+      <h3><span class="chapno">Chapitre 19</span><br>Les questions à poser, et les cinq erreurs fatales</h3>
+      <h4>Cinq questions qui te font marquer des points</h4>
+      <ul>
+        <li>« Sur quel type de projets un junior est-il staffé les six premiers mois ? »</li>
+        <li>« La practice Insurance travaille-t-elle plutôt en Channel 1 ou en Channel 2 ? » <em>(à poser seulement si tu maîtrises le chapitre 13 — l'effet est fort)</em></li>
+        <li>« Quelle place prend aujourd'hui l'IA générative dans vos missions d'assurance ? »</li>
+        <li>« Comment fonctionne le système de counselor, et à quelle fréquence a-t-on un retour ? »</li>
+        <li>« Qu'est-ce qui distingue, chez vous, un junior qui réussit d'un junior qui peine ? »</li>
+      </ul>
+      <h4>Cinq erreurs qui coûtent le poste</h4>
+      <ul>
+        <li><b>« Je n'ai pas de question. »</b> Interprété comme un désintérêt. Toujours en garder deux en réserve.</li>
+        <li><b>Parler salaire au premier entretien.</b> C'est le sujet du RH, à la fin.</li>
+        <li><b>Annoncer que le Big 4 est un tremplin.</b> Même si c'est vrai et que tout le monde le sait, on ne recrute pas quelqu'un qui a déjà planifié son départ.</li>
+        <li><b>Critiquer un ancien employeur ou professeur.</b> Le consulting est un métier de discrétion : c'est un signal d'alarme immédiat.</li>
+        <li><b>Confondre les quatre cabinets.</b> Dire « chez Deloitte… » en entretien chez EY est une élimination directe. Relis le chapitre 12 : ta réponse à « pourquoi EY » doit être impossible à recycler ailleurs.</li>
+      </ul>
+      <p class="note blue"><strong>Le mot de la fin du coach.</strong> Tu ne seras pas recruté parce que tu connais Solvabilité II par cœur. Tu seras recruté parce que tu es clair, fiable, curieux et agréable à avoir dans une équipe pendant six mois de projet. Le contenu de ce syllabus sert à te débarrasser du stress du contenu — pour que tu puisses être exactement cette personne-là le jour J.</p>
+    </article>
+
+    <p class="srcs">Sources des chiffres : EY, communiqué de résultats FY2025 (30 juin 2025) · EY Belgique, Rapport de transparence 2025 · EY Belgium, pages Financial Services, bureaux et « How we hire » · Assuralia et données de marché 2024 pour les parts de marché belges · offre d'emploi EY réf. 1643952BEL-Diegem. Page personnelle et non officielle, sans lien avec EY.</p>
+  </div>
+</section>
+
+<!-- ============================ ONGLET 2 ============================ -->
+<section role="tabpanel" id="panel-flash" aria-labelledby="tab-btn-flash" hidden>
+  <div class="wrap">
+    <h2>Flashcards entretien</h2>
+    <p class="lead">Les questions qui tombent quasi systématiquement, avec une réponse modèle à adapter — jamais à réciter. Choisis la langue, cache la réponse, réponds à voix haute, puis compare. Tu peux modifier chaque carte et en ajouter les tiennes ; tout est sauvegardé dans ce navigateur.</p>
+
+    <div class="toolbar">
+      <div class="langpick" role="radiogroup" aria-label="Langue">
+        <label><input type="radio" name="lang" value="fr" checked> Français</label>
+        <label><input type="radio" name="lang" value="en"> English</label>
+        <label><input type="radio" name="lang" value="nl"> Nederlands</label>
+      </div>
+      <button class="btn" id="fc-toggle-all">Tout afficher</button>
+      <span class="spacer"></span>
+      <button class="btn primary" id="fc-add">+ Nouvelle carte</button>
+      <button class="btn ghost sm" id="fc-reset" title="Restaurer les cartes d'origine">Réinitialiser</button>
+    </div>
+
+    <div class="fc-grid" id="fc-grid"></div>
+  </div>
+</section>
+
+<dialog id="fc-dialog">
+  <div class="dlg-head">
+    <h3 id="fc-dlg-title">Modifier la carte</h3>
+    <p class="lead" style="margin:0 0 4px;font-size:14px">Laisse un champ vide si tu ne veux pas traduire : la carte affichera alors une note dans cette langue.</p>
+  </div>
+  <form method="dialog" id="fc-form">
+    <div class="field"><label for="f-tag">Catégorie</label><input id="f-tag" name="tag" placeholder="Motivation, Personnalité…"></div>
+    <div class="field"><label for="f-qfr">Question — Français</label><textarea id="f-qfr" name="q_fr" rows="2"></textarea></div>
+    <div class="field"><label for="f-afr">Réponse modèle — Français</label><textarea id="f-afr" name="a_fr" rows="5"></textarea></div>
+    <div class="field"><label for="f-qen">Question — English</label><textarea id="f-qen" name="q_en" rows="2"></textarea></div>
+    <div class="field"><label for="f-aen">Model answer — English</label><textarea id="f-aen" name="a_en" rows="5"></textarea></div>
+    <div class="field"><label for="f-qnl">Question — Nederlands</label><textarea id="f-qnl" name="q_nl" rows="2"></textarea></div>
+    <div class="field"><label for="f-anl">Modelantwoord — Nederlands</label><textarea id="f-anl" name="a_nl" rows="5"></textarea></div>
+    <div class="field"><label for="f-tip">Conseil du coach (facultatif)</label><textarea id="f-tip" name="tip" rows="3"></textarea></div>
+  </form>
+  <div class="dlg-foot">
+    <button class="btn primary" id="fc-save">Enregistrer</button>
+    <button class="btn" id="fc-cancel">Annuler</button>
+    <span class="spacer"></span>
+    <button class="btn danger sm" id="fc-delete">Supprimer</button>
+  </div>
+</dialog>
+
+<!-- ============================ ONGLET 3 ============================ -->
+<section role="tabpanel" id="panel-qcm" aria-labelledby="tab-btn-qcm" hidden>
+  <div class="wrap" id="qcm-root"></div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    Préparation personnelle à un entretien chez EY Belgique — page non officielle, sans affiliation ni approbation d'EY. Les chiffres cités proviennent des publications publiques d'EY (résultats mondiaux FY2025, rapport de transparence 2025 d'EY Belgique) et des données de marché d'Assuralia. Tes cartes et tes scores restent dans ce navigateur, rien n'est envoyé nulle part.
+  </div>
+</footer>
+
+<script>
+(function () {
+"use strict";
+
+/* =====================================================================
+   0 · Utilitaires
+   ===================================================================== */
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function store(key, fallback) {
+  try {
+    var raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) { return fallback; }
+}
+function persist(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* mode privé */ }
+}
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+/* =====================================================================
+   1 · Onglets + navigation vers un chapitre
+   ===================================================================== */
+var PANELS = { syllabus: "panel-syllabus", flash: "panel-flash", qcm: "panel-qcm" };
+
+function selectTab(name, keepScroll) {
+  Object.keys(PANELS).forEach(function (k) {
+    var on = k === name;
+    $("#tab-btn-" + k).setAttribute("aria-selected", on ? "true" : "false");
+    $("#" + PANELS[k]).hidden = !on;
+  });
+  if (!keepScroll) window.scrollTo({ top: 0, behavior: "auto" });
+  try { history.replaceState(null, "", "#" + name); } catch (e) {}
+}
+
+$$("nav.tabs button").forEach(function (b) {
+  b.addEventListener("click", function () { selectTab(b.id.replace("tab-btn-", "")); });
+});
+
+/** Depuis le QCM : ouvrir le syllabus au bon chapitre et le faire clignoter. */
+function goToChapter(id) {
+  selectTab("syllabus", true);
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  el.classList.remove("flash");
+  void el.offsetWidth;
+  el.classList.add("flash");
+}
+
+/* =====================================================================
+   2 · Flashcards
+   ===================================================================== */
+var FC_KEY = "etudiant:flashcards:v1";
+var LANGS = ["fr", "en", "nl"];
+var LANG_LABEL = { fr: "Français", en: "English", nl: "Nederlands" };
+var A_LABEL = { fr: "Réponse modèle", en: "Model answer", nl: "Modelantwoord" };
+var MISSING = {
+  fr: "Pas encore rédigé en français — clique sur Modifier pour l’écrire.",
+  en: "Not written in English yet — click Edit to add it.",
+  nl: "Nog niet in het Nederlands geschreven — klik op Aanpassen om het toe te voegen."
+};
+
+var DEFAULT_CARDS = [
+  {
+    id: "intro", tag: "Ouverture",
+    q: {
+      fr: "Parle-moi de toi.",
+      en: "Tell me about yourself.",
+      nl: "Vertel eens iets over jezelf."
+    },
+    a: {
+      fr: "Trois temps, deux minutes maximum.\n1) D’où je viens : mon parcours en haute école, l’orientation qui m’a plu et pourquoi.\n2) Ce que j’ai déjà fait : mon stage / mon job étudiant, et une chose concrète que j’y ai livrée.\n3) Où je vais : pourquoi le conseil en services financiers, et pourquoi cette candidature-ci maintenant.\nJe termine sur une phrase qui tend la perche : et c’est précisément la partie transformation qui m’intéresse le plus.",
+      en: "Three beats, two minutes maximum.\n1) Where I come from: my degree, the direction I enjoyed and why.\n2) What I have already done: my internship or student job, and one concrete thing I delivered there.\n3) Where I am heading: why consulting in financial services, and why this application now.\nI close on a hook: and that is exactly why the transformation side of this role appeals to me.",
+      nl: "Drie delen, maximaal twee minuten.\n1) Waar ik vandaan kom: mijn opleiding en waarom die richting me lag.\n2) Wat ik al gedaan heb: mijn stage of studentenjob, en één concreet resultaat.\n3) Waar ik naartoe wil: waarom consulting in financiële diensten, en waarom deze functie nu.\nIk eindig met een aanknopingspunt: en net dat transformatieluik trekt me het meest aan."
+    },
+    tip: "On ne demande pas ta biographie mais ta capacité à structurer. Chronologie passé → présent → futur, et tu t’arrêtes. Chronomètre-toi : au-delà de deux minutes, on décroche."
+  },
+  {
+    id: "why-big4", tag: "Motivation",
+    q: {
+      fr: "Pourquoi le Big 4 ?",
+      en: "Why a Big 4 firm?",
+      nl: "Waarom een Big 4-kantoor?"
+    },
+    a: {
+      fr: "Pour trois raisons, dans cet ordre.\nLa courbe d’apprentissage d’abord : en cabinet, je change de client et de problème tous les quelques mois, là où en entreprise je verrais un seul système pendant trois ans. Pour un début de carrière, c’est le rythme d’apprentissage le plus rapide que je connaisse.\nLe cadre ensuite : méthodologie, formation structurée, un counselor, des équipes seniors qui relisent mon travail. J’apprends dans un environnement exigeant mais encadré.\nEt l’exposition enfin : je travaille tôt avec des interlocuteurs bien plus expérimentés que moi, et ça, ça ne se rattrape pas plus tard.",
+      en: "Three reasons, in this order.\nFirst, the learning curve: in a firm I change client and problem every few months, whereas in industry I would see one system for three years. For a first job, that is the fastest learning rhythm I know.\nSecond, the framework: methodology, structured training, a counselor, senior teams who review my work. I learn in a demanding but supervised environment.\nThird, the exposure: I get to work early with people far more experienced than me, and that is something you cannot catch up on later.",
+      nl: "Drie redenen, in deze volgorde.\nEerst de leercurve: in een kantoor wissel ik om de paar maanden van klant en probleem, terwijl ik in een bedrijf drie jaar naar hetzelfde systeem zou kijken. Voor een eerste job is dat het snelste leerritme dat ik ken.\nDaarnaast het kader: methodologie, gestructureerde opleiding, een counselor, senioren die mijn werk nalezen. Veeleisend, maar begeleid.\nEn ten slotte de blootstelling: ik werk al vroeg met mensen die veel meer ervaring hebben dan ik, en die kans komt later niet terug."
+    },
+    tip: "Interdit : « pour le prestige », « pour la ligne sur mon CV », « c’est un bon tremplin ». Vrai peut-être, mais tu annonces ton départ avant d’être arrivé. Parle apprentissage, cadre, exposition."
+  },
+  {
+    id: "why-ey", tag: "Motivation",
+    q: {
+      fr: "Pourquoi EY, et pas un autre Big 4 ?",
+      en: "Why EY rather than another Big 4 firm?",
+      nl: "Waarom EY en niet een ander Big 4-kantoor?"
+    },
+    a: {
+      fr: "Pour une raison structurelle, pas pour une impression.\nEY est le seul des quatre à avoir une organisation dédiée aux services financiers, la FSO, intégrée à l’échelle de toute la zone EMEIA — plus de 11 000 professionnels qui travaillent par-delà les frontières pour les banques et les assureurs, dans toutes les lignes de service à la fois. Pour quelqu’un qui veut se spécialiser en assurance dès le premier jour plutôt que de faire du conseil généraliste, ça change tout : je serai entouré de gens qui ne font que ça.\nS’y ajoute la stratégie All in, très orientée IA, qui correspond aux chantiers de transformation qui m’intéressent. Et sur le terrain belge, EY est présent à Diegem au cœur des assureurs et des groupes internationaux.",
+      en: "For a structural reason, not a vague impression.\nEY is the only one of the four with a dedicated financial services organisation, the FSO, integrated across the whole EMEIA region — more than 11,000 professionals working across borders for banks and insurers, in every service line at once. For someone who wants to specialise in insurance from day one rather than do generalist consulting, that changes everything: I would be surrounded by people who do only that.\nOn top of that, the All in strategy is heavily AI-driven, which matches the transformation work that interests me. And in Belgium, EY sits in Diegem, right in the middle of the insurance market.",
+      nl: "Om een structurele reden, niet om een vaag gevoel.\nEY is het enige van de vier met een aparte organisatie voor financiële diensten, de FSO, geïntegreerd over de hele EMEIA-zone — meer dan 11 000 professionals die grensoverschrijdend werken voor banken en verzekeraars, in alle service lines tegelijk. Voor wie zich vanaf dag één in verzekeringen wil specialiseren in plaats van generalistische consulting te doen, maakt dat het verschil: ik zit tussen mensen die alleen dat doen.\nDaarbij komt de All in-strategie, sterk gericht op AI, wat aansluit bij de transformatieprojecten die me boeien. En in België zit EY in Diegem, midden in de verzekeringsmarkt."
+    },
+    tip: "C’est LA question éliminatoire. Ta réponse doit être impossible à recycler chez Deloitte : cite la FSO, la stratégie All in, un chiffre. Si ta réponse marche pour les quatre cabinets, c’est qu’elle est mauvaise."
+  },
+  {
+    id: "why-role", tag: "Motivation",
+    q: {
+      fr: "Qu’est-ce qui t’attire dans cette fonction ?",
+      en: "What attracts you to this role?",
+      nl: "Wat trekt je aan in deze functie?"
+    },
+    a: {
+      fr: "Ce qui m’attire, c’est le croisement entre un secteur et un métier.\nLe secteur : l’assurance est en pleine bascule — des systèmes centraux vieux de vingt ans à remplacer, des règles européennes qui s’empilent comme DORA ou la révision de Solvabilité II, et l’arrivée de l’IA dans la gestion des sinistres. Ce sont des chantiers de plusieurs années, pas des effets de mode.\nLe métier : la transformation, c’est-à-dire faire passer une organisation d’un fonctionnement à un autre. J’aime le côté analytique — comprendre un processus, mesurer l’écart, proposer une cible — autant que le côté humain, parce que ces projets échouent presque toujours pour des raisons humaines.\nEt à mon niveau, j’ai conscience que ça commence par de l’analyse, de la documentation et du support à l’équipe. C’est comme ça qu’on apprend le métier.",
+      en: "What attracts me is the intersection of a sector and a craft.\nThe sector: insurance is mid-shift — twenty-year-old core systems to replace, European rules piling up such as DORA and the Solvency II review, and AI arriving in claims handling. These are multi-year programmes, not fashions.\nThe craft: transformation means moving an organisation from one way of working to another. I like the analytical side — understand a process, measure the gap, design the target — as much as the human side, because these projects almost always fail for human reasons.\nAnd at my level I am well aware it starts with analysis, documentation and supporting the team. That is how you learn the job.",
+      nl: "Wat me aantrekt is de kruising van een sector en een vak.\nDe sector: verzekeringen zitten midden in een kanteling — kernsystemen van twintig jaar oud die vervangen moeten worden, Europese regels die zich opstapelen zoals DORA en de herziening van Solvency II, en AI die in schadebeheer binnenkomt. Dat zijn meerjarige programma’s, geen modeverschijnselen.\nHet vak: transformatie betekent een organisatie van de ene manier van werken naar de andere brengen. Ik hou van het analytische luik — een proces begrijpen, de kloof meten, een doelbeeld voorstellen — én van het menselijke luik, want die projecten mislukken bijna altijd om menselijke redenen.\nEn op mijn niveau besef ik goed dat het begint met analyse, documentatie en ondersteuning van het team. Zo leer je het vak."
+    },
+    tip: "Cite un élément précis du chapitre 6 (DORA, core system, IA dans les sinistres) : c’est ce qui prouve que tu as travaillé le secteur. Termine toujours par la lucidité sur le rôle de junior, ça rassure le manager qui te recrute."
+  },
+  {
+    id: "why-insurance", tag: "Secteur",
+    q: {
+      fr: "Pourquoi l’assurance ? Ce n’est pas le secteur le plus glamour.",
+      en: "Why insurance? It is not the most glamorous sector.",
+      nl: "Waarom verzekeringen? Niet de meest glamoureuze sector."
+    },
+    a: {
+      fr: "Justement, c’est ce qui la rend intéressante à mes yeux.\nUne compagnie d’assurance, c’est une chaîne complète que je peux apprendre : distribution, souscription, émission de la police, encaissement, gestion, sinistre, reporting. Chaque projet vient se greffer quelque part sur cette chaîne, donc chaque mission enrichit ma compréhension d’ensemble.\nC’est aussi un secteur où la technologie a un impact direct et mesurable : réduire un délai d’indemnisation de dix jours à deux, ça se voit chez le client final.\nEt il y a la contrainte réglementaire, qui garantit un flux de travail durable : les règles européennes ne vont pas se simplifier dans les cinq ans.",
+      en: "That is exactly what makes it interesting to me.\nAn insurer is a complete chain I can actually learn: distribution, underwriting, policy issuance, collection, servicing, claims, reporting. Every project plugs in somewhere on that chain, so every engagement deepens my overall understanding.\nIt is also a sector where technology has a direct, measurable impact: cutting a claims settlement from ten days to two is visible to the end customer.\nAnd there is the regulatory pressure, which guarantees a durable flow of work: European rules are not going to get simpler in the next five years.",
+      nl: "Net dat maakt de sector interessant voor mij.\nEen verzekeraar is een volledige keten die ik echt kan leren: distributie, acceptatie, uitgifte van de polis, inning, beheer, schade, rapportering. Elk project haakt ergens op die keten in, dus elke opdracht verdiept mijn totaalbeeld.\nHet is ook een sector waar technologie een direct meetbaar effect heeft: een schadedossier van tien dagen naar twee brengen, dat merkt de klant.\nEn er is de regelgevende druk, die voor duurzaam werk zorgt: de Europese regels worden de komende vijf jaar niet eenvoudiger."
+    },
+    tip: "Ne fais jamais semblant d’avoir une passion pour l’assurance depuis l’enfance : personne n’y croit. Assume le raisonnement rationnel — chaîne de valeur, impact mesurable, flux réglementaire. C’est plus crédible et plus mature."
+  },
+  {
+    id: "strengths", tag: "Personnalité",
+    q: {
+      fr: "Quelles sont tes qualités et tes défauts ?",
+      en: "What are your strengths and weaknesses?",
+      nl: "Wat zijn je sterke en zwakke punten?"
+    },
+    a: {
+      fr: "Deux qualités, illustrées, et un vrai défaut, avec ce que j’en fais.\nQualité 1 — la fiabilité : quand je m’engage sur une échéance, je la tiens, et si je vois qu’elle est menacée je préviens avant, pas après. Exemple : [ton stage / ton TFE].\nQualité 2 — la clarté : je sais reformuler un sujet complexe simplement, ce qui est exactement le métier quand on doit expliquer un processus à quelqu’un qui ne l’a jamais vu.\nDéfaut — j’ai tendance à vouloir finir seul avant de montrer, par peur de présenter quelque chose d’imparfait. En stage, ça m’a coûté deux jours de travail dans la mauvaise direction. Depuis, je montre une version intermédiaire tôt, même incomplète. Je progresse, mais c’est un réflexe sur lequel je dois encore m’appuyer consciemment.",
+      en: "Two strengths with evidence, and one real weakness with what I do about it.\nStrength 1 — reliability: when I commit to a deadline I meet it, and if I see it slipping I flag it before, not after. Example: [your internship / thesis].\nStrength 2 — clarity: I can restate a complex topic simply, which is precisely the job when you have to explain a process to someone who has never seen it.\nWeakness — I tend to want to finish alone before showing anything, out of fear of presenting something imperfect. During my internship that cost me two days of work in the wrong direction. Since then I share an early draft, even incomplete. I am improving, but it is still a reflex I have to manage consciously.",
+      nl: "Twee sterke punten met bewijs, en één echte zwakte met wat ik eraan doe.\nSterk punt 1 — betrouwbaarheid: als ik een deadline toezeg, haal ik die, en als ze in gevaar komt meld ik dat vooraf, niet achteraf. Voorbeeld: [je stage / je eindwerk].\nSterk punt 2 — helderheid: ik kan een complex onderwerp eenvoudig herformuleren, en dat is precies het vak wanneer je een proces moet uitleggen aan iemand die het nooit gezien heeft.\nZwakte — ik wil te vaak alleen afwerken voordat ik iets toon, uit angst iets onafs te presenteren. Tijdens mijn stage kostte me dat twee dagen werk in de verkeerde richting. Sindsdien deel ik vroeg een tussenversie, ook al is die onvolledig. Ik ga vooruit, maar het blijft een reflex waar ik bewust op moet letten."
+    },
+    tip: "Le piège, c’est le faux défaut (« je suis perfectionniste », « je travaille trop »). Un vrai défaut se reconnaît à trois choses : il a eu une conséquence réelle, tu as pris une mesure concrète, et tu ne prétends pas l’avoir résolu. Prépare tes exemples à l’avance."
+  },
+  {
+    id: "diploma", tag: "Profil",
+    q: {
+      fr: "L’annonce demande un master, tu sors de haute école. Pourquoi devrions-nous te prendre ?",
+      en: "The posting asks for a Master’s degree and you have a bachelor. Why should we hire you?",
+      nl: "De vacature vraagt een master, jij hebt een bachelor. Waarom zouden we jou aanwerven?"
+    },
+    a: {
+      fr: "Vous avez raison, c’est un fait, et je préfère le poser tout de suite.\nCe que je n’ai pas en années d’études, je l’ai en pratique : [stage / job étudiant / projet], où j’ai livré [élément concret] dans un délai et avec une équipe. Le travail d’un junior la première année — analyser, documenter, produire proprement, tenir ses délais — je l’ai déjà fait, même à plus petite échelle.\nJ’ai aussi un atout mesurable ici : les langues. [Adapte : je peux mener une partie de cet entretien en néerlandais si vous le souhaitez.]\nEt je ne compte pas en rester là : je suis prêt à compléter par un master en horaire décalé ou par les certifications internes. Je choisis justement un cabinet où la formation est structurée.",
+      en: "You are right, that is a fact, and I would rather put it on the table straight away.\nWhat I lack in years of study I have in practice: [internship / student job / project], where I delivered [concrete item] to a deadline and with a team. The first-year junior work — analysing, documenting, producing clean output, meeting deadlines — I have already done, on a smaller scale.\nI also bring one measurable asset here: languages. [Adapt: I am happy to switch part of this interview to Dutch if you like.]\nAnd I do not intend to stop there: I am ready to add an evening Master’s or the internal certifications. That is precisely why I am choosing a firm with structured training.",
+      nl: "U hebt gelijk, dat is een feit, en ik leg het liever meteen op tafel.\nWat ik mis aan studiejaren, heb ik in praktijk: [stage / studentenjob / project], waar ik [concreet resultaat] opleverde binnen een deadline en in team. Het werk van een junior in het eerste jaar — analyseren, documenteren, net werk afleveren, deadlines halen — heb ik al gedaan, zij het op kleinere schaal.\nIk breng hier ook een meetbare troef: talen. [Pas aan: ik kan een deel van dit gesprek in het Nederlands voeren als u dat wenst.]\nEn daar wil ik het niet bij laten: ik ben bereid een master in avondonderwijs of de interne certificeringen te volgen. Net daarom kies ik een kantoor met een gestructureerd opleidingstraject."
+    },
+    tip: "Trois phrases, pas plus, et surtout aucune excuse. Le pire serait de laisser passer la question sans l’aborder : si tu ne la traites pas, elle reste dans la tête du recruteur après ton départ. Voir le chapitre 18 du syllabus."
+  },
+  {
+    id: "team", tag: "Comportemental",
+    q: {
+      fr: "Raconte-moi une situation de travail en équipe qui s’est mal passée.",
+      en: "Tell me about a teamwork situation that went badly.",
+      nl: "Vertel over een teamsituatie die slecht liep."
+    },
+    a: {
+      fr: "Méthode STAR, quatre temps, et je ne dépasse pas trois minutes.\nSituation : un projet de groupe de [X] personnes, avec une échéance ferme.\nTâche : j’étais responsable de [ta partie].\nAction : un membre ne rendait rien et le groupe commençait à contourner le problème. J’ai proposé un point à trois, j’ai reformulé ce qui bloquait de son côté, et on a redécoupé sa partie en morceaux plus petits avec des points de contrôle intermédiaires.\nRésultat : on a rendu à temps, avec une répartition différente. Ce que j’en retire : le silence coûte toujours plus cher que la conversation gênante, et il faut l’avoir tôt.",
+      en: "STAR method, four beats, under three minutes.\nSituation: a group project of [X] people with a hard deadline.\nTask: I was responsible for [your part].\nAction: one member was delivering nothing and the group started working around the problem. I proposed a three-way meeting, restated what was actually blocking them, and we broke their part into smaller pieces with intermediate checkpoints.\nResult: we delivered on time with a different split. What I take from it: silence always costs more than the awkward conversation, and you have to have it early.",
+      nl: "STAR-methode, vier stappen, onder de drie minuten.\nSituatie: een groepswerk met [X] mensen en een harde deadline.\nTaak: ik was verantwoordelijk voor [jouw deel].\nActie: één lid leverde niets en de groep begon het probleem te omzeilen. Ik stelde een gesprek met z’n drieën voor, herformuleerde wat er bij hem écht vastliep, en we hakten zijn deel op in kleinere stukken met tussentijdse controlepunten.\nResultaat: we leverden op tijd, met een andere verdeling. Wat ik eruit haal: stilte kost altijd meer dan het ongemakkelijke gesprek, en dat moet je vroeg voeren."
+    },
+    tip: "Ne choisis jamais un exemple où tu es le héros parfait ni un où tu es la victime. Le recruteur cherche : est-ce que tu affrontes un problème relationnel ou est-ce que tu le contournes ? En mission, c’est un risque quotidien."
+  },
+  {
+    id: "5years", tag: "Projection",
+    q: {
+      fr: "Où te vois-tu dans cinq ans ?",
+      en: "Where do you see yourself in five years?",
+      nl: "Waar zie je jezelf over vijf jaar?"
+    },
+    a: {
+      fr: "Dans cinq ans, j’aimerais être manager ou en approche, sur des projets de transformation en assurance.\nConcrètement, ça veut dire : deux à trois ans à produire et à apprendre le secteur en profondeur, puis un passage senior où je pilote un chantier et j’encadre des juniors comme je l’aurai été. À ce moment-là, je veux être la personne qu’un client appelle sur un sujet précis — par exemple la gestion des sinistres ou un domaine réglementaire.\nJ’ai aussi conscience que dans ce métier, une partie de la trajectoire dépend des missions sur lesquelles on est staffé. Donc : une direction claire, et de la souplesse sur le chemin.",
+      en: "In five years I would like to be a manager or close to it, on insurance transformation projects.\nConcretely: two to three years producing and learning the sector in depth, then a senior stretch where I run a workstream and coach juniors the way I will have been coached. By then I want to be the person a client calls about one specific topic — claims handling or a regulatory area, for example.\nI am also aware that in this job part of the path depends on the engagements you are staffed on. So: a clear direction, and flexibility on the route.",
+      nl: "Over vijf jaar zou ik graag manager zijn of daar dicht bij, op transformatieprojecten in verzekeringen.\nConcreet: twee à drie jaar produceren en de sector grondig leren, daarna een seniorperiode waarin ik een werkstroom aanstuur en juniors begeleid zoals ik begeleid zal zijn. Tegen dan wil ik de persoon zijn die een klant belt over één specifiek onderwerp — schadebeheer of een regelgevend domein bijvoorbeeld.\nIk besef ook dat een deel van dat traject afhangt van de opdrachten waarop je gestaffed wordt. Dus: een duidelijke richting, en soepelheid over de weg ernaartoe."
+    },
+    tip: "Deux erreurs symétriques : viser partner dans cinq ans (irréaliste, on te trouvera naïf) ou annoncer un départ vers l’industrie (on ne recrute pas quelqu’un qui part). Reste dans le cabinet, reste dans le secteur, montre une direction."
+  },
+  {
+    id: "questions", tag: "Clôture",
+    q: {
+      fr: "As-tu des questions pour nous ?",
+      en: "Do you have any questions for us?",
+      nl: "Heb je nog vragen voor ons?"
+    },
+    a: {
+      fr: "Toujours deux questions minimum, préparées, jamais sur le salaire.\n1) Sur quel type de projets un junior est-il staffé pendant ses six premiers mois ?\n2) La practice Insurance travaille-t-elle plutôt sur des clients Channel 1 ou Channel 2 ?\n3) Quelle place prend aujourd’hui l’IA générative dans vos missions d’assurance ?\n4) Qu’est-ce qui distingue chez vous un junior qui réussit d’un junior qui peine ?\nEt une question à l’humain en face : qu’est-ce qui vous a fait rester chez EY ?",
+      en: "Always at least two prepared questions, never about salary.\n1) What kind of projects is a junior staffed on during the first six months?\n2) Does the Insurance practice work mainly with Channel 1 or Channel 2 clients?\n3) How much room does generative AI take in your insurance engagements today?\n4) What separates a junior who thrives here from one who struggles?\nAnd one question to the person in front of you: what made you stay at EY?",
+      nl: "Altijd minstens twee voorbereide vragen, nooit over het loon.\n1) Op welk soort projecten wordt een junior de eerste zes maanden ingezet?\n2) Werkt de Insurance-practice vooral met Channel 1- of Channel 2-klanten?\n3) Hoeveel ruimte neemt generatieve AI vandaag in jullie verzekeringsopdrachten?\n4) Wat onderscheidt bij jullie een junior die het goed doet van een junior die worstelt?\nEn één vraag aan de persoon tegenover je: wat maakt dat u bij EY gebleven bent?"
+    },
+    tip: "La question sur Channel 1 / Channel 2 est ton coup d’éclat — mais uniquement si tu maîtrises le chapitre 13. Si on te renvoie la question, tu dois pouvoir expliquer la différence en trois phrases."
+  }
+];
+
+var fcCards = store(FC_KEY, null) || DEFAULT_CARDS.map(function (c) { return JSON.parse(JSON.stringify(c)); });
+var fcLang = "fr";
+var fcOpen = {};
+var fcEditing = null;
+
+function fcSave() { persist(FC_KEY, fcCards); }
+
+function fcRender() {
+  var grid = $("#fc-grid");
+  grid.innerHTML = fcCards.map(function (c) {
+    var q = (c.q && c.q[fcLang] || "").trim();
+    var a = (c.a && c.a[fcLang] || "").trim();
+    var shown = !!fcOpen[c.id];
+    return "" +
+      '<article class="fc" data-id="' + esc(c.id) + '">' +
+        '<header><span class="tag">' + esc(c.tag || "Question") + "</span></header>" +
+        '<div class="q">' + (q ? esc(q) : '<span class="missing">' + esc(MISSING[fcLang]) + "</span>") + "</div>" +
+        '<div class="a"' + (shown ? "" : " hidden") + ">" +
+          '<div class="lbl">' + esc(A_LABEL[fcLang]) + "</div>" +
+          (a ? "<p>" + esc(a) + "</p>" : '<p class="missing">' + esc(MISSING[fcLang]) + "</p>") +
+          (c.tip ? '<div class="tip"><b>Coach ·</b> ' + esc(c.tip) + "</div>" : "") +
+        "</div>" +
+        "<footer>" +
+          '<button class="btn sm primary" data-act="reveal">' + (shown ? "Masquer" : "Voir la réponse") + "</button>" +
+          '<button class="btn sm" data-act="edit">Modifier</button>' +
+        "</footer>" +
+      "</article>";
+  }).join("");
+}
+
+$("#fc-grid").addEventListener("click", function (ev) {
+  var btn = ev.target.closest("button[data-act]");
+  if (!btn) return;
+  var id = btn.closest(".fc").getAttribute("data-id");
+  if (btn.getAttribute("data-act") === "reveal") {
+    fcOpen[id] = !fcOpen[id];
+    fcRender();
+  } else {
+    fcOpenDialog(id);
+  }
+});
+
+$$('input[name="lang"]').forEach(function (r) {
+  r.addEventListener("change", function () { fcLang = r.value; fcRender(); });
+});
+
+$("#fc-toggle-all").addEventListener("click", function () {
+  var anyClosed = fcCards.some(function (c) { return !fcOpen[c.id]; });
+  fcCards.forEach(function (c) { fcOpen[c.id] = anyClosed; });
+  this.textContent = anyClosed ? "Tout masquer" : "Tout afficher";
+  fcRender();
+});
+
+/* --- modale d’édition / d’ajout --- */
+var dlg = $("#fc-dialog");
+var form = $("#fc-form");
+
+function fcOpenDialog(id) {
+  fcEditing = id;
+  var c = id ? fcCards.filter(function (x) { return x.id === id; })[0] : null;
+  $("#fc-dlg-title").textContent = c ? "Modifier la carte" : "Nouvelle carte";
+  $("#fc-delete").style.display = c ? "" : "none";
+  form.tag.value = c ? (c.tag || "") : "";
+  form.tip.value = c ? (c.tip || "") : "";
+  LANGS.forEach(function (l) {
+    form["q_" + l].value = c ? (c.q && c.q[l] || "") : "";
+    form["a_" + l].value = c ? (c.a && c.a[l] || "") : "";
+  });
+  if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+  var first = $("#f-q" + fcLang);
+  if (first) first.focus();
+}
+
+function fcCloseDialog() {
+  if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open");
+}
+
+$("#fc-add").addEventListener("click", function () { fcOpenDialog(null); });
+$("#fc-cancel").addEventListener("click", function (e) { e.preventDefault(); fcCloseDialog(); });
+
+$("#fc-save").addEventListener("click", function (e) {
+  e.preventDefault();
+  var data = { tag: form.tag.value.trim() || "Question", tip: form.tip.value.trim(), q: {}, a: {} };
+  LANGS.forEach(function (l) {
+    data.q[l] = form["q_" + l].value.trim();
+    data.a[l] = form["a_" + l].value.trim();
+  });
+  var hasQ = LANGS.some(function (l) { return data.q[l]; });
+  if (!hasQ) {
+    alert("Écris au moins la question dans une langue.");
+    return;
+  }
+  if (fcEditing) {
+    fcCards = fcCards.map(function (c) { return c.id === fcEditing ? { id: c.id, tag: data.tag, q: data.q, a: data.a, tip: data.tip } : c; });
+  } else {
+    var id = "c" + Date.now().toString(36);
+    fcCards.push({ id: id, tag: data.tag, q: data.q, a: data.a, tip: data.tip });
+    fcOpen[id] = true;
+  }
+  fcSave();
+  fcCloseDialog();
+  fcRender();
+});
+
+$("#fc-delete").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (!fcEditing) return;
+  if (!confirm("Supprimer cette carte ?")) return;
+  fcCards = fcCards.filter(function (c) { return c.id !== fcEditing; });
+  fcSave();
+  fcCloseDialog();
+  fcRender();
+});
+
+$("#fc-reset").addEventListener("click", function () {
+  if (!confirm("Restaurer les 10 cartes d’origine ? Tes cartes personnelles seront perdues.")) return;
+  fcCards = DEFAULT_CARDS.map(function (c) { return JSON.parse(JSON.stringify(c)); });
+  fcOpen = {};
+  fcSave();
+  fcRender();
+});
+
+fcRender();
+
+/* =====================================================================
+   3 · QCM — moteur inspiré du module Study de Jarvis
+   (catégories, weak spots, stats persistées, deep-link vers le chapitre)
+   ===================================================================== */
+var QZ_KEY = "etudiant:qcm:v1";
+var RANDOM_N = 10;
+
+var CHAPTERS = {
+  "ch-role": "1 · Décoder l’intitulé du poste",
+  "ch-journee": "2 · Les 4 phases d’une mission",
+  "ch-lexique-conseil": "3 · Le lexique du consultant",
+  "ch-lexique-assurance": "4 · Le lexique de l’assurance",
+  "ch-police": "5 · Le cycle de vie d’une police",
+  "ch-transfo": "6 · Les 5 chantiers de la transformation",
+  "ch-attentes": "7 · Ce qu’on attend d’un junior",
+  "ch-big4": "8 · Le Big 4, c’est quoi",
+  "ch-ey": "9 · EY en chiffres (monde)",
+  "ch-eybe": "10 · EY Belgique en chiffres",
+  "ch-servicelines": "11 · Les quatre service lines",
+  "ch-fso": "12 · FSO, la practice Financial Services",
+  "ch-channels": "13 · Channel 1 et Channel 2",
+  "ch-carriere": "14 · La pyramide et les grades",
+  "ch-bizmodel": "15 · Le modèle économique du cabinet",
+  "ch-marche": "16 · Le marché belge de l’assurance",
+  "ch-process": "17 · Le process de recrutement",
+  "ch-gap": "18 · Ton profil face à l’offre",
+  "ch-questions": "19 · Questions à poser et erreurs fatales"
+};
+
+var QUESTIONS = [
+  /* ---- EY & Big 4 ---- */
+  { tag: "EY & Big 4", type: "single", theory: "ch-big4",
+    stem: "Quels sont les quatre cabinets du Big 4 ?",
+    opts: ["Deloitte, PwC, EY, KPMG", "Deloitte, PwC, EY, Accenture", "McKinsey, BCG, Bain, EY", "EY, KPMG, BDO, Grant Thornton"],
+    correct: [0],
+    ex: "Accenture est un pur acteur du conseil et de la technologie, jamais un auditeur légal. McKinsey, BCG et Bain sont les cabinets de stratégie (le MBB). BDO et Grant Thornton existent bien, mais dans le tour suivant. Les quatre réseaux issus de l’audit sont Deloitte, PwC, EY et KPMG." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-ey",
+    stem: "Quel était le chiffre d’affaires mondial d’EY sur l’exercice 2025 ?",
+    opts: ["53,2 milliards de dollars", "70,5 milliards de dollars", "39,8 milliards de dollars", "483,6 millions d’euros"],
+    correct: [0],
+    ex: "53,2 Md$, en hausse de 4,0 % à devises constantes. Les autres chiffres sont des pièges utiles à connaître : 70,5 Md$ c’est Deloitte, 39,8 Md$ c’est KPMG, et 483,6 M€ c’est le chiffre d’affaires de l’ensemble des entités belges d’EY." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-ey",
+    stem: "Combien de personnes EY emploie-t-il dans le monde ?",
+    opts: ["Environ 406 000", "Environ 150 000", "Environ 1,5 million", "Environ 40 000"],
+    correct: [0],
+    ex: "406 209 personnes à la clôture FY2025. 1,5 million, c’est le total cumulé des quatre cabinets du Big 4 ; 150+ est le nombre de pays où EY opère — ne confonds pas les deux." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-ey",
+    stem: "Quelle service line d’EY pèse le plus lourd en chiffre d’affaires ?",
+    opts: ["Assurance (l’audit), 17,9 Md$", "Consulting, 16,4 Md$", "Tax, 12,7 Md$", "Strategy and Transactions, 6,2 Md$"],
+    correct: [0],
+    ex: "L’audit reste la première ligne au niveau mondial (17,9 Md$), juste devant le Consulting (16,4 Md$). Attention : en Belgique, le rapport est inversé — l’audit ne pèse qu’environ 28 % du chiffre d’affaires du réseau belge." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-servicelines",
+    stem: "Dans quelle service line se trouve le poste de Junior Insurance Transformation Consultant ?",
+    opts: ["Consulting", "Assurance", "Strategy and Transactions", "Tax"],
+    correct: [0],
+    ex: "Consulting — et attention au faux ami : chez EY, « Assurance » ne veut pas dire « assurance » au sens du secteur, mais « audit ». Ton secteur est l’assurance ; ta service line est le Consulting." },
+  { tag: "EY & Big 4", type: "tf", theory: "ch-big4",
+    stem: "Vrai ou faux : EY est une entreprise unique, dont EY Belgique est une filiale.",
+    opts: ["Vrai", "Faux"],
+    correct: [1],
+    ex: "Faux. Les Big 4 sont des réseaux de sociétés membres juridiquement indépendantes, qui partagent une marque, des méthodes et des standards de qualité. EY Belgique regroupe plusieurs sociétés belges (EY Réviseurs d’Entreprises SRL, EY Consulting BV, EY Tax Consultants BV…), détenues par des associés. Rien n’est coté en bourse." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-eybe",
+    stem: "Quel est le chiffre d’affaires de l’ensemble des entités belges d’EY sur l’exercice clos le 30 juin 2025 ?",
+    opts: ["483,6 millions d’euros", "135,7 millions d’euros", "347,9 millions d’euros", "53,2 millions d’euros"],
+    correct: [0],
+    ex: "483,6 M€ au total. Les deux autres chiffres en sont les composantes : 135,7 M€ pour l’entité d’audit (EY Réviseurs d’Entreprises) et 347,9 M€ pour les services non-audit des autres entités belges." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-fso",
+    stem: "Que désigne la FSO chez EY ?",
+    opts: [
+      "La Financial Services Organisation : une organisation dédiée aux services financiers, intégrée à l’échelle EMEIA",
+      "Le service d’audit financier belge",
+      "Le centre de services partagés qui produit à distance",
+      "Le programme de formation des nouveaux arrivants"],
+    correct: [0],
+    ex: "La FSO est la practice dédiée à la banque, à l’assurance et à la gestion d’actifs, avec plus de 11 000 professionnels intégrés sur toute la zone EMEIA et toutes les service lines. C’est l’argument central de ta réponse à « pourquoi EY ». Le centre de production à distance, c’est le GDS (Global Delivery Services) — ne confonds pas les deux acronymes." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-ey",
+    stem: "Comment s’appelle la stratégie mondiale d’EY lancée en 2024 ?",
+    opts: ["All in", "NextWave", "Project Everest", "Vision 2030"],
+    correct: [0],
+    ex: "« All in », avec la signature « Shape the future with confidence ». NextWave était la stratégie précédente. Project Everest, c’est tout autre chose : le projet avorté de séparer l’audit et le conseil, abandonné en 2023." },
+  { tag: "EY & Big 4", type: "single", theory: "ch-eybe",
+    stem: "Où se trouve le siège belge d’EY, et donc ton futur lieu de travail ?",
+    opts: ["Diegem", "Bruxelles-Centre", "Anvers", "Gand"],
+    correct: [0],
+    ex: "Diegem, en périphérie bruxelloise et en Région flamande — d’où l’importance du néerlandais. EY Belgique compte huit bureaux : Diegem, Bruxelles, Anvers, Gand, Hasselt, Liège, Nivelles et Tournai." },
+
+  /* ---- Channel 1 / 2 ---- */
+  { tag: "Channel 1 / 2", type: "single", theory: "ch-channels",
+    stem: "Qu’est-ce qu’un client « Channel 1 » ?",
+    opts: [
+      "Un client dont EY est l’auditeur légal (ou qui appartient à son groupe)",
+      "Un client qui rapporte plus d’un million d’euros par an",
+      "Un client du secteur public",
+      "Le premier client d’une nouvelle practice"],
+    correct: [0],
+    ex: "Channel 1 = client d’audit. La taille du client ou son secteur n’ont rien à voir. La conséquence est réglementaire : on ne peut lui vendre que des services non-audit autorisés, validés au cas par cas." },
+  { tag: "Channel 1 / 2", type: "single", theory: "ch-channels",
+    stem: "Pourquoi cette distinction entre Channel 1 et Channel 2 existe-t-elle ?",
+    opts: [
+      "Pour préserver l’indépendance de l’auditeur vis-à-vis de l’entreprise qu’il audite",
+      "Pour répartir les commissions entre associés",
+      "Pour distinguer les clients belges des clients étrangers",
+      "Pour séparer les missions au forfait des missions en régie"],
+    correct: [0],
+    ex: "C’est une contrainte d’indépendance, imposée par la réglementation européenne et belge : un cabinet ne peut pas auditer objectivement un système qu’il a lui-même conçu, ni valider des décisions qu’il a prises. D’où une liste de services interdits, un plafond d’honoraires et une validation par le comité d’audit du client." },
+  { tag: "Channel 1 / 2", type: "multi", theory: "ch-channels",
+    stem: "Qu’est-ce qui est vrai des clients Channel 2 ? (plusieurs réponses)",
+    opts: [
+      "EY peut leur vendre toute la palette du conseil",
+      "Ce sont les clients qu’EY n’audite pas",
+      "C’est là que se font les missions de transformation les plus larges",
+      "Chaque mission doit être validée par le comité d’audit du client"],
+    correct: [0, 1, 2],
+    ex: "Les trois premières sont vraies. La quatrième décrit le Channel 1 : c’est justement parce que le cabinet est l’auditeur que chaque service supplémentaire doit passer par une validation formelle. En Channel 2, cette contrainte n’existe pas — EY y affronte directement Accenture, Capgemini ou McKinsey." },
+  { tag: "Channel 1 / 2", type: "single", theory: "ch-channels",
+    stem: "Dans le rapport de transparence 2025 d’EY Belgique, les services non-audit vendus à des entités auditées par le cabinet représentent :",
+    opts: ["9,9 M€, soit 7 % des revenus de l’entité d’audit", "71,5 M€, soit 53 %", "36,5 M€, soit 27 %", "347,9 M€"],
+    correct: [0],
+    ex: "9,9 M€ (7 %) pour le Channel 1, contre 17,8 M€ (13 %) pour le Channel 2 : deux fois plus de conseil vendu à des non-clients d’audit. Les 71,5 M€ et 36,5 M€ correspondent au contrôle légal des comptes, et les 347,9 M€ aux services non-audit des autres entités belges du réseau." },
+  { tag: "Channel 1 / 2", type: "tf", theory: "ch-big4",
+    stem: "Vrai ou faux : le Project Everest était le projet d’EY de séparer mondialement son audit de son conseil, abandonné en 2023.",
+    opts: ["Vrai", "Faux"],
+    correct: [0],
+    ex: "Vrai. C’est l’illustration parfaite de la tension gérée par les channels : la contrainte d’indépendance bride la croissance du conseil, ce qui pousse régulièrement les Big 4 à envisager une scission. Bien placée, l’anecdote montre que tu comprends le modèle, pas seulement le vocabulaire." },
+
+  /* ---- La fonction ---- */
+  { tag: "La fonction", type: "single", theory: "ch-journee",
+    stem: "Quelles sont les quatre phases de projet citées dans l’offre d’emploi ?",
+    opts: [
+      "Discovery, Analysis, Alignment, Outcome",
+      "Plan, Do, Check, Act",
+      "Initiation, Exécution, Contrôle, Clôture",
+      "Audit, Conseil, Mise en œuvre, Suivi"],
+    correct: [0],
+    ex: "Discovery → Analysis → Alignment → Outcome. Elles figurent noir sur blanc dans l’annonce : les citer dans cet ordre prouve que tu as lu l’offre en détail, ce que la majorité des candidats ne fait pas." },
+  { tag: "La fonction", type: "single", theory: "ch-journee",
+    stem: "En phase Discovery, que fait concrètement un junior ?",
+    opts: [
+      "Il prend les notes, rédige le compte rendu et tient la liste des questions ouvertes",
+      "Il négocie le budget de la mission avec le client",
+      "Il choisit la solution technique à déployer",
+      "Il présente les conclusions au comité de direction"],
+    correct: [0],
+    ex: "La Discovery consiste à récolter le besoin : interviews, ateliers, lecture des processus existants. Le junior y est les yeux et la mémoire de l’équipe. Négocier le budget relève du manager ou du partner, et la présentation finale intervient en phase Outcome." },
+  { tag: "La fonction", type: "tf", theory: "ch-journee",
+    stem: "Vrai ou faux : dès la première année, on attend d’un junior qu’il conseille le comité de direction du client sur sa stratégie.",
+    opts: ["Vrai", "Faux"],
+    correct: [1],
+    ex: "Faux, et c’est une erreur d’entretien très courante. La première année, tu produis : analyses, slides, comptes rendus, support à l’équipe. Dire clairement que tu le sais rassure le manager — il cherche quelqu’un de lucide, pas quelqu’un qui se croit consultant en stratégie." },
+  { tag: "La fonction", type: "multi", theory: "ch-attentes",
+    stem: "Quels comportements font une bonne première année ? (plusieurs réponses)",
+    opts: [
+      "Dire « je ne sais pas, je vérifie et je reviens vers toi »",
+      "Envoyer le compte rendu de réunion le jour même",
+      "Encoder son timesheet à temps",
+      "Attendre d’avoir une réponse parfaite avant de reparler à son manager"],
+    correct: [0, 1, 2],
+    ex: "Les trois premiers. Le quatrième est le piège classique du junior : rester bloqué seul, puis livrer trois jours de travail dans la mauvaise direction. Mieux vaut une question groupée au bon moment qu’un silence prolongé." },
+
+  /* ---- Lexique conseil ---- */
+  { tag: "Lexique conseil", type: "single", theory: "ch-lexique-conseil",
+    stem: "Que signifie « scope creep » ?",
+    opts: [
+      "La demande du client grossit sans que le budget ni le délai bougent",
+      "Un dépassement du budget approuvé par le comité de pilotage",
+      "Le fait de changer d’équipe en cours de mission",
+      "Une baisse de la qualité des livrables"],
+    correct: [0],
+    ex: "Le scope creep, c’est l’élargissement rampant du périmètre. Il mange la marge du cabinet et épuise l’équipe, d’où l’obsession du scope écrit dans le Statement of Work et de la validation formelle de tout changement." },
+  { tag: "Lexique conseil", type: "single", theory: "ch-lexique-conseil",
+    stem: "Que mesure la « chargeability » (ou utilization) ?",
+    opts: [
+      "La part de tes heures effectivement facturées à un client",
+      "Le montant que le client doit encore payer",
+      "Le nombre de missions vendues par un associé",
+      "La charge de travail ressentie par l’équipe"],
+    correct: [0],
+    ex: "C’est ton taux d’utilisation facturable — l’indicateur qui suit un consultant toute sa carrière. C’est aussi pourquoi le timesheet hebdomadaire n’est pas de la bureaucratie : c’est littéralement la facturation du cabinet." },
+  { tag: "Lexique conseil", type: "single", theory: "ch-lexique-conseil",
+    stem: "Qu’est-ce qu’un « steerco » ?",
+    opts: [
+      "Le comité de pilotage du projet, où se prennent les décisions",
+      "Le contrat de mission signé avec le client",
+      "L’équipe technique qui développe la solution",
+      "La réunion quotidienne de quinze minutes"],
+    correct: [0],
+    ex: "Steering committee : l’instance de décision du projet, généralement mensuelle, avec les responsables côté client. La réunion quotidienne de quinze minutes est le stand-up ; le contrat de mission est le SoW (Statement of Work)." },
+  { tag: "Lexique conseil", type: "single", theory: "ch-lexique-conseil",
+    stem: "Chez EY, qu’est-ce qu’un « counselor » ?",
+    opts: [
+      "Un collègue plus expérimenté qui suit ta carrière et ton évaluation",
+      "Le juriste interne du cabinet",
+      "Le chef de la mission chez le client",
+      "Le recruteur qui t’a fait passer les entretiens"],
+    correct: [0],
+    ex: "Le counselor est ton parrain de carrière : il consolide les retours de tes managers de mission et porte ton évaluation annuelle. Ce n’est pas nécessairement quelqu’un avec qui tu travailles au quotidien — d’où l’intérêt de poser une question là-dessus en entretien." },
+  { tag: "Lexique conseil", type: "single", theory: "ch-bizmodel",
+    stem: "Comment un cabinet de conseil génère-t-il son chiffre d’affaires ?",
+    opts: [
+      "Nombre de consultants × taux journalier × taux d’utilisation",
+      "Nombre de clients × abonnement annuel",
+      "Un pourcentage des économies réalisées par le client",
+      "La vente de licences logicielles"],
+    correct: [0],
+    ex: "C’est un modèle de vente de temps. Le taux journalier croît fortement avec le grade, d’où la pyramide : beaucoup de juniors sous peu de seniors. Savoir énoncer cette formule en entretien impressionne : très peu de candidats juniors en sont capables." },
+
+  /* ---- Assurance ---- */
+  { tag: "Assurance", type: "single", theory: "ch-lexique-assurance",
+    stem: "Un ratio combiné de 95 % en Non-Vie signifie que :",
+    opts: [
+      "L’activité d’assurance est rentable avant produits financiers",
+      "L’assureur perd de l’argent sur son activité",
+      "95 % des sinistres ont été payés",
+      "L’assureur détient 95 % du capital réglementaire requis"],
+    correct: [0],
+    ex: "Ratio combiné = (sinistres + frais) ÷ primes. Sous 100 %, l’activité gagne de l’argent avant même les produits financiers ; au-dessus, elle en perd. Le capital réglementaire, c’est un tout autre sujet : c’est Solvabilité II." },
+  { tag: "Assurance", type: "single", theory: "ch-lexique-assurance",
+    stem: "Solvabilité II, c’est :",
+    opts: [
+      "Le cadre prudentiel européen qui fixe le capital qu’un assureur doit détenir face à ses risques",
+      "La norme comptable des contrats d’assurance",
+      "Le règlement sur la résilience informatique du secteur financier",
+      "La directive sur la distribution d’assurances"],
+    correct: [0],
+    ex: "Solvabilité II = capital et gouvernance, avec ses trois piliers. La norme comptable, c’est IFRS 17 ; la résilience informatique, c’est DORA ; la distribution, c’est l’IDD. Ces quatre-là tombent souvent ensemble : ne les mélange pas, c’est exactement ce qu’on teste." },
+  { tag: "Assurance", type: "single", theory: "ch-lexique-assurance",
+    stem: "Que règle DORA ?",
+    opts: [
+      "La résilience opérationnelle numérique du secteur financier",
+      "Le calcul des provisions techniques",
+      "La protection des données personnelles",
+      "La transparence des frais pour le client final"],
+    correct: [0],
+    ex: "DORA (Digital Operational Resilience Act) impose la gestion des incidents informatiques, des tests de résilience et la surveillance des prestataires TIC. Applicable depuis janvier 2025, c’est un générateur de missions à lui seul. La protection des données, c’est le RGPD ; la transparence des frais relève de l’IDD." },
+  { tag: "Assurance", type: "single", theory: "ch-police",
+    stem: "Qu’appelle-t-on le « core system » d’un assureur ?",
+    opts: [
+      "Le logiciel qui porte l’émission de la police, sa gestion, l’encaissement et les sinistres",
+      "Le serveur central hébergeant les données clients",
+      "Le portail public de souscription en ligne",
+      "L’outil de reporting réglementaire"],
+    correct: [0],
+    ex: "Le core system (ou policy administration system) est le cœur opérationnel : étapes 3 à 6 du cycle de vie de la police. Son remplacement représente les plus gros budgets de transformation du secteur. Éditeurs courants au Benelux : Guidewire, Keylane, Sapiens, Duck Creek." },
+  { tag: "Assurance", type: "single", theory: "ch-police",
+    stem: "Que désigne la « souscription » (underwriting) ?",
+    opts: [
+      "La décision d’accepter ou non un risque, et à quel prix",
+      "La signature du contrat par le client",
+      "Le paiement de la première prime",
+      "L’indemnisation d’un sinistre"],
+    correct: [0],
+    ex: "L’underwriting, c’est l’évaluation et la tarification du risque — étape 2 du cycle de vie. Le piège vient du langage courant, où « souscrire » veut dire « acheter un contrat ». En assurance, c’est l’assureur qui souscrit le risque, pas le client." },
+  { tag: "Assurance", type: "single", theory: "ch-lexique-assurance",
+    stem: "En assurance Vie belge, quelle est la différence entre la branche 21 et la branche 23 ?",
+    opts: [
+      "La branche 21 offre un rendement garanti, la branche 23 est liée à des fonds d’investissement sans garantie",
+      "La branche 21 concerne les particuliers, la branche 23 les entreprises",
+      "La branche 21 est de l’assurance décès, la branche 23 de l’assurance épargne",
+      "La branche 21 est fiscalement déductible, la branche 23 ne l’est jamais"],
+    correct: [0],
+    ex: "Branche 21 = capital et taux garantis ; branche 23 = performance liée à des fonds, donc risque porté par l’assuré. C’est une spécificité belge très connue : la citer montre que tu connais le marché local, pas seulement la théorie européenne." },
+  { tag: "Assurance", type: "multi", theory: "ch-transfo",
+    stem: "Quels sont aujourd’hui des chantiers de transformation typiques chez un assureur ? (plusieurs réponses)",
+    opts: [
+      "Remplacer un système central vieillissant et migrer les contrats",
+      "Intégrer l’IA générative dans la gestion des sinistres",
+      "Se mettre en conformité avec DORA et la révision de Solvabilité II",
+      "Augmenter le nombre d’agences physiques pour recruter des clients"],
+    correct: [0, 1, 2],
+    ex: "Les trois premiers. Le marché belge est mature et très intermédié : la croissance vient de la réduction du coût de gestion et de la fidélisation, pas de l’ouverture d’agences. Répondre « le digital » en bloc ne suffit pas — cite un chantier précis." },
+
+  /* ---- Marché belge ---- */
+  { tag: "Marché belge", type: "single", theory: "ch-marche",
+    stem: "Quel est le leader du marché belge de l’assurance ?",
+    opts: ["AG Insurance, avec environ 20 % de part de marché", "Ethias", "Allianz Benelux", "Baloise"],
+    correct: [0],
+    ex: "AG Insurance mène le marché avec environ 20,4 % fin 2024, devant AXA et KBC Assurances — ces trois-là pèsent à elles seules près de la moitié du marché. Ethias, Belfius Assurances, Baloise et Allianz suivent." },
+  { tag: "Marché belge", type: "single", theory: "ch-marche",
+    stem: "Qui exerce la supervision prudentielle des assureurs belges (solvabilité, capital, gouvernance) ?",
+    opts: ["La BNB, Banque nationale de Belgique", "La FSMA", "Assuralia", "L’EIOPA uniquement"],
+    correct: [0],
+    ex: "La BNB fait le prudentiel ; la FSMA surveille la conduite — protection du consommateur, information, règles de vente. Assuralia n’est pas un régulateur mais la fédération professionnelle du secteur. Confondre BNB et FSMA est une erreur classique en entretien belge." },
+  { tag: "Marché belge", type: "single", theory: "ch-marche",
+    stem: "Que représente Assuralia ?",
+    opts: [
+      "La fédération professionnelle des entreprises d’assurance en Belgique",
+      "Le régulateur des courtiers",
+      "Le fonds de garantie des assurés",
+      "Une compagnie d’assurance mutuelle"],
+    correct: [0],
+    ex: "Assuralia est la fédération sectorielle : elle publie les chiffres clés du marché belge et porte la voix des assureurs auprès des autorités. C’est une source que tu peux citer en entretien pour appuyer un chiffre." },
+
+  /* ---- Carrière ---- */
+  { tag: "Carrière", type: "single", theory: "ch-carriere",
+    stem: "Quel est l’ordre correct des grades en conseil ?",
+    opts: [
+      "Consultant → Senior Consultant → Manager → Senior Manager → Director → Partner",
+      "Analyst → Manager → Consultant → Director → Partner",
+      "Junior → Expert → Directeur → Associé",
+      "Consultant → Manager → Senior Consultant → Partner"],
+    correct: [0],
+    ex: "Tu entres comme Consultant (ou Analyst), pour 2 à 3 ans, avant de passer Senior Consultant. Le grade de Manager arrive typiquement après 4 à 6 ans. Connaître la grille montre que tu sais où tu mets les pieds — et qu’à cinq ans, viser Manager est réaliste, viser Partner ne l’est pas." },
+  { tag: "Carrière", type: "tf", theory: "ch-carriere",
+    stem: "Vrai ou faux : partir du cabinet après trois à cinq ans, souvent chez un client, est un parcours normal et reconnu.",
+    opts: ["Vrai", "Faux"],
+    correct: [0],
+    ex: "Vrai dans les faits — une grande partie des juniors rejoint l’industrie, et souvent un assureur. Mais attention : c’est vrai à dire dans un couloir, pas en entretien. On ne recrute pas quelqu’un qui annonce son départ avant son arrivée." },
+
+  /* ---- Entretien ---- */
+  { tag: "Entretien", type: "multi", theory: "ch-questions",
+    stem: "Quelles réponses coûtent le poste en entretien chez EY ? (plusieurs réponses)",
+    opts: [
+      "« Je n’ai pas de question. »",
+      "« Le Big 4, c’est un excellent tremplin pour la suite. »",
+      "« Chez Deloitte, j’avais compris que… »",
+      "« Je préfère être honnête : mon parcours est plus court, voici ce qui le compense. »"],
+    correct: [0, 1, 2],
+    ex: "Les trois premières. Ne pas avoir de question passe pour du désintérêt ; annoncer le tremplin, c’est annoncer son départ ; confondre les cabinets est éliminatoire. La quatrième, au contraire, est la bonne façon de traiter le sujet du diplôme : factuelle, sans excuse, en trois phrases." },
+  { tag: "Entretien", type: "single", theory: "ch-process",
+    stem: "Face à un mini-cas (« comment réduire de 20 % le délai de traitement des sinistres ? »), quelle est la bonne approche ?",
+    opts: [
+      "Reformuler l’objectif, annoncer sa structure à voix haute, creuser un axe, conclure",
+      "Donner immédiatement la solution qui paraît la plus évidente",
+      "Expliquer qu’il manque trop d’informations pour se prononcer",
+      "Réciter les cinq chantiers de transformation du secteur"],
+    correct: [0],
+    ex: "On ne teste pas la bonne réponse mais la lisibilité de ton raisonnement pour un client. Reformule, structure (processus / outils / personnes), creuse un axe avec des exemples concrets, puis conclus en disant ce qu’il te manque comme information." },
+  { tag: "Entretien", type: "single", theory: "ch-gap",
+    stem: "L’offre demande un master et tu sors de haute école. Quelle est la bonne stratégie ?",
+    opts: [
+      "Poser le fait toi-même, montrer le concret qui compense, évoquer ta trajectoire de formation",
+      "Ne jamais aborder le sujet et espérer qu’il ne vienne pas",
+      "Expliquer que les diplômes ne servent à rien",
+      "Prétendre que ta formation équivaut à un master"],
+    correct: [0],
+    ex: "Trois phrases : le fait, ce qui le compense (stage, projet livré, langues — le néerlandais est un avantage direct à Diegem), et ta volonté de compléter par un master en horaire décalé ou des certifications. Ni excuse, ni déni : si tu ne traites pas la question, elle reste dans la tête du recruteur." },
+  { tag: "Entretien", type: "single", theory: "ch-questions",
+    stem: "Quelle question posée par le candidat produit le meilleur effet en fin d’entretien ?",
+    opts: [
+      "« La practice Insurance travaille-t-elle plutôt en Channel 1 ou en Channel 2 ? »",
+      "« Quel est le salaire de départ ? »",
+      "« Combien de jours de télétravail par semaine ? »",
+      "« Est-ce que je pourrai changer de service line rapidement ? »"],
+    correct: [0],
+    ex: "La question sur les channels prouve que tu as compris la structure du cabinet — à condition de savoir répondre si on te la retourne. Le salaire se discute avec le RH, à la fin du processus ; le télétravail donne l’impression que tu penses déjà à ne pas venir ; demander à changer de service line laisse croire que ce poste n’est pas vraiment celui que tu veux." }
+];
+
+QUESTIONS.forEach(function (q, i) { q.qid = i; });
+
+var qz = store(QZ_KEY, null) || { stats: {}, wrong: [], history: [] };
+if (!qz.stats) qz.stats = {};
+if (!qz.wrong) qz.wrong = [];
+if (!qz.history) qz.history = [];
+function qzSave() { persist(QZ_KEY, qz); }
+
+var qzView = "menu";
+var qzSession = null;
+var root = $("#qcm-root");
+
+function cats() {
+  var map = {};
+  QUESTIONS.forEach(function (q) { map[q.tag] = (map[q.tag] || 0) + 1; });
+  return Object.keys(map).map(function (t) { return { tag: t, count: map[t] }; })
+    .sort(function (a, b) { return a.tag.localeCompare(b.tag, "fr"); });
+}
+function catStat(tag) {
+  var s = qz.stats[tag] || { answered: 0, correct: 0 };
+  return { answered: s.answered, correct: s.correct, acc: s.answered ? s.correct / s.answered : null };
+}
+function accColor(acc) {
+  if (acc == null) return "var(--line)";
+  if (acc >= 0.85) return "var(--ok)";
+  if (acc >= 0.6) return "var(--ey-yellow)";
+  return "var(--ko)";
+}
+function sameSet(a, b) {
+  if (a.length !== b.length) return false;
+  var x = a.slice().sort(), y = b.slice().sort();
+  return x.every(function (v, i) { return v === y[i]; });
+}
+
+function startSession(list, label) {
+  if (!list.length) return;
+  qzSession = {
+    label: label, idx: 0, list: list,
+    state: list.map(function () { return { picked: [], checked: false, correct: null }; })
+  };
+  qzView = "quiz";
+  qzRender();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function catRow(c, withBtn) {
+  var st = catStat(c.tag);
+  var w = st.acc == null ? 0 : Math.max(4, Math.round(st.acc * 100));
+  var right = st.answered
+    ? Math.round(st.acc * 100) + " % <span style=\"color:var(--muted)\">(" + st.correct + "/" + st.answered + ")</span>"
+    : c.count + " Q";
+  return '<div class="catrow">' +
+    '<span class="cn">' + esc(c.tag) + "</span>" +
+    '<span class="accbar"><i style="width:' + w + "%;background:" + accColor(st.acc) + '"></i></span>' +
+    '<span class="cp">' + right + "</span>" +
+    (withBtn ? '<button class="btn sm" data-cat="' + esc(c.tag) + '">S’entraîner</button>' : "") +
+    "</div>";
+}
+
+function menuHTML() {
+  var list = cats();
+  var attempted = list.map(function (c) { return { c: c, s: catStat(c.tag) }; })
+    .filter(function (o) { return o.s.answered > 0; })
+    .sort(function (a, b) { return a.s.acc - b.s.acc; });
+
+  var totalA = 0, totalC = 0;
+  Object.keys(qz.stats).forEach(function (k) { totalA += qz.stats[k].answered; totalC += qz.stats[k].correct; });
+
+  var weak = attempted.length
+    ? '<div class="ph">Tes points faibles</div><div class="ps">Catégories classées par ton taux de réussite, la plus fragile en premier.</div>' +
+      attempted.slice(0, 3).map(function (o) { return catRow(o.c, true); }).join("")
+    : '<div class="ph">Tes points faibles</div><div class="ps">Réponds à quelques questions : ce panneau classera ensuite les catégories où tu es le plus fragile, pour que tu les cibles.</div>';
+
+  var hist = qz.history.length
+    ? '<div class="ph">Tes dernières sessions</div>' +
+      '<div class="tw"><table><thead><tr><th>Session</th><th class="num">Score</th><th class="num">Quand</th></tr></thead><tbody>' +
+      qz.history.slice(0, 6).map(function (h) {
+        var d = new Date(h.ts);
+        var when = d.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" }) + " " +
+                   d.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
+        var pct = Math.round((h.score / h.total) * 100);
+        return "<tr><td>" + esc(h.label) + "</td><td class=\"num\"><b>" + h.score + "/" + h.total + "</b> · " + pct + " %</td><td class=\"num\">" + when + "</td></tr>";
+      }).join("") + "</tbody></table></div>"
+    : "";
+
+  return "" +
+    "<h2>QCM de contrôle</h2>" +
+    '<p class="lead">' + QUESTIONS.length + " questions sur le syllabus. À chaque erreur, tu reçois l’explication et un lien direct vers le chapitre qui traite le sujet. Tes scores sont conservés dans ce navigateur, catégorie par catégorie." +
+    (totalA ? " <b>Global : " + totalC + "/" + totalA + " (" + Math.round((totalC / totalA) * 100) + " %).</b>" : "") + "</p>" +
+    '<div class="startgrid">' +
+      '<button class="startbtn gold" data-act="rand"><span class="bt">Session rapide · ' + Math.min(RANDOM_N, QUESTIONS.length) + " questions</span><span class=\"bs\">Un tirage aléatoire dans toute la banque</span></button>" +
+      '<button class="startbtn" data-act="full"><span class="bt">Banque complète</span><span class="bs">Les ' + QUESTIONS.length + " questions, dans l’ordre</span></button>" +
+      (qz.wrong.length
+        ? '<button class="startbtn" data-act="wrong"><span class="bt">Rejouer mes erreurs</span><span class="bs">' + qz.wrong.length + " question" + (qz.wrong.length > 1 ? "s" : "") + " ratée" + (qz.wrong.length > 1 ? "s" : "") + " à revoir</span></button>"
+        : "") +
+    "</div>" +
+    '<div class="qz panel">' + weak + "</div>" +
+    '<div class="qz panel"><div class="ph">S’entraîner par catégorie</div><div class="ps">Chaque barre montre ton taux de réussite sur cette catégorie.</div>' +
+      list.map(function (c) { return catRow(c, true); }).join("") + "</div>" +
+    (hist ? '<div class="qz panel">' + hist + '<button class="btn sm ghost" data-act="reset">Effacer mes scores</button></div>' : "");
+}
+
+function quizHTML() {
+  var s = qzSession, q = s.list[s.idx], st = s.state[s.idx];
+  var multi = q.type === "multi";
+  var answered = s.state.filter(function (x) { return x.checked; }).length;
+  var okCount = s.state.filter(function (x) { return x.correct; }).length;
+
+  var opts = q.opts.map(function (o, i) {
+    var cls = "opt";
+    if (st.checked) {
+      if (q.correct.indexOf(i) >= 0) cls += " correct";
+      else if (st.picked.indexOf(i) >= 0) cls += " wrong";
+      cls += " locked";
+    }
+    return '<label class="' + cls + '"><input type="' + (multi ? "checkbox" : "radio") + '" name="opt" value="' + i + '"' +
+      (st.picked.indexOf(i) >= 0 ? " checked" : "") + (st.checked ? " disabled" : "") + "> <span>" + esc(o) + "</span></label>";
+  }).join("");
+
+  var feedback = "";
+  if (st.checked) {
+    feedback = '<div class="verdict ' + (st.correct ? "ok" : "ko") + '">' +
+      '<div class="vhead">' + (st.correct ? "Correct." : "Raté — voici pourquoi.") + "</div>" +
+      "<div>" + esc(q.ex) + "</div>" +
+      (st.correct ? "" :
+        '<p style="margin:12px 0 0"><button class="btn sm primary" data-goto="' + esc(q.theory) + '">→ Revoir le chapitre ' + esc(CHAPTERS[q.theory] || "") + "</button></p>") +
+      "</div>";
+  }
+
+  var dots = s.state.map(function (x, i) {
+    var c = x.checked ? (x.correct ? "ok" : "no") : "";
+    return '<i class="' + c + (i === s.idx ? " cur" : "") + '" data-jump="' + i + '"></i>';
+  }).join("");
+
+  var last = s.idx === s.list.length - 1;
+  return "" +
+    '<div class="toolbar"><button class="btn sm ghost" data-act="menu">← Menu du QCM</button>' +
+      '<span class="spacer"></span><span style="font-size:13.5px;color:var(--muted)">' + esc(s.label) +
+      " · <b>" + answered + "</b>/" + s.list.length + " répondues · <b>" + okCount + "</b> justes</span></div>" +
+    '<div class="qz">' +
+      '<div class="qtitle"><span class="idx">' + (s.idx + 1) + "</span><span>" + esc(q.stem) +
+        (multi ? ' <em style="color:var(--muted);font-weight:400">(plusieurs réponses)</em>' : "") + "</span></div>" +
+      '<div class="opts">' + opts + "</div>" +
+      feedback +
+      '<div class="toolbar" style="margin:16px 0 0">' +
+        (st.checked
+          ? '<button class="btn primary" data-act="next">' + (last ? "Voir mon score" : "Question suivante →") + "</button>"
+          : '<button class="btn primary" data-act="check">Vérifier</button>') +
+        '<span class="spacer"></span><span style="font-size:13px;color:var(--muted)">' + esc(q.tag) + "</span>" +
+      "</div>" +
+    "</div>" +
+    '<div class="dots">' + dots + "</div>";
+}
+
+function summaryHTML() {
+  var s = qzSession;
+  var score = s.state.filter(function (x) { return x.correct; }).length;
+  var pct = Math.round((score / s.list.length) * 100);
+  var missed = s.list.filter(function (q, i) { return s.state[i].correct === false; });
+  var verdict = pct >= 85 ? "Tu es prêt sur cette partie." : pct >= 60 ? "Bonne base, mais relis les chapitres ci-dessous." : "Reprends le syllabus avant de recommencer.";
+  return "" +
+    '<div class="qz" style="text-align:center;padding:36px 22px">' +
+      '<div style="font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1.1">' + score + "<span style=\"color:var(--muted)\">/" + s.list.length + "</span></div>" +
+      '<div style="color:var(--muted);margin:6px 0 18px">' + pct + " % · " + esc(verdict) + "</div>" +
+      '<div class="toolbar" style="justify-content:center">' +
+        '<button class="btn primary" data-act="menu">Retour au menu</button>' +
+        (missed.length ? '<button class="btn" data-act="replay">Rejouer mes ' + missed.length + " erreur" + (missed.length > 1 ? "s" : "") + "</button>" : "") +
+      "</div>" +
+    "</div>" +
+    (missed.length
+      ? '<div class="qz panel"><div class="ph">Les chapitres à relire</div>' +
+        missed.map(function (q) {
+          return '<div class="catrow"><span style="flex:1;font-size:14px">' + esc(q.stem) + "</span>" +
+            '<button class="btn sm" data-goto="' + esc(q.theory) + '">' + esc(CHAPTERS[q.theory] || "Chapitre") + "</button></div>";
+        }).join("") + "</div>"
+      : "");
+}
+
+function qzRender() {
+  root.innerHTML = qzView === "menu" ? menuHTML() : qzView === "quiz" ? quizHTML() : summaryHTML();
+}
+
+root.addEventListener("change", function (ev) {
+  if (ev.target.name !== "opt" || !qzSession) return;
+  var st = qzSession.state[qzSession.idx];
+  if (st.checked) return;
+  var q = qzSession.list[qzSession.idx];
+  var v = parseInt(ev.target.value, 10);
+  if (q.type === "multi") {
+    var i = st.picked.indexOf(v);
+    if (i >= 0) st.picked.splice(i, 1); else st.picked.push(v);
+  } else {
+    st.picked = [v];
+  }
+});
+
+root.addEventListener("click", function (ev) {
+  var goto = ev.target.closest("[data-goto]");
+  if (goto) { goToChapter(goto.getAttribute("data-goto")); return; }
+
+  var cat = ev.target.closest("[data-cat]");
+  if (cat) {
+    var tag = cat.getAttribute("data-cat");
+    startSession(shuffle(QUESTIONS.filter(function (q) { return q.tag === tag; })), tag);
+    return;
+  }
+
+  var jump = ev.target.closest("[data-jump]");
+  if (jump && qzSession) { qzSession.idx = parseInt(jump.getAttribute("data-jump"), 10); qzRender(); return; }
+
+  var b = ev.target.closest("[data-act]");
+  if (!b) return;
+  var act = b.getAttribute("data-act");
+
+  if (act === "rand") { startSession(shuffle(QUESTIONS).slice(0, RANDOM_N), "Session rapide"); return; }
+  if (act === "full") { startSession(QUESTIONS.slice(), "Banque complète"); return; }
+  if (act === "wrong") {
+    startSession(shuffle(QUESTIONS.filter(function (q) { return qz.wrong.indexOf(q.qid) >= 0; })), "Mes erreurs");
+    return;
+  }
+  if (act === "menu") { qzView = "menu"; qzSession = null; qzRender(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if (act === "reset") {
+    if (!confirm("Effacer tous tes scores et ton historique ?")) return;
+    qz = { stats: {}, wrong: [], history: [] };
+    qzSave(); qzRender(); return;
+  }
+  if (act === "replay") {
+    var s0 = qzSession;
+    startSession(s0.list.filter(function (q, i) { return s0.state[i].correct === false; }), "Mes erreurs");
+    return;
+  }
+
+  if (act === "check" && qzSession) {
+    var s = qzSession, q = s.list[s.idx], st = s.state[s.idx];
+    if (!st.picked.length) { alert("Choisis au moins une réponse."); return; }
+    st.checked = true;
+    st.correct = sameSet(st.picked, q.correct);
+    var acc = qz.stats[q.tag] || { answered: 0, correct: 0 };
+    acc.answered++;
+    if (st.correct) acc.correct++;
+    qz.stats[q.tag] = acc;
+    var w = qz.wrong.indexOf(q.qid);
+    if (st.correct) { if (w >= 0) qz.wrong.splice(w, 1); }
+    else if (w < 0) { qz.wrong.push(q.qid); }
+    qzSave();
+    qzRender();
+    return;
+  }
+
+  if (act === "next" && qzSession) {
+    if (qzSession.idx < qzSession.list.length - 1) {
+      qzSession.idx++;
+      qzRender();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      qz.history.unshift({
+        label: qzSession.label,
+        score: qzSession.state.filter(function (x) { return x.correct; }).length,
+        total: qzSession.list.length,
+        ts: Date.now()
+      });
+      qz.history = qz.history.slice(0, 20);
+      qzSave();
+      qzView = "summary";
+      qzRender();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+});
+
+qzRender();
+
+/* Onglet initial depuis l’ancre */
+var h = (location.hash || "").replace("#", "");
+if (PANELS[h]) selectTab(h, true);
+
+})();
+</script>
+</body>
+</html>
