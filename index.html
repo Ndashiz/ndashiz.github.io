@@ -1,46 +1,533 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hello human world</title>
-  <style>
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      height: 100dvh;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    h1 {
-      flex: none;
-      margin: 0;
-      padding: 5vh 16px 0;
-      text-align: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-size: clamp(2rem, 6vw, 4.5rem);
-      font-weight: 800;
-      letter-spacing: .04em;
-      color: #fff;
-      text-shadow: 0 0 28px rgba(255, 255, 255, .35);
-      animation: pulse 2.4s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .7; }
-    }
-    img {
-      flex: 1;
-      min-height: 0;
-      width: 100%;
-      object-fit: contain;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ndashiz Brain</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: #03040c; }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; }
+  .brand {
+    position: fixed; top: 22px; left: 26px; pointer-events: none; user-select: none;
+    font-family: "Segoe UI", system-ui, sans-serif;
+  }
+  .brand h1 {
+    font-size: 14px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(235, 242, 255, 0.9);
+  }
+  .brand h1 span { color: #38e0ff; text-shadow: 0 0 12px #38e0ff; }
+  .brand p {
+    margin-top: 6px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(200, 215, 255, 0.5);
+    font-family: "Segoe UI", system-ui, sans-serif;
+  }
+  .brand .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: #ff5c39; box-shadow: 0 0 10px #ff5c39;
+    margin-right: 7px; vertical-align: 1px;
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+</style>
 </head>
 <body>
-  <h1>Hello human world</h1>
-  <img src="cat-dance.gif" alt="Dancing cat">
+<canvas id="scene"></canvas>
+<div class="brand">
+  <h1>Ndashiz <span>Brain</span></h1>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d');
+
+  let W = 0, H = 0, DPR = 1, cx = 0, cy = 0, unit = 0;
+
+  /* ================= Sprites de lueur pré-rendus ================= */
+  function makeGlow(r, g, b) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g2 = c.getContext('2d');
+    const grad = g2.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.25, `rgba(${r},${g},${b},0.85)`);
+    grad.addColorStop(0.6, `rgba(${r},${g},${b},0.22)`);
+    grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    g2.fillStyle = grad;
+    g2.fillRect(0, 0, 64, 64);
+    return c;
+  }
+  const spBrain  = makeGlow(255, 110, 130);   // rose cérébral
+  const spCyan   = makeGlow(70, 215, 255);    // liens neuronaux
+  const spOrange = makeGlow(255, 140, 60);    // anneaux néon
+  const spWhite  = makeGlow(235, 245, 255);   // impulsions
+
+  /* ================= Génération du cerveau ================= */
+  const N = 2200;
+  const px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
+  const shade = new Float32Array(N), energy = new Float32Array(N);
+  const depth = new Float32Array(N);
+  const order = new Int32Array(N);
+
+  /* Anatomie : hémisphères allongés avant-arrière, cervelet, tronc.
+     Le champ est un smooth-min de volumes sphériques ; la surface = iso-champ 1. */
+  const BLOBS = [
+    { c: [-0.165, 0.05, 0.03], r: 0.40, ez: 1.55 },   // hémisphère gauche
+    { c: [ 0.165, 0.05, 0.03], r: 0.40, ez: 1.55 },   // hémisphère droit
+    { c: [0, -0.22, -0.42], r: 0.19, ez: 1.10 },      // cervelet (arrière-bas)
+    { c: [0, -0.33, -0.14], r: 0.10, ey: 0.55 },      // tronc cérébral
+  ];
+
+  function smin(a, b, k) {
+    const h = Math.min(1, Math.max(0, 0.5 + 0.5 * (b - a) / k));
+    return b * (1 - h) + a * h - k * h * (1 - h);
+  }
+
+  function field(x, y, z) {
+    let d = Infinity;
+    for (const b of BLOBS) {
+      const dx = x - b.c[0];
+      const dy = b.ey ? (y - b.c[1]) / b.ey : y - b.c[1];
+      const dz = (z - b.c[2]) / (b.ez || 1);
+      const dist = Math.hypot(dx, dy, dz) / b.r;
+      d = d === Infinity ? dist : smin(d, dist, 0.35);
+    }
+    return d;
+  }
+
+  const S = 1.22; // échelle globale
+
+  function buildBrain() {
+    const GA = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < N; i++) {
+      // direction de Fibonacci
+      const y0 = 1 - (i / (N - 1)) * 2;
+      const rad = Math.sqrt(Math.max(0, 1 - y0 * y0));
+      const th = GA * i;
+      const dx = Math.cos(th) * rad, dy = y0, dz = Math.sin(th) * rad;
+
+      // marche le long du rayon jusqu'à l'iso-surface champ = 1
+      let t0 = 0.1, t1 = 1.6, hit = false, prev = 0.1, prevF = field(dx * prev, dy * prev, dz * prev);
+      for (let t = 0.13; t <= 1.6; t += 0.013) {
+        const f = field(dx * t, dy * t, dz * t);
+        if (f >= 1) { t0 = prev; t1 = t; hit = true; break; }
+        prev = t; prevF = f;
+      }
+      if (!hit) { i--; continue; } // ne devrait pas arriver
+      // affinage par bissection
+      for (let k = 0; k < 5; k++) {
+        const m = (t0 + t1) / 2;
+        if (field(dx * m, dy * m, dz * m) >= 1) t1 = m; else t0 = m;
+      }
+      let x = dx * t1, y = dy * t1, z = dz * t1;
+
+      // ---- Plis corticaux : grosses crêtes allongées dans le sens avant-arrière ----
+      const s1 = Math.sin(13 * x + 3.0 * Math.sin(6 * z + 1) + 1.2) * Math.sin(12 * y + 2.5 * Math.sin(5 * z));
+      const s2 = Math.sin(22 * x + 4 * Math.sin(8 * z)) * Math.sin(20 * y + 3 * Math.sin(7 * z) + 2);
+      let disp = 0.060 * (1 - Math.abs(s1)) + 0.028 * (1 - Math.abs(s2));
+      // stries fines du cervelet
+      const cb = Math.max(0, 1 - Math.hypot(x, y + 0.22, z + 0.42) / 0.28);
+      disp = disp * (1 - cb) + cb * 0.010 * (1 - Math.abs(Math.sin(24 * y + 5 * z)));
+      // pas de plis sur le tronc
+      const st = Math.max(0, 1 - Math.hypot(x, (y + 0.33) / 0.6, z + 0.14) / 0.22);
+      disp *= 1 - st;
+      const nl = Math.hypot(x, y, z) || 1;
+      x += x / nl * disp; y += y / nl * disp; z += z / nl * disp;
+
+      // ---- Sillon longitudinal profond entre les hémisphères ----
+      const topW = Math.min(1, Math.max(0, (y + 0.15) / 0.5));
+      const fis = Math.exp(-((x / 0.05) ** 2)) * topW;
+      x += Math.sign(x || 0.01) * 0.07 * fis;
+
+      // Aplatissement de la base
+      if (y < -0.42) y = -0.42 + (y + 0.42) * 0.35;
+
+      px[i] = x * S; py[i] = y * S; pz[i] = z * S;
+
+      // Ombrage : creux de plis et du sillon assombris, crêtes mises en valeur
+      const crest = 0.55 + 0.45 * Math.abs(s1);
+      shade[i] = (0.6 + 0.4 * Math.random()) * (0.45 + 0.55 * crest) * (1 - 0.9 * fis) * (1 - 0.3 * cb);
+    }
+  }
+
+  /* ---- Maillage neural : liens entre points proches (hash spatial) ---- */
+  const CELL = 0.08, MAXLINK = 0.075;
+  const grid = new Map();
+  const edges = []; // {a,b}
+  const degree = new Uint8Array(N);
+
+  function buildLinks() {
+    grid.clear(); edges.length = 0; degree.fill(0);
+    const key = (a, b, c) => a * 100000 + b * 1000 + c;
+    for (let i = 0; i < N; i++) {
+      const k = key(Math.round(px[i] / CELL), Math.round(py[i] / CELL), Math.round(pz[i] / CELL));
+      if (!grid.has(k)) grid.set(k, []);
+      grid.get(k).push(i);
+    }
+    for (let i = 0; i < N; i++) {
+      const gx = Math.round(px[i] / CELL), gy = Math.round(py[i] / CELL), gz = Math.round(pz[i] / CELL);
+      for (let a = gx - 1; a <= gx + 1; a++)
+        for (let b = gy - 1; b <= gy + 1; b++)
+          for (let c = gz - 1; c <= gz + 1; c++) {
+            const cell = grid.get(key(a, b, c));
+            if (!cell) continue;
+            for (const j of cell) {
+              if (j <= i || degree[i] >= 4 || degree[j] >= 4) continue;
+              const d = Math.hypot(px[i] - px[j], py[i] - py[j], pz[i] - pz[j]);
+              if (d < MAXLINK) { edges.push({ a: i, b: j, glow: 0 }); degree[i]++; degree[j]++; }
+            }
+          }
+    }
+  }
+
+  /* ================= Impulsions synaptiques ================= */
+  const pulses = [];
+  function firePulse(ei, from, gen) {
+    const e = edges[ei];
+    if (!e) return;
+    pulses.push({ e: ei, t: 0, dir: e.a === from ? 1 : -1,
+                  speed: 0.7 + Math.random() * 0.8, gen });
+  }
+  function nodeLinks(n) {
+    const l = [];
+    for (let i = 0; i < edges.length; i++)
+      if (edges[i].a === n || edges[i].b === n) l.push(i);
+    return l;
+  }
+  function surge(origin, big) {
+    const list = nodeLinks(origin);
+    energy[origin] = 1.6;
+    bursts.push({ x: px[origin], y: py[origin], z: pz[origin], r: 0.05, life: 1 });
+    const n = big ? 4 + (Math.random() * 3 | 0) : 2;
+    for (let k = 0; k < n && list.length; k++)
+      firePulse(list[Math.random() * list.length | 0], origin, 0);
+  }
+  const bursts = [];
+
+  /* ================= Anneaux néon & flux de données ================= */
+  const rings = [];
+  function buildRings() {
+    rings.length = 0;
+    const defs = [
+      { R: 1.42, tilt: 0.45, spin: 0.35, hue: 'orange', packets: 3 },
+      { R: 1.72, tilt: -0.60, spin: -0.25, hue: 'cyan', packets: 2 },
+      { R: 1.95, tilt: 1.10, spin: 0.18, hue: 'orange', packets: 2 },
+    ];
+    for (const d of defs) {
+      const pts = [];
+      for (let i = 0; i <= 90; i++) {
+        const a = i / 90 * Math.PI * 2;
+        pts.push([Math.cos(a) * d.R, Math.sin(a) * d.R]);
+      }
+      const pk = [];
+      for (let i = 0; i < d.packets; i++)
+        pk.push({ a: Math.random() * Math.PI * 2, v: (0.25 + Math.random() * 0.3) * Math.sign(d.spin || 1) });
+      rings.push({ ...d, pts, pk, phase: Math.random() * Math.PI * 2 });
+    }
+  }
+  const streams = [];
+  function buildStreams() {
+    streams.length = 0;
+    for (let i = 0; i < 12; i++) {
+      streams.push({
+        a: (i / 12) * Math.PI * 2 + Math.random() * 0.3,
+        R: 2.2 + Math.random() * 0.8,
+        y: -1.8 + Math.random() * 3.6,
+        v: 0.5 + Math.random() * 0.7,
+        len: 0.5 + Math.random() * 0.5,
+      });
+    }
+  }
+
+  /* ================= Étoiles d'arrière-plan ================= */
+  const stars = [];
+  function buildStars() {
+    stars.length = 0;
+    for (let i = 0; i < 260; i++) {
+      stars.push({
+        x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: 0.3 + Math.random() * 0.7,
+        r: Math.random() * 1.4 + 0.3, tw: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  /* ================= Rotation & projection ================= */
+  let yaw = 0, tiltX = -0.32, tiltY = 0;
+  let mTiltX = -0.32, mTiltY = 0;
+  const F = 3.6;
+  const rx = new Float32Array(N), ry = new Float32Array(N), rz = new Float32Array(N);
+  const sx = new Float32Array(N), sy = new Float32Array(N), ss = new Float32Array(N);
+
+  function rotate(x, y, z, cosy, siny, cosx, sinx) {
+    // yaw autour de Y
+    let x1 = x * cosy + z * siny, z1 = -x * siny + z * cosy;
+    // tilt autour de X
+    let y1 = y * cosx - z1 * sinx, z2 = y * sinx + z1 * cosx;
+    return [x1, y1, z2];
+  }
+
+  function projectAll() {
+    const cosy = Math.cos(yaw), siny = Math.sin(yaw);
+    const cosx = Math.cos(tiltX), sinx = Math.sin(tiltX);
+    const cosy2 = Math.cos(tiltY), siny2 = Math.sin(tiltY);
+    for (let i = 0; i < N; i++) {
+      let [x1, y1, z1] = rotate(px[i], py[i], pz[i], cosy, siny, cosx, sinx);
+      // léger basculement latéral (parallaxe souris)
+      let x2 = x1 * cosy2 + y1 * siny2, y2 = -x1 * siny2 + y1 * cosy2;
+      rx[i] = x2; ry[i] = y2; rz[i] = z1;
+      const s = unit * F / (F - z1 * -1); // caméra à -F regardant +z
+      ss[i] = s / unit;
+      sx[i] = cx + x2 * s;
+      sy[i] = cy + y2 * s;
+      depth[i] = z1;
+      order[i] = i;
+    }
+    order.sort((a, b) => depth[a] - depth[b]);
+  }
+
+  // Lumière fixe dans le monde (le cerveau tourne sous la lumière)
+  const L = (() => { const v = [-0.55, 0.7, 0.65]; const l = Math.hypot(...v); return v.map(c => c / l); })();
+
+  /* ================= Mise à jour ================= */
+  let spawnAcc = 0;
+  function update(dt) {
+    yaw += dt * 0.28;
+    tiltX += (mTiltX - tiltX) * dt * 3;
+    tiltY += (mTiltY - tiltY) * dt * 3;
+
+    spawnAcc += dt * 2.4;
+    while (spawnAcc > 1) {
+      spawnAcc -= 1;
+      if (edges.length)
+        pulses.push({ e: Math.random() * edges.length | 0, t: Math.random() * 0.3,
+                      dir: Math.random() < 0.5 ? 1 : -1,
+                      speed: 0.7 + Math.random() * 0.8, gen: 0 });
+    }
+
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      p.t += p.speed * dt * 1.4;
+      if (p.t >= 1) {
+        pulses.splice(i, 1);
+        const e = edges[p.e];
+        const end = p.dir === 1 ? e.b : e.a;
+        energy[end] = Math.min(1.6, energy[end] + 1);
+        e.glow = 1;
+        if (p.gen < 4 && Math.random() < 0.7) {
+          const l = nodeLinks(end).filter(x => x !== p.e);
+          for (let k = 0, m = 1 + (Math.random() < 0.35 ? 1 : 0); k < m && l.length; k++)
+            firePulse(l[Math.random() * l.length | 0], end, p.gen + 1);
+        }
+        if (Math.random() < 0.05)
+          bursts.push({ x: px[end], y: py[end], z: pz[end], r: 0.05, life: 1 });
+      }
+    }
+
+    for (let i = 0; i < N; i++) energy[i] *= Math.pow(0.2, dt);
+    for (const e of edges) e.glow *= Math.pow(0.08, dt);
+    for (let i = bursts.length - 1; i >= 0; i--) {
+      bursts[i].r += dt * 0.9;
+      bursts[i].life -= dt * 1.3;
+      if (bursts[i].life <= 0) bursts.splice(i, 1);
+    }
+    for (const r of rings) for (const p of r.pk) p.a += p.v * dt;
+    for (const s of streams) {
+      s.y += s.v * dt;
+      if (s.y > 2.1) { s.y = -2.1; s.a = Math.random() * Math.PI * 2; }
+    }
+  }
+
+  /* ================= Rendu ================= */
+  function render(t) {
+    // Fond
+    const bg = ctx.createRadialGradient(cx, cy - unit * 0.3, unit * 0.2, cx, cy, Math.max(W, H) * 0.75);
+    bg.addColorStop(0, '#0a0e22');
+    bg.addColorStop(0.55, '#060a18');
+    bg.addColorStop(1, '#02030a');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Étoiles
+    for (const st of stars) {
+      const tw = 0.5 + 0.5 * Math.sin(t * 0.001 + st.tw);
+      ctx.globalAlpha = 0.25 + tw * 0.45;
+      ctx.fillStyle = '#cfe4ff';
+      ctx.beginPath();
+      ctx.arc(cx + st.x * W * 0.55 + Math.sin(yaw * 0.3 + st.tw) * 6 * st.z, cy + st.y * H * 0.55, st.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    const cosy = Math.cos(yaw), siny = Math.sin(yaw);
+    const cosx = Math.cos(tiltX), sinx = Math.sin(tiltX);
+
+    ctx.globalCompositeOperation = 'lighter';
+
+    /* ---- Flux de données verticaux (lignes technologiques) ---- */
+    for (const s of streams) {
+      const [x1, , z1] = rotate(Math.cos(s.a) * s.R, 0, Math.sin(s.a) * s.R, cosy * 0.6, siny * 0.6, 0, 0);
+      const sc = unit * F / (F + z1);
+      const X = cx + x1 * sc;
+      const top = cy + (-2.0) * unit * F / (F + z1);
+      const bot = cy + (2.0) * unit * F / (F + z1);
+      const fade = Math.max(0.05, 0.5 - z1 * 0.25);
+      ctx.strokeStyle = `rgba(70,200,255,${fade * 0.10})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(X, top); ctx.lineTo(X, bot); ctx.stroke();
+      // paquet lumineux qui remonte
+      const yTop = cy + (s.y + s.len) * unit * F / (F + z1);
+      const yBot = cy + s.y * unit * F / (F + z1);
+      const g = ctx.createLinearGradient(X, yBot, X, yTop);
+      g.addColorStop(0, 'rgba(80,220,255,0)');
+      g.addColorStop(1, `rgba(140,235,255,${fade * 0.8})`);
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(X, yBot); ctx.lineTo(X, yTop); ctx.stroke();
+    }
+
+    /* ---- Anneaux néon ---- */
+    for (const r of rings) {
+      const spinA = t * 0.0004 * r.spin * 10 + r.phase;
+      const path = [];
+      for (const [lx, ly] of r.pts) {
+        const cs = Math.cos(spinA), sn = Math.sin(spinA);
+        const x0 = lx * cs, z0 = lx * sn;
+        const [x1, y1, z1] = rotate(x0, ly * Math.sin(r.tilt), ly * Math.cos(r.tilt) * 0 + z0, cosy, siny, cosx, sinx);
+        const sc = unit * F / (F + z1);
+        path.push([cx + x1 * sc, cy + y1 * sc, z1]);
+      }
+      const col = r.hue === 'orange' ? '255,150,60' : '70,215,255';
+      for (let i = 0; i < path.length - 1; i++) {
+        const a = path[i], b = path[i + 1];
+        const al = Math.max(0.03, 0.28 - (a[2] + b[2]) * 0.09);
+        ctx.strokeStyle = `rgba(${col},${al})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      for (const p of r.pk) {
+        const lx = Math.cos(p.a) * r.R, ly = Math.sin(p.a) * r.R;
+        const cs = Math.cos(spinA), sn = Math.sin(spinA);
+        const [x1, y1, z1] = rotate(lx * cs, ly * Math.sin(r.tilt), lx * sn, cosy, siny, cosx, sinx);
+        const sc = unit * F / (F + z1);
+        const X = cx + x1 * sc, Y = cy + y1 * sc;
+        const sz = Math.max(6, 16 * sc / unit);
+        ctx.globalAlpha = Math.max(0.15, 0.9 - z1 * 0.3);
+        ctx.drawImage(r.hue === 'orange' ? spOrange : spCyan, X - sz / 2, Y - sz / 2, sz, sz);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    projectAll();
+
+    /* ---- Liens neuronaux ---- */
+    for (const e of edges) {
+      const a = e.a, b = e.b;
+      const zAvg = (depth[a] + depth[b]) * 0.5;
+      const al = Math.max(0.012, 0.10 - zAvg * 0.05) + e.glow * 0.35;
+      ctx.strokeStyle = `rgba(70,210,255,${Math.min(al, 0.8)})`;
+      ctx.lineWidth = 0.8 + e.glow * 1.2;
+      ctx.beginPath();
+      ctx.moveTo(sx[a], sy[a]);
+      ctx.lineTo(sx[b], sy[b]);
+      ctx.stroke();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    /* ---- Surface du cerveau (points triés par profondeur) ---- */
+    for (let k = 0; k < N; k++) {
+      const i = order[k];
+      const z = depth[i];
+      // Éclairage : normale ≈ direction radiale, lumière fixe dans le monde
+      const nx = px[i], ny = py[i], nz = pz[i];
+      const nl = Math.hypot(nx, ny, nz) || 1;
+      const dot = Math.max(0, (nx * L[0] + ny * L[1] + nz * L[2]) / nl);
+      const lWorld = rotate(nx, ny, nz, cosy, siny, cosx, sinx);
+      const lit = Math.max(0, lWorld[0] * L[0] + lWorld[1] * L[1] + lWorld[2] * L[2]) / nl;
+      const fog = Math.max(0.25, 1 - (z + 1.2) * 0.28);
+      const inten = (0.28 + lit * 1.0) * shade[i] * fog + energy[i] * 0.7;
+      const size = Math.max(1.5, (3.4 + energy[i] * 6) * ss[i]);
+      ctx.globalAlpha = Math.min(1, inten);
+      ctx.drawImage(spBrain, sx[i] - size, sy[i] - size, size * 2, size * 2);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.globalCompositeOperation = 'lighter';
+
+    /* ---- Impulsions (comètes le long des synapses) ---- */
+    for (const p of pulses) {
+      const e = edges[p.e];
+      const a = p.dir === 1 ? e.a : e.b;
+      const b = p.dir === 1 ? e.b : e.a;
+      const head = Math.min(p.t, 1), tail = Math.max(head - 0.12, 0);
+      const hx = sx[a] + (sx[b] - sx[a]) * head, hy = sy[a] + (sy[b] - sy[a]) * head;
+      const tx2 = sx[a] + (sx[b] - sx[a]) * tail, ty2 = sy[a] + (sy[b] - sy[a]) * tail;
+      const g = ctx.createLinearGradient(tx2, ty2, hx, hy);
+      g.addColorStop(0, 'rgba(90,225,255,0)');
+      g.addColorStop(1, 'rgba(200,245,255,0.9)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.moveTo(tx2, ty2); ctx.lineTo(hx, hy); ctx.stroke();
+      const sz = 9 * ss[b] + 4;
+      ctx.drawImage(spWhite, hx - sz, hy - sz, sz * 2, sz * 2);
+    }
+
+    /* ---- Ondes d'activation ---- */
+    for (const bu of bursts) {
+      const [x1, y1, z1] = rotate(bu.x, bu.y, bu.z, cosy, siny, cosx, sinx);
+      const sc = unit * F / (F + z1);
+      const X = cx + x1 * sc, Y = cy + y1 * sc;
+      ctx.beginPath();
+      ctx.arc(X, Y, bu.r * sc, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(120,230,255,${Math.max(bu.life, 0) * 0.4})`;
+      ctx.lineWidth = 1.5 * bu.life;
+      ctx.stroke();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  /* ================= Boucle ================= */
+  let last = performance.now();
+  let paused = false;
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    if (!paused) { update(dt); render(now); }
+    requestAnimationFrame(frame);
+  }
+
+  /* ================= Redimensionnement ================= */
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cx = W / 2; cy = H / 2;
+    unit = Math.min(W, H) * 0.25;
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('pointermove', e => {
+    mTiltY = ((e.clientX / W) - 0.5) * 0.35;
+    mTiltX = -0.32 + ((e.clientY / H) - 0.5) * 0.25;
+  });
+  canvas.addEventListener('pointerdown', () => {
+    if (N) surge(Math.random() * N | 0, true);
+  });
+
+  resize();
+  buildBrain();
+  buildLinks();
+  buildRings();
+  buildStreams();
+  buildStars();
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) { update(0.016); render(0); paused = true; }
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
