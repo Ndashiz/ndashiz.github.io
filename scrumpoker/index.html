@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1117">
+<meta name="robots" content="noindex">
+<title>Scrum Poker</title>
+<style>
+:root{
+  --bg:#0f1117; --panel:#181b24; --panel2:#1f2330; --raise:#272c3b;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.18);
+  --text:#eceaf2; --dim:#9a9db0; --faint:#666a7c;
+  --acc:#8b7cf6; --acc2:#6d5be6; --accbg:rgba(139,124,246,.16);
+  --green:#4fcf8a; --greenbg:rgba(79,207,138,.14);
+  --red:#ee6f66; --redbg:rgba(238,111,102,.14);
+  --amber:#f0b45a; --amberbg:rgba(240,180,90,.14);
+  --r:14px; --rs:9px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--acc)}
+h1,h2,h3{margin:0;line-height:1.2;font-weight:600}
+h1{font-size:1.6rem}h2{font-size:1.25rem}h3{font-size:1rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;font-size:.78rem}
+p{margin:.4em 0}
+.muted{color:var(--dim)}.faint{color:var(--faint)}.small{font-size:.85rem}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(15,17,23,.92);backdrop-filter:blur(8px);z-index:5}
+header .brand{white-space:nowrap;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)}
+header .brand span.s{color:var(--acc);font-size:1.3em}
+header .sess{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:.9rem;min-width:0}
+header .sess .n{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+main{max-width:980px;margin:0 auto;padding:22px 18px calc(30px + env(safe-area-inset-bottom))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card+.card{margin-top:16px}
+.grid{display:grid;gap:16px}
+@media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr}.grid.main{grid-template-columns:minmax(0,1fr) 320px}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:var(--rs);border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-weight:600;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--raise)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.primary:hover{background:var(--acc2)}
+.btn.danger{color:var(--red);border-color:rgba(238,111,102,.4)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--dim)}
+.btn.big{padding:16px 26px;font-size:1.1rem;border-radius:var(--r)}
+.btn.sm{padding:6px 12px;font-size:.85rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.between{justify-content:space-between}
+label.f{display:block;margin:12px 0 0}
+label.f span{display:block;font-size:.82rem;color:var(--dim);margin-bottom:5px}
+input[type=text],input[type=password],input[type=number],select{width:100%;padding:11px 13px;border-radius:var(--rs);border:1px solid var(--line2);background:var(--bg);outline:none}
+input:focus,select:focus{border-color:var(--acc)}
+.hint{font-size:.8rem;color:var(--faint);margin-top:4px}
+.err{color:var(--red);background:var(--redbg);border:1px solid rgba(238,111,102,.3);padding:10px 12px;border-radius:var(--rs);margin-top:12px}
+.ok{color:var(--green);background:var(--greenbg);border:1px solid rgba(79,207,138,.3);padding:10px 12px;border-radius:var(--rs);margin-top:12px}
+.warn{color:var(--amber);background:var(--amberbg);border:1px solid rgba(240,180,90,.3);padding:10px 12px;border-radius:var(--rs);margin-top:12px}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.75rem;font-weight:600;letter-spacing:.03em;background:var(--accbg);color:var(--acc)}
+.badge.green{background:var(--greenbg);color:var(--green)}
+.badge.amber{background:var(--amberbg);color:var(--amber)}
+.badge.red{background:var(--redbg);color:var(--red)}
+.badge.grey{background:rgba(255,255,255,.07);color:var(--dim)}
+/* landing */
+.hero{text-align:center;padding:30px 0 20px}
+.hero h1{font-size:2.2rem}
+.hero p{color:var(--dim);max-width:520px;margin:10px auto 0}
+.actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+.lobby{list-style:none;margin:0;padding:0}
+.lobby li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.lobby li:first-child{border-top:0}
+.lobby .nm{font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--greenbg);flex:none}
+.empty{color:var(--faint);padding:14px 0;text-align:center}
+/* waiting room */
+.room{display:grid;gap:22px;align-items:start}
+@media(min-width:760px){.room{grid-template-columns:auto 1fr}}
+.qr{background:#fff;padding:14px;border-radius:var(--r);display:inline-block;line-height:0}
+.qr svg{width:min(62vw,300px);height:auto;display:block}
+.link{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;word-break:break-all;color:var(--dim);background:var(--bg);padding:8px 10px;border-radius:var(--rs);border:1px solid var(--line);margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{padding:8px 14px;border-radius:99px;background:var(--panel2);border:1px solid var(--line2);font-weight:600;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.chip.admin{border-color:var(--acc);color:var(--acc)}
+.chip.off{opacity:.45;text-decoration:line-through}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.count{font-size:3rem;font-weight:700;line-height:1}
+/* vote screen */
+.feat{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.feat h1{font-size:1.5rem;word-break:break-word}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:14px 0 18px}
+.tabs button{background:none;border:0;padding:10px 14px;color:var(--dim);font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--text);border-bottom-color:var(--acc)}
+.deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:10px;margin-top:14px}
+@media(max-width:480px){.deck{grid-template-columns:repeat(4,1fr);gap:8px}.pcard{font-size:1.25rem}}
+.pcard{aspect-ratio:2/3;border-radius:10px;border:2px solid var(--line2);background:linear-gradient(160deg,var(--panel2),var(--raise));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;cursor:pointer;transition:.15s;position:relative;user-select:none}
+.pcard:hover{transform:translateY(-4px);border-color:var(--acc)}
+.pcard.sel{border-color:var(--acc);background:linear-gradient(160deg,var(--acc),var(--acc2));color:#fff;transform:translateY(-6px);box-shadow:0 10px 24px rgba(139,124,246,.35)}
+.pcard:disabled,.pcard.dis{opacity:.4;cursor:not-allowed;transform:none}
+.pcard .c{position:absolute;top:5px;left:7px;font-size:.6rem;opacity:.6}
+.roster{list-style:none;margin:0;padding:0}
+.roster li{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.roster li:first-child{border-top:0}
+.roster .nm{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.roster .st{font-size:.85rem;color:var(--dim)}
+.roster li.off .nm{color:var(--faint);text-decoration:line-through}
+.st.v{color:var(--green)}
+.x{background:none;border:0;color:var(--faint);cursor:pointer;padding:2px 6px;font-size:1rem}
+.x:hover{color:var(--red)}
+.mini{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:46px;padding:0 8px;border-radius:7px;border:1.5px solid var(--line2);background:var(--panel2);font-weight:700;font-size:1.05rem}
+.mini.hid{color:var(--faint);letter-spacing:.1em}
+.mini.min{border-color:var(--green);color:var(--green)}
+.mini.max{border-color:var(--red);color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:var(--rs);padding:12px}
+.stat .l{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.stat .v{font-size:1.8rem;font-weight:700;line-height:1.15}
+.stat .w{font-size:.8rem;color:var(--dim);word-break:break-word}
+.stat.min .v{color:var(--green)}.stat.max .v{color:var(--red)}.stat.med .v{color:var(--acc)}
+.votes{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.vote{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+.vote .who{font-size:.75rem;color:var(--dim);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.flip{animation:flip .5s ease both}
+@keyframes flip{from{transform:rotateY(90deg);opacity:0}to{transform:none;opacity:1}}
+.admin{border-color:rgba(139,124,246,.35)}
+.admin h3{color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+td.pts{font-weight:700;font-size:1.1rem;color:var(--acc)}
+.tw{overflow-x:auto}
+/* overlays */
+#overlay[hidden]{display:none}
+#overlay{position:fixed;inset:0;background:rgba(15,17,23,.9);display:flex;align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(6px)}
+#overlay .n{font-size:min(40vw,260px);font-weight:800;line-height:1;color:#fff;animation:tick .9s ease-out both}
+@keyframes tick{0%{transform:scale(1.6);opacity:0}25%{transform:scale(1);opacity:1}100%{opacity:.9}}
+#toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:60;max-width:min(90vw,360px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:3px solid var(--acc);padding:10px 14px;border-radius:var(--rs);box-shadow:0 8px 24px rgba(0,0,0,.4);animation:pop .3s ease;font-size:.92rem}
+.toast.green{border-left-color:var(--green)}.toast.red{border-left-color:var(--red)}.toast.amber{border-left-color:var(--amber)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:40;padding:18px}
+.modal .card{max-width:420px;width:100%}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--acc);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+footer{text-align:center;color:var(--faint);font-size:.75rem;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="./"><span class="s">♠</span> Scrum Poker</a>
+  <div class="sess" id="hdr"></div>
+</header>
+<main id="app"></main>
+<footer>Ephemeral sessions · no accounts · votes stay in your team's browsers</footer>
+<div id="toasts"></div>
+<div id="overlay" hidden><div class="n"></div></div>
+
+<!-- supabase-js 2.45.4 UMD (classic realtime-js). Do NOT bump to 2.10x: its rewritten presence layer drops presence refs after the first diff, so leaves/untrack never apply and the lobby fills with ghosts. `presence.enabled: true` is required by current Realtime servers for this older client. -->
+<script src="supabase.min.js"></script>
+<script src="qrcode.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ───────────────────────── config ───────────────────────── */
+const SUPABASE_URL  = 'https://hrvxhnmtvzvrsmmmmtsv.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_Mj-FuPZcN_oTeLQ0ME84yQ_uulPdJ4c';
+const FIB = [0,1,2,3,5,8,13,21,34,55,89,144,233,377,610];
+const COFFEE = '☕', INF = '∞';
+const JOIN_TIMEOUT = 8000;
+const LOBBY_CHANNEL = 'poker:lobby';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { persistSession:false, autoRefreshToken:false, detectSessionInUrl:false, storageKey:'sb-scrumpoker-noop' },
+  realtime: { params: { eventsPerSecond: 20 } }
+});
+
+/* ───────────────────────── helpers ───────────────────────── */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function uid(n = 10) {
+  const a = 'abcdefghijklmnopqrstuvwxyz0123456789', b = new Uint8Array(n);
+  crypto.getRandomValues(b); return Array.from(b, x => a[x % a.length]).join('');
+}
+async function sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2,'0')).join('');
+}
+const deriveKey = async (sid, pw) => (await sha256hex(`scrumpoker:${sid}:${pw}`)).slice(0, 24);
+const chanName = (sid, key) => `poker:${sid}:${key}`;
+const joinUrl = (sid, key) => `${location.origin}${location.pathname}?s=${encodeURIComponent(sid)}&t=${encodeURIComponent(key)}`;
+const fmtCard = c => c === null || c === undefined ? '' : String(c);
+const isNum = c => typeof c === 'number';
+const nowIso = () => new Date().toISOString();
+const timeHM = ts => new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+function toast(msg, kind = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + kind; el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = '.4s'; setTimeout(() => el.remove(), 400); }, 4200);
+}
+
+/* ───────────────────────── state ───────────────────────── */
+const me = {
+  clientId: sessionStorage.getItem('poker:cid') || (() => { const c = uid(12); sessionStorage.setItem('poker:cid', c); return c; })(),
+  nickname: null, isAdmin: false, sid: null, key: null, joined: false, myVote: null
+};
+let S = null;            // session state (authoritative for admin, mirror for players)
+let chan = null;         // session channel
+let lobbyChan = null;    // global lobby channel
+let countdownN = null;
+let adminPresent = false;
+const ui = { screen: 'landing', tab: 'vote', lobby: [], showManualJoin: false, join: { status: 'idle', error: null, sid: '', name: '', key: null, nickname: '', password: '' }, feature: '', points: '' };
+let joinTimer = null;
+
+const ADMIN_KEY = sid => `poker:admin:${sid}`;
+function saveAdmin() {
+  if (!me.isAdmin || !S) return;
+  localStorage.setItem(ADMIN_KEY(S.sid), JSON.stringify({ state: S, key: me.key, clientId: me.clientId, nickname: me.nickname, savedAt: Date.now() }));
+}
+function savedAdminSessions() {
+  const out = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i); if (!k.startsWith('poker:admin:')) continue;
+    try { const d = JSON.parse(localStorage.getItem(k)); out.push(d); } catch {}
+  }
+  return out.sort((a,b) => b.savedAt - a.savedAt);
+}
+function savePlayer() {
+  sessionStorage.setItem('poker:me', JSON.stringify({ sid: me.sid, key: me.key, nickname: me.nickname }));
+}
+
+/* ───────────────────────── game logic (admin) ───────────────────────── */
+function deckFor(cap) { return FIB.filter(v => v <= cap); }
+
+function computeResults(votes, deck) {
+  const entries = Object.entries(votes);
+  const nums = entries.filter(([,c]) => isNum(c));
+  const base = { count: nums.length, total: entries.length, min: null, max: null, median: null, proposal: null, consensus: false };
+  if (!nums.length) return base;
+  const vals = nums.map(([,c]) => c).sort((a,b) => a-b);
+  const minV = vals[0], maxV = vals[vals.length-1];
+  const mid = vals.length / 2;
+  const median = vals.length % 2 ? vals[Math.floor(mid)] : (vals[mid-1] + vals[mid]) / 2;
+  let proposal = deck[0];
+  for (const v of deck) {
+    const d = Math.abs(v - median), b = Math.abs(proposal - median);
+    if (d < b || (d === b && v > proposal)) proposal = v;   // tie → round up
+  }
+  return { ...base,
+    min: { value: minV, who: nums.filter(([,c]) => c === minV).map(([n]) => n) },
+    max: { value: maxV, who: nums.filter(([,c]) => c === maxV).map(([n]) => n) },
+    median, proposal, consensus: minV === maxV };
+}
+
+function publicState() {
+  const revealed = S.phase === 'revealed';
+  return { ...S, votes: revealed ? S.votes : {}, voted: Object.keys(S.votes), results: revealed ? S.results : null };
+}
+
+let bcTimer = null;
+function broadcastState() {
+  saveAdmin(); render();
+  clearTimeout(bcTimer);
+  bcTimer = setTimeout(() => {
+    if (chan && chan.state === 'joined') chan.send({ type: 'broadcast', event: 'state', payload: { state: publicState() } });
+    updateLobbyPresence();
+  }, 60);
+}
+function ack(clientId, ok, reason = null, extra = {}) {
+  chan?.send({ type: 'broadcast', event: 'join-ack', payload: { clientId, ok, reason, ...extra } });
+}
+function findNick(nick) {
+  const l = nick.toLowerCase();
+  return Object.keys(S.participants).find(k => k.toLowerCase() === l);
+}
+function connectedCount() { return Object.values(S.participants).filter(p => p.connected).length; }
+
+function handleJoin(p) {
+  const nick = String(p.nickname || '').trim().slice(0, 24);
+  if (!nick) return ack(p.clientId, false, 'Please enter a nickname.');
+  const existingKey = findNick(nick);
+  if (existingKey) {
+    const ex = S.participants[existingKey];
+    if (ex.clientId === p.clientId) { ex.connected = true; ack(p.clientId, true, null, { nickname: existingKey, yourVote: S.votes[existingKey] ?? null }); broadcastState(); return; }
+    if (ex.connected) return ack(p.clientId, false, `“${existingKey}” is already taken in this session.`);
+    if (!p.rejoin) return ack(p.clientId, false, null, { needConfirm: true, nickname: existingKey });
+    ex.clientId = p.clientId; ex.connected = true;
+    toast(`${existingKey} is back${S.votes[existingKey] !== undefined ? ' (vote kept)' : ''}`, 'green');
+    ack(p.clientId, true, null, { nickname: existingKey, yourVote: S.votes[existingKey] ?? null }); broadcastState(); return;
+  }
+  const voting = S.phase === 'voting' || S.phase === 'countdown' || S.phase === 'revealed';
+  const role = voting ? 'spectator' : 'player';
+  S.participants[nick] = { nickname: nick, clientId: p.clientId, connected: true, role, joinedAt: Date.now() };
+  toast(role === 'spectator' ? `${nick} joined as spectator (vote in progress)` : `${nick} joined`, 'green');
+  ack(p.clientId, true, null, { nickname: nick }); broadcastState();
+}
+function handleVote(p) {
+  if (S.phase !== 'voting') return;
+  const nick = findNick(String(p.nickname || ''));
+  if (!nick) return;
+  const pt = S.participants[nick];
+  if (pt.clientId !== p.clientId || pt.role === 'spectator') return;
+  const c = p.card;
+  const valid = (isNum(c) && S.deck.includes(c)) || c === COFFEE || c === INF;
+  if (c === null) delete S.votes[nick]; else if (valid) S.votes[nick] = c; else return;
+  broadcastState();
+}
+function handleLeave(p) {
+  const nick = findNick(String(p.nickname || ''));
+  if (!nick || S.participants[nick].clientId !== p.clientId) return;
+  delete S.participants[nick]; delete S.votes[nick];
+  toast(`${nick} left the session`, 'amber'); broadcastState();
+}
+function syncPresence() {
+  if (!chan) return;
+  const present = new Set();
+  for (const [key, arr] of Object.entries(chan.presenceState())) if (arr.length) present.add(key);
+  if (me.isAdmin) {
+    let changed = false;
+    for (const pt of Object.values(S.participants)) {
+      const on = pt.clientId === me.clientId ? true : present.has(pt.clientId);
+      if (on !== pt.connected) {
+        pt.connected = on; changed = true;
+        if (!on) { const nick = pt.nickname; setTimeout(() => { const q = S?.participants[nick]; if (q && !q.connected) toast(`${nick} disconnected`, 'red'); }, 2500); }
+      }
+    }
+    if (changed) broadcastState();
+  } else {
+    const was = adminPresent;
+    adminPresent = Object.values(chan.presenceState()).flat().some(p => p.role === 'admin');
+    if (was !== adminPresent) render();
+  }
+}
+
+/* admin actions */
+function startVote(feature, revote = false) {
+  feature = String(feature || '').trim();
+  if (!feature) { toast('Enter a feature name first', 'amber'); return; }
+  if (!revote) {
+    S.round = 1;
+    for (const p of Object.values(S.participants)) if (p.role === 'spectator') p.role = 'player';
+  } else S.round++;
+  S.feature = feature; S.votes = {}; S.results = null; S.phase = 'voting';
+  me.myVote = null; ui.feature = ''; ui.points = '';
+  broadcastState();
+}
+async function go() {
+  if (S.phase !== 'voting') return;
+  if (!Object.keys(S.votes).length && !confirm('Nobody has voted yet. Reveal anyway?')) return;
+  S.phase = 'countdown'; broadcastState();
+  for (const n of [3, 2, 1]) {
+    countdownN = n; renderOverlay();
+    chan?.send({ type: 'broadcast', event: 'countdown', payload: { n } });
+    await sleep(1000);
+  }
+  countdownN = null; renderOverlay();
+  S.results = computeResults(S.votes, S.deck);
+  S.phase = 'revealed';
+  ui.points = S.results.proposal ?? '';
+  broadcastState();
+}
+function settle(points) {
+  const v = Number(points);
+  if (!Number.isFinite(v) || v < 0) { toast('Enter a valid number of story points', 'amber'); return; }
+  const r = S.results || computeResults(S.votes, S.deck);
+  S.history.push({ feature: S.feature, points: v, min: r.min?.value ?? null, max: r.max?.value ?? null, median: r.median, votes: { ...S.votes }, rounds: S.round, at: Date.now() });
+  S.phase = 'idle'; S.feature = ''; S.votes = {}; S.results = null; S.round = 0; me.myVote = null; ui.points = '';
+  broadcastState();
+  toast('Saved to history', 'green');
+}
+function removeParticipant(nick) {
+  if (!S.participants[nick] || S.participants[nick].role === 'admin') return;
+  delete S.participants[nick]; delete S.votes[nick]; broadcastState();
+}
+async function endSession() {
+  if (!confirm('End the session for everyone? The history will be lost unless you export it.')) return;
+  chan?.send({ type: 'broadcast', event: 'ended', payload: {} });
+  await sleep(150);
+  localStorage.removeItem(ADMIN_KEY(S.sid));
+  await teardown(); goHome();
+}
+
+/* ───────────────────────── player actions ───────────────────────── */
+function castVote(card) {
+  if (!S || S.phase !== 'voting') return;
+  const mine = S.participants[me.nickname];
+  if (!mine || mine.role === 'spectator') return;
+  const next = me.myVote === card ? null : card;
+  me.myVote = next;
+  if (me.isAdmin) { if (next === null) delete S.votes[me.nickname]; else S.votes[me.nickname] = next; broadcastState(); }
+  else { chan?.send({ type: 'broadcast', event: 'vote', payload: { clientId: me.clientId, nickname: me.nickname, card: next } }); render(); }
+}
+async function leaveSession() {
+  if (me.isAdmin) return endSession();
+  chan?.send({ type: 'broadcast', event: 'leave', payload: { clientId: me.clientId, nickname: me.nickname } });
+  await sleep(150);
+  sessionStorage.removeItem('poker:me');
+  await teardown(); goHome();
+}
+
+/* ───────────────────────── realtime plumbing ───────────────────────── */
+const withTimeout = (p, ms) => Promise.race([p, sleep(ms)]);
+async function dropChannel(c) {
+  try { await withTimeout(c.untrack(), 1000); } catch {}
+  try { await withTimeout(sb.removeChannel(c), 1500); } catch {}
+}
+async function teardown() {
+  clearTimeout(joinTimer);
+  const wasAdmin = me.isAdmin;
+  if (chan) { const c = chan; chan = null; await dropChannel(c); }
+  // the admin rebuilds its lobby channel afterwards: a fresh subscribe gets a clean presence snapshot
+  if (wasAdmin && lobbyChan) { const l = lobbyChan; lobbyChan = null; await dropChannel(l); }
+  S = null; me.sid = me.key = me.nickname = null; me.isAdmin = me.joined = false; me.myVote = null;
+  adminPresent = false; countdownN = null; renderOverlay();
+}
+
+function connectSession() {
+  chan = sb.channel(chanName(me.sid, me.key), { config: { broadcast: { self: false }, presence: { key: me.clientId, enabled: true } } });
+  if (me.isAdmin) {
+    chan.on('broadcast', { event: 'join'  }, ({ payload }) => handleJoin(payload));
+    chan.on('broadcast', { event: 'vote'  }, ({ payload }) => handleVote(payload));
+    chan.on('broadcast', { event: 'leave' }, ({ payload }) => handleLeave(payload));
+    chan.on('broadcast', { event: 'sync'  }, () => broadcastState());
+  } else {
+    chan.on('broadcast', { event: 'state' }, ({ payload }) => onState(payload.state));
+    chan.on('broadcast', { event: 'countdown' }, ({ payload }) => { countdownN = payload.n; renderOverlay(); });
+    chan.on('broadcast', { event: 'join-ack' }, ({ payload }) => onJoinAck(payload));
+    chan.on('broadcast', { event: 'ended' }, async () => { toast('The admin ended the session', 'amber'); sessionStorage.removeItem('poker:me'); await teardown(); goHome(); });
+  }
+  chan.on('presence', { event: 'sync' }, syncPresence);
+  chan.subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      await chan.track({ clientId: me.clientId, nickname: me.nickname, role: me.isAdmin ? 'admin' : 'player' });
+      if (me.isAdmin) { broadcastState(); }
+      else sendJoin(me.joined);   // (re)join — after a socket reconnect this is a silent rejoin
+    } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+      toast('Realtime connection problem, retrying…', 'red');
+    }
+  });
+}
+function sendJoin(rejoin) {
+  chan?.send({ type: 'broadcast', event: 'join', payload: { clientId: me.clientId, nickname: me.nickname, rejoin: !!(rejoin || me._rejoin) } });
+  if (!me.joined) {
+    clearTimeout(joinTimer);
+    joinTimer = setTimeout(() => {
+      if (me.joined) return;
+      ui.join.status = 'error';
+      ui.join.error = adminPresent ? 'The admin did not answer. Try again.' : 'No session found with this password (or the admin is offline).';
+      render();
+    }, JOIN_TIMEOUT);
+  }
+}
+function onJoinAck(p) {
+  if (p.clientId !== me.clientId) return;
+  clearTimeout(joinTimer);
+  if (p.ok) { me.joined = true; me._rejoin = false; me.nickname = p.nickname || me.nickname; if (p.yourVote !== undefined) me.myVote = p.yourVote; savePlayer(); ui.join.status = 'joined'; ui.screen = 'session'; ui.tab = 'vote'; history.replaceState(null, '', `?s=${encodeURIComponent(me.sid)}`); render(); return; }
+  if (p.needConfirm) { ui.join.status = 'confirm'; ui.join.nickname = p.nickname || me.nickname; render(); return; }
+  ui.join.status = 'error'; ui.join.error = p.reason || 'Join refused.'; render();
+}
+function onState(state) {
+  const prev = S; S = state;
+  if (!me.joined) return;
+  if (prev && prev.phase !== 'revealed' && S.phase === 'revealed') { countdownN = null; renderOverlay(); }
+  if (prev && prev.phase !== 'voting' && S.phase === 'voting') me.myVote = null;
+  if (S.phase !== 'voting' && S.phase !== 'countdown') me.myVote = S.votes?.[me.nickname] ?? null;
+  if (prev && prev.phase !== 'voting' && S.phase === 'voting') toast(`Vote started: ${S.feature}`);
+  render();
+}
+
+function ensureLobby(cb) {
+  if (lobbyChan && !sb.realtime.getChannels().includes(lobbyChan)) lobbyChan = null;   // dropped by the client (socket closed on last channel removal)
+  if (lobbyChan) { cb && cb(); return; }
+  const ch = lobbyChan = sb.channel(LOBBY_CHANNEL, { config: { presence: { key: 'l-' + me.clientId, enabled: true } } });
+  ch.on('presence', { event: 'sync' }, () => {
+    if (ch !== lobbyChan) return;   // superseded by a rebuilt channel
+    const bySid = new Map();        // a reloaded admin can leave a stale duplicate under the same key for a few seconds
+    for (const p of Object.values(ch.presenceState()).flat()) if (p.sid) bySid.set(p.sid, p);
+    ui.lobby = [...bySid.values()].sort((a,b) => a.createdAt - b.createdAt);
+    if (ui.screen === 'landing') render();
+  });
+  ch.subscribe(status => { if (status === 'SUBSCRIBED' && ch === lobbyChan) { updateLobbyPresence(); cb && cb(); } });
+}
+function updateLobbyPresence() {
+  if (!lobbyChan || lobbyChan.state !== 'joined') return;
+  if (me.isAdmin && S) lobbyChan.track({ sid: S.sid, name: S.name, players: connectedCount(), phase: S.phase, createdAt: S.createdAt });
+}
+
+/* ───────────────────────── flows ───────────────────────── */
+async function createSession({ name, password, cap, nickname }) {
+  const sid = uid(8);
+  const key = await deriveKey(sid, password);
+  Object.assign(me, { nickname, isAdmin: true, sid, key, joined: true, myVote: null });
+  S = { sid, name, cap, deck: deckFor(cap), createdAt: Date.now(), phase: 'lobby', feature: '', round: 0,
+        participants: { [nickname]: { nickname, clientId: me.clientId, connected: true, role: 'admin', joinedAt: Date.now() } },
+        votes: {}, results: null, history: [] };
+  saveAdmin();
+  history.replaceState(null, '', `?s=${sid}`);
+  ui.screen = 'session'; ui.tab = 'vote'; render();
+  ensureLobby(); connectSession();
+}
+function resumeAdmin(sid) {
+  const d = JSON.parse(localStorage.getItem(ADMIN_KEY(sid)));
+  Object.assign(me, { nickname: d.nickname, isAdmin: true, sid, key: d.key, joined: true, clientId: d.clientId });
+  sessionStorage.setItem('poker:cid', d.clientId);
+  S = d.state; me.myVote = S.votes[me.nickname] ?? null;
+  for (const p of Object.values(S.participants)) p.connected = p.role === 'admin';
+  if (S.phase === 'countdown') S.phase = 'voting';
+  history.replaceState(null, '', `?s=${sid}`);
+  ui.screen = 'session'; ui.tab = 'vote'; render();
+  ensureLobby(); connectSession();
+}
+async function joinSession({ sid, key, password, nickname, rejoin = false }) {
+  if (!key) key = await deriveKey(sid, password);
+  Object.assign(me, { nickname, isAdmin: false, sid, key, joined: false, myVote: null });
+  ui.join.status = 'waiting'; ui.join.error = null; ui.screen = 'join'; render();
+  if (chan) { const c = chan; chan = null; await dropChannel(c); }
+  me._rejoin = !!rejoin;
+  connectSession();
+}
+function goHome() {
+  ui.screen = 'landing'; ui.join = { status: 'idle', error: null, sid: '', name: '', key: null, nickname: '', password: '' };
+  history.replaceState(null, '', location.pathname);
+  render(); ensureLobby();
+}
+
+/* ───────────────────────── rendering ───────────────────────── */
+function preserve(fn) {
+  const a = document.activeElement, id = a && a.id; let pos = null; try { pos = a && a.selectionStart; } catch {}
+  fn();
+  if (id) { const el = document.getElementById(id); if (el) { el.focus(); try { if (pos != null) el.setSelectionRange(pos, pos); } catch {} } }
+}
+function render() { preserve(() => { renderHeader(); app.innerHTML = ({ landing: vLanding, create: vCreate, join: vJoin, session: vSession })[ui.screen](); }); renderOverlay(); }
+function renderHeader() {
+  if (!S || ui.screen !== 'session') { $('#hdr').innerHTML = ''; return; }
+  $('#hdr').innerHTML = `<span class="n">${esc(S.name)}</span><span class="badge ${me.isAdmin ? '' : 'grey'}">${esc(me.nickname)}${me.isAdmin ? ' · admin' : ''}</span>
+    <button class="btn sm ghost" data-action="leave">${me.isAdmin ? 'End' : 'Leave'}</button>`;
+}
+function renderOverlay() {
+  const o = $('#overlay');
+  if (countdownN === null) { o.hidden = true; return; }
+  o.hidden = false; const n = o.querySelector('.n'); n.textContent = countdownN; n.style.animation = 'none'; void n.offsetWidth; n.style.animation = '';
+}
+
+function vLanding() {
+  const mine = savedAdminSessions();
+  return `
+  <div class="hero"><h1>Scrum Poker</h1><p>Real-time planning poker for your team. Create a session, share the QR code, vote blind, reveal together.</p></div>
+  <div class="actions">
+    <button class="btn primary big" data-action="show-create">＋ Create a session</button>
+    <button class="btn big" data-action="toggle-manual">Join with a session ID</button>
+  </div>
+  ${ui.showManualJoin ? `<div class="card"><form data-form="manual-join"><h3>Join with a session ID</h3>
+    <label class="f"><span>Session ID</span><input type="text" id="mj-sid" name="sid" required autocomplete="off" placeholder="e.g. k3x9p2qa"></label>
+    <div class="row" style="margin-top:14px"><button class="btn primary">Continue</button></div></form></div>` : ''}
+  ${mine.length ? `<div class="card"><h3>Your sessions on this browser</h3><ul class="lobby">${mine.map(d => `<li><span class="nm">${esc(d.state.name)} <span class="faint small">· ${d.state.history.length} settled · ${timeHM(d.savedAt)}</span></span>
+    <button class="btn sm primary" data-action="resume-admin" data-sid="${esc(d.state.sid)}">Resume as admin</button><button class="x" title="Forget" data-action="forget-admin" data-sid="${esc(d.state.sid)}">✕</button></li>`).join('')}</ul></div>` : ''}
+  <div class="card"><div class="row between"><h3>Ongoing sessions</h3><span class="faint small">${ui.lobby.length} live</span></div>
+    ${ui.lobby.length ? `<ul class="lobby">${ui.lobby.map(s => `<li><span class="dot"></span><span class="nm">${esc(s.name)}</span>
+      <span class="badge ${s.phase === 'lobby' ? 'green' : s.phase === 'idle' ? 'grey' : 'amber'}">${s.phase === 'lobby' ? 'waiting room' : s.phase === 'idle' ? 'between votes' : 'voting'}</span>
+      <span class="muted small">${s.players} ${s.players === 1 ? 'player' : 'players'}</span>
+      <button class="btn sm" data-action="lobby-join" data-sid="${esc(s.sid)}" data-name="${esc(s.name)}">Join</button></li>`).join('')}</ul>`
+    : `<div class="empty">No session running right now. Create one!</div>`}
+    <p class="hint">Session names are public — don't put client names in them.</p></div>`;
+}
+function vCreate() {
+  return `<div class="card" style="max-width:520px;margin:0 auto"><form data-form="create"><h2>Create a session</h2>
+    <label class="f"><span>Session name (shown in the public lobby)</span><input type="text" id="c-name" name="name" required maxlength="40" placeholder="Team Rocket" autocomplete="off"></label>
+    <label class="f"><span>Password (needed to join without the QR code)</span><input type="text" id="c-pw" name="password" required maxlength="40" autocomplete="off"></label>
+    <label class="f"><span>Highest card</span><select id="c-cap" name="cap">${FIB.filter(v => v >= 5).map(v => `<option value="${v}" ${v === 34 ? 'selected' : ''}>${v}</option>`).join('')}</select>
+      <div class="hint">Deck: 0, 1, 2, 3, 5, 8 … up to this value, plus ☕ (need a break) and ∞ (too big).</div></label>
+    <label class="f"><span>Your nickname (you vote too)</span><input type="text" id="c-nick" name="nickname" required maxlength="24" autocomplete="off"></label>
+    <div class="row" style="margin-top:18px"><button class="btn primary big">Open the waiting room</button><button type="button" class="btn ghost" data-action="home">Cancel</button></div>
+  </form></div>`;
+}
+function vJoin() {
+  const j = ui.join;
+  const title = j.name ? `Join “${esc(j.name)}”` : 'Join a session';
+  if (j.status === 'waiting') return `<div class="card" style="max-width:420px;margin:0 auto"><h2>${title}</h2><p class="muted" style="margin-top:14px"><span class="spin"></span>Knocking on the door…</p><button class="btn ghost sm" data-action="cancel-join" style="margin-top:10px">Cancel</button></div>`;
+  if (j.status === 'confirm') return `<div class="card" style="max-width:420px;margin:0 auto"><h2>Was that you?</h2>
+    <p class="muted">Someone named <b>${esc(j.nickname)}</b> was previously in this session and is now disconnected. Rejoin as them? Your previous vote will be kept.</p>
+    <div class="row" style="margin-top:14px"><button class="btn primary" data-action="confirm-rejoin">Yes, that was me</button><button class="btn" data-action="cancel-join">No, pick another nickname</button></div></div>`;
+  return `<div class="card" style="max-width:420px;margin:0 auto"><form data-form="join"><h2>${title}</h2>
+    ${j.key ? `<p class="ok small">You came in through the QR code — no password needed.</p>` : `<label class="f"><span>Session password</span><input type="password" id="j-pw" name="password" required autocomplete="off" value="${esc(j.password)}"></label>`}
+    <label class="f"><span>Your nickname</span><input type="text" id="j-nick" name="nickname" required maxlength="24" autocomplete="off" value="${esc(j.nickname)}"></label>
+    ${j.error ? `<div class="err">${esc(j.error)}</div>` : ''}
+    <div class="row" style="margin-top:18px"><button class="btn primary big">Join</button><button type="button" class="btn ghost" data-action="home">Cancel</button></div>
+  </form></div>`;
+}
+
+function vSession() {
+  if (!S) return `<div class="card" style="max-width:420px;margin:0 auto"><p class="muted"><span class="spin"></span>Joined — waiting for the session state…</p></div>`;
+  return S.phase === 'lobby' ? vRoom() : vVote();
+}
+function vRoom() {
+  const url = joinUrl(S.sid, me.key);
+  let svg = '';
+  try { const q = qrcode(0, 'M'); q.addData(url); q.make(); svg = q.createSvgTag({ cellSize: 6, margin: 0, scalable: true }); } catch { svg = '<div class="err">QR too long</div>'; }
+  const parts = Object.values(S.participants).sort((a,b) => a.joinedAt - b.joinedAt);
+  return `<div class="room">
+    <div class="card" style="text-align:center">
+      <h3>Scan to join</h3>
+      <div class="qr" style="margin-top:12px">${svg}</div>
+      <div class="link">${esc(url)}</div>
+      <div class="row" style="justify-content:center;margin-top:10px"><button class="btn sm" data-action="copy-link">Copy link</button></div>
+      <p class="hint">Or join from the lobby with the password.</p>
+    </div>
+    <div>
+      <div class="card"><div class="row between"><div><h3>In the room</h3><div class="count">${connectedCount()}</div></div>
+        ${me.isAdmin ? `<button class="btn primary big" data-action="start-session" ${connectedCount() < 1 ? 'disabled' : ''}>Start ▶</button>` : `<span class="muted"><span class="spin"></span>Waiting for ${esc(adminNick())} to start…</span>`}</div>
+        <div class="chips">${parts.map(p => `<span class="chip ${p.role === 'admin' ? 'admin' : ''} ${p.connected ? '' : 'off'}">${esc(p.nickname)}</span>`).join('')}</div>
+      </div>
+      ${!me.isAdmin && !adminPresent ? `<div class="warn">The admin seems to be offline. Waiting for them to come back…</div>` : ''}
+      <div class="card" style="margin-top:16px"><h3>Session</h3><p class="muted small">${esc(S.name)} · cards up to <b>${S.cap}</b> · ID <code>${esc(S.sid)}</code></p>
+        ${me.isAdmin ? `<p class="hint">The QR link carries the session key: anyone who scans it can join without the password until you end the session.</p>` : ''}</div>
+    </div></div>`;
+}
+function adminNick() { return Object.values(S.participants).find(p => p.role === 'admin')?.nickname || 'the admin'; }
+
+function vVote() {
+  const mine = S.participants[me.nickname] || {};
+  const phase = S.phase;
+  const badge = { idle: ['grey', 'between votes'], voting: ['amber', 'voting'], countdown: ['amber', 'revealing…'], revealed: ['green', 'revealed'] }[phase] || ['grey', phase];
+  return `
+    <div class="feat">${S.feature ? `<h1>${esc(S.feature)}</h1>` : `<h1 class="faint">No feature yet</h1>`}<span class="badge ${badge[0]}">${badge[1]}</span>${S.round > 1 ? `<span class="badge grey">round ${S.round}</span>` : ''}</div>
+    <div class="tabs"><button class="${ui.tab === 'vote' ? 'on' : ''}" data-action="tab" data-tab="vote">Current vote</button><button class="${ui.tab === 'history' ? 'on' : ''}" data-action="tab" data-tab="history">History <span class="badge grey">${S.history.length}</span></button></div>
+    ${ui.tab === 'history' ? vHistory() : `<div class="grid main"><div>${vMain(mine)}</div><div>${vRoster()}${me.isAdmin ? vAdminPanel() : ''}</div></div>`}`;
+}
+function vMain(mine) {
+  const phase = S.phase;
+  if (!me.isAdmin && !adminPresent) return `<div class="warn">The admin is offline. The session is paused until they come back.</div>` + (phase === 'revealed' ? vResults() : '');
+  if (phase === 'idle') return `<div class="card"><p class="muted">${me.isAdmin ? 'Enter the next feature name in the admin panel and start the vote.' : `Waiting for ${esc(adminNick())} to start the next feature…`}</p></div>`;
+  if (phase === 'revealed') return vResults();
+  if (mine.role === 'spectator') return `<div class="card"><span class="badge amber">spectator</span><p class="muted" style="margin-top:10px">You joined while this vote was running. You'll be able to vote from the next feature.</p></div>`;
+  const cards = [...S.deck, COFFEE, INF];
+  const voted = (S.voted || Object.keys(S.votes || {})).length, total = Object.values(S.participants).filter(p => p.role !== 'spectator' && p.connected).length;
+  return `<div class="card">
+    <div class="row between"><h3>Pick your card</h3><span class="muted small">${voted}/${total} voted</span></div>
+    <div class="deck">${cards.map(c => `<button class="pcard ${me.myVote === c ? 'sel' : ''}" data-action="vote" data-card="${esc(c)}" ${phase !== 'voting' ? 'disabled' : ''} title="${c === COFFEE ? 'I need a break' : c === INF ? 'Too big to estimate' : ''}">${esc(c)}</button>`).join('')}</div>
+    <p class="hint">${me.myVote === null ? 'Your card stays hidden until the reveal.' : `You picked <b>${esc(me.myVote)}</b> — you can change it until the reveal.`}</p>
+  </div>`;
+}
+function vResults() {
+  const r = S.results || computeResults(S.votes, S.deck);
+  const all = Object.entries(S.votes).sort((a, b) => {
+    const na = isNum(a[1]), nb = isNum(b[1]);
+    if (na && nb) return a[1] - b[1]; if (na) return -1; if (nb) return 1; return String(a[1]).localeCompare(String(b[1]));
+  });
+  return `<div class="card">
+    <div class="row between"><h3>Results${r.consensus && r.count > 1 ? ' · 🎉 consensus' : ''}</h3><span class="muted small">${r.count} numeric of ${r.total} votes</span></div>
+    ${r.count ? `<div class="stats">
+      <div class="stat min"><div class="l">Min</div><div class="v">${r.min.value}</div><div class="w">${esc(r.min.who.join(', '))}</div></div>
+      <div class="stat med"><div class="l">Median</div><div class="v">${r.median}</div><div class="w">→ proposes <b>${r.proposal}</b></div></div>
+      <div class="stat max"><div class="l">Max</div><div class="v">${r.max.value}</div><div class="w">${esc(r.max.who.join(', '))}</div></div>
+    </div>` : `<p class="muted">No numeric votes this round.</p>`}
+    <h3 style="margin-top:18px">All votes</h3>
+    ${all.length ? `<div class="votes">${all.map(([n, c], i) => `<div class="vote"><span class="mini flip ${isNum(c) && c === r.min?.value ? 'min' : ''} ${isNum(c) && c === r.max?.value ? 'max' : ''}" style="animation-delay:${i * 60}ms">${esc(c)}</span><span class="who" title="${esc(n)}">${esc(n)}</span></div>`).join('')}</div>` : `<p class="muted">Nobody voted.</p>`}
+    ${(r.total && (r.min?.value !== r.max?.value || r.count !== r.total)) ? `<p class="hint">☕ and ∞ are listed but excluded from min / max / median.</p>` : ''}
+  </div>`;
+}
+function vRoster() {
+  const parts = Object.values(S.participants).sort((a, b) => (a.role === 'admin' ? -1 : b.role === 'admin' ? 1 : a.joinedAt - b.joinedAt));
+  const voted = new Set(S.voted || Object.keys(S.votes || {}));
+  const showStatus = S.phase === 'voting' || S.phase === 'countdown';
+  return `<div class="card"><div class="row between"><h3>Players</h3><span class="muted small">${connectedCount()} online</span></div>
+    <ul class="roster">${parts.map(p => {
+      let st = '';
+      if (!p.connected) st = `<span class="st">offline</span>`;
+      else if (p.role === 'spectator') st = `<span class="st">👁 spectator</span>`;
+      else if (showStatus) st = voted.has(p.nickname) ? `<span class="st v">✔ voted</span>` : `<span class="st">… thinking</span>`;
+      else if (S.phase === 'revealed') st = `<span class="mini" style="height:30px;min-width:28px;font-size:.9rem">${esc(fmtCard(S.votes[p.nickname]))}</span>`;
+      return `<li class="${p.connected ? '' : 'off'}"><span class="nm">${esc(p.nickname)}${p.role === 'admin' ? ' <span class="badge">admin</span>' : ''}${p.nickname === me.nickname ? ' <span class="faint small">(you)</span>' : ''}</span>${st}
+        ${me.isAdmin && p.role !== 'admin' && !p.connected ? `<button class="x" title="Remove from roster" data-action="remove" data-nick="${esc(p.nickname)}">✕</button>` : ''}</li>`;
+    }).join('')}</ul></div>`;
+}
+function vAdminPanel() {
+  const phase = S.phase, r = S.results;
+  const voted = Object.keys(S.votes).length;
+  let body = '';
+  if (phase === 'idle' || phase === 'revealed') {
+    body += `<form data-form="start-vote"><label class="f"><span>${phase === 'revealed' ? 'Next feature' : 'Feature to estimate'}</span><input type="text" id="a-feature" name="feature" maxlength="80" placeholder="Feature A" autocomplete="off" value="${esc(ui.feature)}"></label>
+      <div class="row" style="margin-top:10px"><button class="btn primary">Start vote ▶</button></div></form>`;
+  }
+  if (phase === 'voting') {
+    body += `<p class="muted small">${voted} vote${voted === 1 ? '' : 's'} in. Press Go to run the 3-2-1 countdown and reveal.</p>
+      <button class="btn primary big" data-action="go" style="width:100%">Go — 3 · 2 · 1 🃏</button>`;
+  }
+  if (phase === 'countdown') body += `<p class="muted"><span class="spin"></span>Revealing…</p>`;
+  if (phase === 'revealed') {
+    body = `<form data-form="settle"><label class="f"><span>Final story points for “${esc(S.feature)}”</span><input type="number" id="a-points" name="points" min="0" step="any" inputmode="decimal" value="${esc(ui.points)}"></label>
+      <div class="hint">${r?.proposal !== null && r?.proposal !== undefined ? `Proposed: <b>${r.proposal}</b> (median ${r.median} snapped to the deck).` : 'No numeric votes — enter the points by hand.'}</div>
+      <div class="row" style="margin-top:12px"><button class="btn primary">Save &amp; next feature</button><button type="button" class="btn" data-action="revote">↻ Re-vote</button></div></form>
+      <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">` + body;
+  }
+  return `<div class="card admin" style="margin-top:16px"><h3>Admin</h3>${body}</div>`;
+}
+function vHistory() {
+  const h = S.history;
+  return `<div class="card"><div class="row between"><h3>Settled features</h3>${h.length ? `<div class="row"><button class="btn sm" data-action="copy-csv">Copy CSV</button></div>` : ''}</div>
+    ${h.length ? `<div class="tw"><table><thead><tr><th>#</th><th>Feature</th><th>Points</th><th>Min</th><th>Median</th><th>Max</th><th>Votes</th></tr></thead><tbody>
+      ${h.map((f, i) => `<tr><td class="faint">${i + 1}</td><td><b>${esc(f.feature)}</b>${f.rounds > 1 ? ` <span class="badge grey">${f.rounds} rounds</span>` : ''}</td><td class="pts">${f.points}</td><td>${f.min ?? '–'}</td><td>${f.median ?? '–'}</td><td>${f.max ?? '–'}</td>
+        <td class="small muted">${esc(Object.entries(f.votes).map(([n, c]) => `${n}: ${c}`).join(', '))}</td></tr>`).join('')}</tbody></table></div>`
+    : `<div class="empty">Nothing settled yet. Estimates land here as the admin saves them, so everyone can anchor the next one.</div>`}
+  </div>`;
+}
+function historyCsv() {
+  const q = s => `"${String(s ?? '').replace(/"/g, '""')}"`;
+  const rows = [['#', 'feature', 'points', 'min', 'median', 'max', 'rounds', 'votes']];
+  S.history.forEach((f, i) => rows.push([i + 1, f.feature, f.points, f.min ?? '', f.median ?? '', f.max ?? '', f.rounds, Object.entries(f.votes).map(([n, c]) => `${n}=${c}`).join(' ')]));
+  return rows.map(r => r.map(q).join(',')).join('\n');
+}
+
+/* ───────────────────────── events ───────────────────────── */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  const a = el.dataset.action;
+  switch (a) {
+    case 'show-create': ui.screen = 'create'; render(); setTimeout(() => $('#c-name')?.focus(), 30); break;
+    case 'toggle-manual': ui.showManualJoin = !ui.showManualJoin; render(); setTimeout(() => $('#mj-sid')?.focus(), 30); break;
+    case 'home': goHome(); break;
+    case 'lobby-join': ui.join = { status: 'idle', error: null, sid: el.dataset.sid, name: el.dataset.name, key: null, nickname: '', password: '' }; ui.screen = 'join'; render(); setTimeout(() => $('#j-pw')?.focus(), 30); break;
+    case 'resume-admin': resumeAdmin(el.dataset.sid); break;
+    case 'forget-admin': if (confirm('Forget this session on this browser?')) { localStorage.removeItem(ADMIN_KEY(el.dataset.sid)); render(); } break;
+    case 'cancel-join': clearTimeout(joinTimer); if (chan) { const c = chan; chan = null; await dropChannel(c); } ui.join.status = 'idle'; ui.join.error = null; me.joined = false; me._rejoin = false; render(); break;
+    case 'confirm-rejoin': me._rejoin = true; me.nickname = ui.join.nickname; ui.join.status = 'waiting'; render(); sendJoin(true); break;
+    case 'start-session': if (me.isAdmin) { S.phase = 'idle'; broadcastState(); } break;
+    case 'copy-link': try { await navigator.clipboard.writeText(joinUrl(S.sid, me.key)); toast('Link copied', 'green'); } catch { toast('Copy failed — select the link manually', 'amber'); } break;
+    case 'copy-csv': try { await navigator.clipboard.writeText(historyCsv()); toast('History copied as CSV', 'green'); } catch { toast('Copy failed', 'amber'); } break;
+    case 'leave': leaveSession(); break;
+    case 'tab': ui.tab = el.dataset.tab; render(); break;
+    case 'vote': { const raw = el.dataset.card; castVote(raw === COFFEE || raw === INF ? raw : Number(raw)); break; }
+    case 'go': go(); break;
+    case 'revote': startVote(S.feature, true); break;
+    case 'remove': removeParticipant(el.dataset.nick); break;
+  }
+});
+app.addEventListener('submit', async e => {
+  const f = e.target.closest('[data-form]'); if (!f) return;
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(f).entries());
+  switch (f.dataset.form) {
+    case 'create': await createSession({ name: d.name.trim(), password: d.password, cap: Number(d.cap), nickname: d.nickname.trim().slice(0, 24) }); break;
+    case 'manual-join': ui.join = { status: 'idle', error: null, sid: d.sid.trim(), name: '', key: null, nickname: '', password: '' }; ui.screen = 'join'; render(); setTimeout(() => $('#j-pw')?.focus(), 30); break;
+    case 'join': ui.join.nickname = d.nickname.trim().slice(0, 24); ui.join.password = d.password || ''; me._rejoin = false;
+      await joinSession({ sid: ui.join.sid, key: ui.join.key, password: ui.join.password, nickname: ui.join.nickname }); break;
+    case 'start-vote': startVote(d.feature); break;
+    case 'settle': settle(d.points); break;
+  }
+});
+app.addEventListener('input', e => {
+  if (e.target.id === 'a-feature') ui.feature = e.target.value;
+  if (e.target.id === 'a-points') ui.points = e.target.value;
+  if (e.target.id === 'j-nick') ui.join.nickname = e.target.value;
+  if (e.target.id === 'j-pw') ui.join.password = e.target.value;
+});
+window.addEventListener('pagehide', () => { if (chan && !me.isAdmin) chan.untrack(); });
+
+/* ───────────────────────── boot ───────────────────────── */
+(async function boot() {
+  const q = new URLSearchParams(location.search);
+  const s = q.get('s'), t = q.get('t');
+  if (s && localStorage.getItem(ADMIN_KEY(s))) return resumeAdmin(s);
+  let saved = null; try { saved = JSON.parse(sessionStorage.getItem('poker:me')); } catch {}
+  if (s && saved && saved.sid === s && saved.key) {
+    ui.join = { status: 'idle', error: null, sid: s, name: '', key: saved.key, nickname: saved.nickname, password: '' };
+    return joinSession({ sid: s, key: saved.key, nickname: saved.nickname, rejoin: true });
+  }
+  if (s) {
+    ui.join = { status: 'idle', error: null, sid: s, name: '', key: t || null, nickname: '', password: '' };
+    ui.screen = 'join'; render(); setTimeout(() => (t ? $('#j-nick') : $('#j-pw'))?.focus(), 30); return;
+  }
+  goHome();
+})();
+
+/* debug handle (read-only inspection from the console) */
+window.__sp = { get sb() { return sb; }, get lobby() { return lobbyChan; }, get chan() { return chan; }, get S() { return S; }, me, ui };
+})();
+</script>
+</body>
+</html>
