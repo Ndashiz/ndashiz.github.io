@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#A8174E">
+<title>Belfius AI & Tech Lab Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F7F6F9; --surface:#FFFFFF; --sunk:#EFEDF2; --ink:#1D1A24; --muted:#625C6E; --line:#E1DDE7;
+  --accent:#A8174E; --accent-ink:#FFFFFF; --accent-soft:#F7E4EB;
+  --teal:#0E6B68; --teal-soft:#E0F0EE;
+  --good:#1E7A46; --good-soft:#E3F3E9; --bad:#B3261E; --bad-soft:#FBE7E5;
+  --display:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body:"Newsreader", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141218; --surface:#1D1A22; --sunk:#26222C; --ink:#EDEAF2; --muted:#A7A0B2; --line:#34303B;
+    --accent:#F0739C; --accent-ink:#1A0B11; --accent-soft:#3A1826;
+    --teal:#63C7C0; --teal-soft:#10302E;
+    --good:#62CE8F; --good-soft:#12301F; --bad:#F2877F; --bad-soft:#3A1614;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141218; --surface:#1D1A22; --sunk:#26222C; --ink:#EDEAF2; --muted:#A7A0B2; --line:#34303B;
+  --accent:#F0739C; --accent-ink:#1A0B11; --accent-soft:#3A1826;
+  --teal:#63C7C0; --teal-soft:#10302E;
+  --good:#62CE8F; --good-soft:#12301F; --bad:#F2877F; --bad-soft:#3A1614;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;padding-inline:16px}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+.wrap{max-width:1160px;margin-inline:auto}
+
+/* header */
+.masthead{padding-block:36px 20px;display:grid;gap:14px}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.masthead h1{font-size:clamp(30px,5vw,50px);font-weight:800;letter-spacing:-.02em}
+.masthead h1 em{font-style:normal;color:var(--accent)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--display);font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding-top:6px}
+.tab{font-family:var(--display);font-size:15px;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:12px 14px 10px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .count{font-family:var(--mono);font-size:12px;font-weight:400;margin-left:6px;color:var(--muted)}
+
+/* syllabus layout */
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;padding-block:32px 80px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);align-self:start;font-family:var(--display);font-size:14px;max-height:calc(100vh - 90px);overflow:auto}
+.toc h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:t}
+.toc li{counter-increment:t}
+.toc a{display:grid;grid-template-columns:28px 1fr;padding:6px 8px;border-radius:6px;color:var(--ink);text-decoration:none}
+.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
+.toc a:hover{background:var(--sunk)}
+.toc a.on{background:var(--accent-soft);color:var(--accent)}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;gap:20px}
+  .toc{position:static;max-height:none;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.chapter{padding-block:8px 44px;border-bottom:1px solid var(--line);margin-bottom:40px;scroll-margin-top:80px;max-width:760px}
+.chapter:last-child{border-bottom:0}
+.chapter > header{display:grid;gap:6px;margin-bottom:18px}
+.chnum{font-family:var(--mono);font-size:13px;color:var(--accent)}
+.chapter h2{font-size:clamp(24px,3vw,32px);font-weight:700;letter-spacing:-.01em}
+.chapter h3{font-size:20px;font-weight:700;margin-top:28px;margin-bottom:8px}
+.chapter p{margin:0 0 14px}
+.chapter ul,.chapter ol{margin:0 0 16px;padding-left:22px}
+.chapter li{margin-bottom:6px}
+.lead{font-size:20px;color:var(--muted)}
+.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
+
+.def{background:var(--teal-soft);border-radius:10px;padding:14px 16px;margin:14px 0}
+.def .term{font-family:var(--display);font-weight:700;color:var(--teal);font-size:15px;display:block;margin-bottom:2px}
+.def p{margin:0}
+.def p + p{margin-top:8px}
+.note{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:17px}
+.note strong{font-family:var(--display)}
+.warn{border-color:var(--accent);background:var(--accent-soft)}
+.tip{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:4px}
+
+.tbl{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--display);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--sunk)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:15px}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:16px 0 20px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.tile .v{font-family:var(--mono);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tile .l{font-family:var(--display);font-size:13px;color:var(--muted);line-height:1.35}
+.tile .d{font-family:var(--mono);font-size:12px;color:var(--good)}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 18px;font-family:var(--display);font-size:14px}
+.flow span{background:var(--surface);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.sources{font-size:15px}
+.sources li{margin-bottom:4px}
+
+/* QCM */
+.panel{padding-block:28px 90px}
+.qbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);z-index:10;background:var(--bg);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:12px;border-bottom:1px solid var(--line);margin-bottom:24px;font-family:var(--display);font-size:14px}
+.score{font-family:var(--mono);font-size:15px}
+.score b{color:var(--good)}
+.progress{flex:1 1 160px;height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;min-width:120px}
+.progress div{height:100%;background:var(--accent);width:0;transition:width .3s}
+.btn{font-family:var(--display);font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chk{display:flex;gap:6px;align-items:center;cursor:pointer}
+.qlist{display:grid;gap:18px;max-width:820px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.q h3{font-size:17px;font-weight:600;display:grid;grid-template-columns:auto 1fr;gap:10px;margin-bottom:12px}
+.q h3 .n{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:3px}
+.opts{display:grid;gap:8px}
+.opt{font-family:var(--body);font-size:17px;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--ink);cursor:pointer;display:grid;grid-template-columns:24px 1fr;gap:8px}
+.opt .k{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:3px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.right .k{color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt.wrong .k{color:var(--bad)}
+.fb{margin-top:12px;font-size:16px;border-top:1px dashed var(--line);padding-top:12px}
+.fb .verdict{font-family:var(--display);font-weight:700}
+.fb .verdict.ok{color:var(--good)} .fb .verdict.ko{color:var(--bad)}
+.fb a{font-family:var(--display);font-size:14px;font-weight:600}
+.q.hide{display:none}
+.chiptag{font-family:var(--display);font-size:12px;color:var(--teal);background:var(--teal-soft);padding:2px 8px;border-radius:99px;display:inline-block;margin-bottom:8px}
+
+/* score par catégorie */
+.catscore{max-width:820px;margin:0 0 26px}
+.cs-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:10px;font-family:var(--display)}
+.cs-head h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.cs-total{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.cs-total b{color:var(--ink)}
+.cs-all{margin-left:auto;font-family:var(--display);font-size:13px;font-weight:600;background:none;border:0;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+.cs-all[hidden]{display:none}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.cs-tile{font-family:var(--display);text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px;cursor:pointer;color:var(--ink)}
+.cs-tile:hover{border-color:var(--accent)}
+.cs-tile[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.cs-tile .cl{font-size:13px;font-weight:600;line-height:1.3}
+.cs-tile .cv{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cs-tile .cv b{font-size:16px;color:var(--ink)}
+.cs-tile .pct{font-weight:600}
+.cs-tile .pct.hi{color:var(--good)} .cs-tile .pct.mid{color:var(--teal)} .cs-tile .pct.lo{color:var(--bad)}
+.cs-bar{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;display:flex}
+.cs-bar .g{background:var(--good);height:100%;transition:width .3s}
+.cs-bar .b{background:var(--bad);height:100%;transition:width .3s}
+.cs-weak{margin-top:12px;font-family:var(--display);font-size:14px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.cs-weak[hidden]{display:none}
+.cs-weak a{font-weight:600}
+.qempty{max-width:820px;font-family:var(--display);color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+.qempty[hidden]{display:none}
+
+/* Q&A */
+.qa-intro{max-width:760px;margin-bottom:18px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.fchip{font-family:var(--display);font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:99px;cursor:pointer}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.qa{max-width:820px;display:grid;gap:10px}
+details.item{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.item summary{cursor:pointer;list-style:none;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+details.item summary::-webkit-details-marker{display:none}
+details.item summary .qq{font-family:var(--display);font-weight:600;font-size:17px;line-height:1.35}
+details.item summary .cat{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-top:4px}
+details.item[open] summary{border-bottom:1px solid var(--line)}
+.ans{padding:14px 16px 16px}
+.ans p{margin:0 0 10px}
+.ans ul{margin:0 0 10px;padding-left:20px}
+.why{font-family:var(--display);font-size:13px;color:var(--muted);background:var(--sunk);border-radius:8px;padding:8px 10px;margin-top:6px}
+.why b{color:var(--ink)}
+.backfloat{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+footer.page{font-family:var(--display);font-size:13px;color:var(--muted);padding-block:24px 40px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <span class="eyebrow">Dossier de préparation · Entretien</span>
+    <h1>Project Manager, Project Office <em>AI&nbsp;&amp;&nbsp;Tech&nbsp;Lab</em></h1>
+    <div class="meta">
+      <span><b>Mardi 29/09/2026</b> · 15h00 (45 à 60 min)</span>
+      <span>Belfius Tower, Place Charles Rogier 11, 1210 Bruxelles</span>
+      <span>Avec <b>Stéphane Kageruka</b> et <b>Amandine Bastiaens</b></span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="tab-syllabus" aria-controls="p-syllabus" aria-selected="true" data-tab="syllabus">Syllabus</button>
+    <button class="tab" role="tab" id="tab-qcm" aria-controls="p-qcm" aria-selected="false" data-tab="qcm">QCM<span class="count" id="tabcount">0/35</span></button>
+    <button class="tab" role="tab" id="tab-qa" aria-controls="p-qa" aria-selected="false" data-tab="qa">Interview Q&amp;A (EN)</button>
+  </nav>
+
+  <!-- ===================== SYLLABUS ===================== -->
+  <section id="p-syllabus" role="tabpanel" aria-labelledby="tab-syllabus">
+    <div class="layout">
+      <aside class="toc" aria-label="Chapitres">
+        <h2>Chapitres</h2>
+        <ol>
+          <li><a href="#ch-poste">Le poste décodé</a></li>
+          <li><a href="#ch-belfius">Belfius en bref</a></li>
+          <li><a href="#ch-chiffres">Chiffres clés</a></li>
+          <li><a href="#ch-strategie">Unlock 2030 &amp; direction</a></li>
+          <li><a href="#ch-ia-belfius">L'IA chez Belfius</a></li>
+          <li><a href="#ch-pmo">Gestion de projet &amp; PMO</a></li>
+          <li><a href="#ch-role-pm">Rôles du Project Manager</a></li>
+          <li><a href="#ch-concepts-ia">Concepts IA</a></li>
+          <li><a href="#ch-regulation">Cadre réglementaire</a></li>
+          <li><a href="#ch-pourquoi">Pourquoi Belfius, pourquoi toi</a></li>
+          <li><a href="#ch-jourj">Le jour J</a></li>
+        </ol>
+      </aside>
+
+      <div>
+        <!-- 1 -->
+        <article class="chapter" id="ch-poste">
+          <header><span class="chnum">Chapitre 01</span><h2>Le poste décodé</h2></header>
+          <p class="lead">L'offre complète n'est plus en ligne sur le site jobs de Belfius. Ce qui suit est reconstruit à partir des agrégateurs (Workopia, Indeed, Glassdoor, Expertini) qui l'ont indexée. Si tu as gardé le PDF de ta candidature, relis-le la veille : c'est lui qui fait foi.</p>
+
+          <h3>Ce que l'annonce dit (reconstruit)</h3>
+          <div class="tbl"><table>
+            <tr><th>Élément</th><th>Contenu</th></tr>
+            <tr><td>Intitulé</td><td>Job | Project Manager - Project Office AI &amp; Tech Lab | Brussel (réf. 6914)</td></tr>
+            <tr><td>Famille</td><td>Belfius Banque · Projects &amp; Transformation · CDI</td></tr>
+            <tr><td>Accroche</td><td>« Chez Belfius, nous sommes convaincus que l'IA est au cœur de notre transformation digitale », que ce soit en marketing digital, dans l'offre aux clients ou pour les collaborateurs.</td></tr>
+            <tr><td>Contexte</td><td>L'IA porte de grands programmes d'investissement : <b>transformation du workforce</b>, <b>migration cloud</b> et une nouvelle <b>Corporate AI Platform</b>.</td></tr>
+            <tr><td>Missions</td><td>Être <b>business partner</b> des initiatives IA et comprendre en profondeur les enjeux et priorités du business · traduire des questions complexes en <b>feature designs</b> · contribuer à la <b>livraison end-to-end</b> avec les project owners · construire la <b>roadmap</b> · améliorer en continu les <b>pratiques de design de features IA</b> · partage de connaissances dans la communauté IA.</td></tr>
+            <tr><td>Compétences citées</td><td>Gestion de projets IA, business partnership, roadmap, collaboration transversale, outils de data science, technologies Big Data. Un plus : culture d'innovation IA, amélioration continue, transformation digitale.</td></tr>
+            <tr><td>Profil</td><td>Diplôme universitaire ou expérience équivalente · excellente maîtrise du <b>néerlandais ou du français</b> · bonne connaissance de l'<b>anglais</b> · expérience en IA, outils d'analytics/reporting ou marketing digital.</td></tr>
+            <tr><td>Mode</td><td>Hybride, avec présence au bureau à Bruxelles pour collaborer au sein de la communauté IA.</td></tr>
+          </table></div>
+
+          <h3>Lecture entre les lignes</h3>
+          <ul>
+            <li><b>« Project Office »</b> : tu ne seras pas le chef d'une seule équipe produit. Tu es dans la cellule qui orchestre le portefeuille d'initiatives du Lab : cadrage, priorisation, suivi, reporting, standards. C'est un rôle de chef d'orchestre plus que de soliste.</li>
+            <li><b>« Business partner »</b> : le Lab a des experts techniques. Il lui manque des gens qui parlent le langage des métiers (Retail, Private, Insurance, Operations) et qui transforment une demande floue en un cas d'usage chiffré. C'est exactement ta zone.</li>
+            <li><b>« Feature design »</b> : on attend de toi que tu saches écrire ce qu'une feature IA doit faire, pour qui, avec quelles données et comment on mesure son succès. Ton expérience de Product Owner (epics, user stories, critères d'acceptation) s'y transpose directement.</li>
+            <li><b>Les 3 programmes</b> (workforce, cloud, Corporate AI Platform) te disent où va l'argent : outiller les 10 000 collaborateurs, finir le passage au cloud, et construire une plateforme IA commune au lieu de projets isolés.</li>
+            <li><b>Data science &amp; Big Data</b> : on ne te demandera pas de coder un modèle, mais de comprendre le cycle de vie d'un modèle, les dépendances data et de dialoguer d'égal à égal avec les data scientists.</li>
+          </ul>
+          <div class="note warn"><span class="tip">À retenir</span>Trois mots-clés à placer naturellement dans tes réponses : <b>business partner</b>, <b>end-to-end delivery</b>, <b>roadmap</b>. Ce sont les trois verbes du poste.</div>
+        </article>
+
+        <!-- 2 -->
+        <article class="chapter" id="ch-belfius">
+          <header><span class="chnum">Chapitre 02</span><h2>Belfius en bref</h2></header>
+          <h3>Histoire en quatre dates</h3>
+          <div class="tbl"><table>
+            <tr><th>Année</th><th>Événement</th></tr>
+            <tr><td class="num">1860</td><td>Création du Crédit Communal de Belgique, pour financer les investissements des communes. D'où l'ADN « secteur public » de Belfius, encore caissier des Régions wallonne et bruxelloise aujourd'hui.</td></tr>
+            <tr><td class="num">1996</td><td>Fusion avec le Crédit Local de France : naissance de Dexia.</td></tr>
+            <tr><td class="num">2011</td><td>Crise Dexia. Le 10 octobre, l'État belge rachète Dexia Banque Belgique pour environ 4 milliards d'euros.</td></tr>
+            <tr><td class="num">2012</td><td>1er mars : Dexia Banque Belgique devient <b>Belfius</b> (Bel pour Belgique, fi pour finance, us pour « nous »).</td></tr>
+          </table></div>
+
+          <h3>Ce qu'est Belfius aujourd'hui</h3>
+          <ul>
+            <li><b>Bancassureur intégré</b> : une banque et un assureur (Belfius Insurance, avec DVV et Belfius Direct Assurances) sous un même toit. La banque pèse environ 75 % du résultat au S1 2026, l'assurance 25 %.</li>
+            <li><b>Un Belge sur trois</b> est client. Environ 10 000 collaborateurs, 456 agences.</li>
+            <li><b>Segments</b> : Retail, Private &amp; Wealth (53 Private Houses), Business, Corporate, Public &amp; Social. Leader historique du financement du secteur public et numéro 1 des émissions obligataires (DCM) pour les émetteurs belges.</li>
+            <li><b>Marques digitales</b> : l'app Belfius, <b>ReBel</b> (plateforme d'investissement pour la jeune génération), Belfius Direct Assurances.</li>
+            <li><b>Participations</b> : 33,33 % + 1 action de Candriam (gestion d'actifs, 2025), rachat de l'insurtech française <b>Leocare</b> (2026), partenariats avec Alan (assurance santé) et Mistral AI.</li>
+          </ul>
+
+          <h3>Actionnariat et ouverture du capital</h3>
+          <p>Belfius appartient à 100 % à l'État belge via la <b>SFPIM</b> (Société fédérale de participations et d'investissement). En décembre 2025, le gouvernement a validé une <b>privatisation partielle d'environ 20 %</b>, qui pourrait rapporter près de 2 milliards d'euros. Le 21 septembre 2026, Belfius a annoncé les mesures liées à cette ouverture, sous réserve de sa signature :</p>
+          <ul>
+            <li>taux de distribution du dividende relevé de <b>40 % à 50 %</b> du bénéfice ;</li>
+            <li>dividende intérimaire de 375 M€ avant fin 2026, et un dividende exceptionnel de 375 M€ à la signature ;</li>
+            <li>fourchette cible de CET1 abaissée à <b>14,5-15 %</b> (contre 15-15,5 %) et émission de 500 M€ d'AT1.</li>
+          </ul>
+          <div class="note"><span class="tip">Pourquoi ça compte pour toi</span>Un futur actionnaire privé regardera la discipline des coûts et le retour sur les 1,2 Md€ d'investissements tech. Un Project Office qui prouve la valeur des initiatives IA devient donc stratégique. C'est un bon argument pour montrer que tu comprends l'enjeu du poste.</div>
+        </article>
+
+        <!-- 3 -->
+        <article class="chapter" id="ch-chiffres">
+          <header><span class="chnum">Chapitre 03</span><h2>Chiffres clés</h2></header>
+          <p>Retiens les six du haut. Les autres servent à montrer que tu as lu les résultats si la conversation s'y prête.</p>
+          <div class="tiles">
+            <div class="tile"><span class="v">521 M€</span><span class="l">Résultat net S1 2026, record semestriel</span><span class="d">+9,3 % sur un an</span></div>
+            <div class="tile"><span class="v">1,160 Md€</span><span class="l">Résultat net 2025</span><span class="d">+3 %, 14ᵉ année de croissance</span></div>
+            <div class="tile"><span class="v">15,5 %</span><span class="l">Ratio CET1 (juin 2026)</span><span class="d">15,9 % fin 2025</span></div>
+            <div class="tile"><span class="v">42,0 %</span><span class="l">Ratio coûts/revenus S1 2026</span><span class="d">-3,4 pts, 37,9 % hors taxes bancaires</span></div>
+            <div class="tile"><span class="v">212,8 Md€</span><span class="l">Épargne et placements des clients</span><span class="d">+5,1 Md€ depuis fin 2025</span></div>
+            <div class="tile"><span class="v">2,2 M</span><span class="l">Utilisateurs actifs de l'app, 38 connexions par mois</span><span class="d">98 % de satisfaction (2025)</span></div>
+          </div>
+
+          <h3>Compte de résultats S1 2026</h3>
+          <div class="tbl"><table>
+            <tr><th>Poste</th><th>S1 2025</th><th>S1 2026</th><th>Commentaire</th></tr>
+            <tr><td>Revenus</td><td class="num">2 006 M€</td><td class="num">2 237 M€</td><td>+11,5 %</td></tr>
+            <tr><td>dont revenus nets d'intérêts (banque)</td><td class="num">972 M€</td><td class="num">1 143 M€</td><td>+17,6 %, moteur principal</td></tr>
+            <tr><td>Coûts</td><td class="num">-910 M€</td><td class="num">-939 M€</td><td>+3,1 %, maîtrisés</td></tr>
+            <tr><td>Coût du risque</td><td class="num">-6 M€</td><td class="num">-123 M€</td><td>dont 35 M€ de provisions prudentes</td></tr>
+            <tr><td>Résultat net</td><td class="num">476 M€</td><td class="num">521 M€</td><td>Banque 391 M€ · Assurance 130 M€ (grêle)</td></tr>
+          </table></div>
+
+          <h3>Solidité</h3>
+          <div class="tbl"><table>
+            <tr><th>Ratio</th><th>Fin 2025</th><th>Juin 2026</th><th>En une phrase</th></tr>
+            <tr><td>CET1</td><td class="num">15,9 %</td><td class="num">15,5 %</td><td>Capital « dur » rapporté aux actifs pondérés par le risque</td></tr>
+            <tr><td>Solvency II (après div.)</td><td class="num">201 %</td><td class="num">193 %</td><td>Solvabilité de l'assureur, minimum réglementaire 100 %</td></tr>
+            <tr><td>LCR</td><td class="num">144 %</td><td class="num">148 %</td><td>Liquidité à 30 jours, minimum 100 %</td></tr>
+            <tr><td>ROE</td><td class="num">9,5 %</td><td class="num">9,7 %</td><td>Rentabilité des fonds propres</td></tr>
+            <tr><td>Fonds propres du groupe</td><td class="num">12,5 Md€</td><td class="num">12,7 Md€</td><td></td></tr>
+          </table></div>
+
+          <h3>Activité commerciale S1 2026</h3>
+          <ul>
+            <li>12,5 Md€ de nouveaux crédits long terme, dont 7,4 Md€ aux entrepreneurs et entreprises, 3,4 Md€ hypothécaires (un sur trois à des moins de 30 ans).</li>
+            <li>Parts de marché crédits : 21,5 % Corporate, 20,1 % Business, 16,9 % hypothécaire (encours).</li>
+            <li>ReBel : 188 000 clients (+22 500), 4,3 Md€ d'encours, +59 % de transactions.</li>
+            <li>Private &amp; Wealth : 71,5 Md€, croissance organique 3,2 Md€, 11 600 nouveaux clients.</li>
+            <li>Belfius Direct Assurances : +39 % de polices vendues.</li>
+            <li>261 recrutements au premier semestre.</li>
+          </ul>
+          <div class="def"><span class="term">Ratio coûts/revenus (cost/income)</span><p>Coûts d'exploitation divisés par les revenus. 42 % signifie que Belfius dépense 42 centimes pour générer 1 euro de revenu. Plus il est bas, plus la banque est efficiente. L'IA est souvent présentée comme un levier pour le faire baisser.</p></div>
+          <div class="def"><span class="term">CET1 (Common Equity Tier 1)</span><p>Le capital de meilleure qualité (actions, réserves) divisé par les actifs pondérés par le risque. C'est le coussin qui absorbe les pertes. Belfius vise désormais 14,5 à 15 %.</p></div>
+        </article>
+
+        <!-- 4 -->
+        <article class="chapter" id="ch-strategie">
+          <header><span class="chnum">Chapitre 04</span><h2>Unlock 2030 &amp; direction</h2></header>
+          <p>Présentée le <b>30 mars 2026</b>, la stratégie <b>Unlock 2030</b> tient en une raison d'être : <b>« Unlocking potential with optimism »</b>. La campagne de marque qui la porte s'appelle <b>« Be Unstoppable »</b>.</p>
+          <h3>Les piliers</h3>
+          <ul>
+            <li><b>Un bancassureur unifié</b> : quatre marques réunies sous un même purpose.</li>
+            <li><b>1,2 milliard d'euros investis en cinq ans</b> dans la technologie, la cybersécurité et les talents.</li>
+            <li><b>L'IA au centre</b> : lancement de Hey Belfius en avril 2026, objectif de <b>80 % des interactions à distance</b> via l'assistant d'ici 2030 (20 % en première phase).</li>
+            <li><b>Private Banking</b> : actifs sous gestion de 65 à 100 Md€.</li>
+            <li><b>International en assurance</b> : la France d'abord, via le direct online (rachat de Leocare).</li>
+            <li><b>Objectif financier</b> : 2 Md€ de bénéfice avant impôt en 2030 (dont 500 M€ assurance), contre environ 1,5 Md€ aujourd'hui.</li>
+            <li><b>Souveraineté européenne</b> : choix délibéré de champions européens de la tech (Mistral AI).</li>
+          </ul>
+          <div class="note"><span class="tip">Citation utile</span>Olivier Onclin : « Hey Belfius n'est pas un chatbot, mais un copilote financier qui anticipe, accompagne le client, mais aussi les banquiers. » Et sur l'emploi : pas d'ambition de plans sociaux, il reste de la place pour les talents.</div>
+
+          <h3>Qui est qui (depuis le 29 avril 2026)</h3>
+          <div class="tbl"><table>
+            <tr><th>Personne</th><th>Rôle</th></tr>
+            <tr><td>Olivier Onclin</td><td>CEO de Belfius Banque (auparavant vice-président du comité de direction)</td></tr>
+            <tr><td>Marc Raisière</td><td>Président du conseil d'administration, après 14 ans comme CEO</td></tr>
+            <tr><td>Bram Somers</td><td>Chief Technology &amp; Operations Officer, la ligne hiérarchique la plus probable du Lab</td></tr>
+            <tr><td>Marianne Collin</td><td>Chief Financial Officer</td></tr>
+            <tr><td>Hédi Ben Mahmoud</td><td>Chief Risk Officer</td></tr>
+            <tr><td>Dirk Gyselinck</td><td>Executive Director Private, Wealth &amp; Retail Banking</td></tr>
+            <tr><td>Mario De Vry</td><td>Executive Director Wholesale &amp; Public Banking</td></tr>
+            <tr><td>Matthias Baillieul</td><td>Chief People &amp; Corporate Affairs</td></tr>
+            <tr><td>Frédéric Van der Schueren</td><td>CEO de Belfius Insurance</td></tr>
+            <tr><td>Jonathan Neubourg</td><td>Head of AI &amp; Tech Lab</td></tr>
+          </table></div>
+          <div class="def"><span class="term">Leocare</span><p>Insurtech française (assurance auto et habitation 100 % mobile) rachetée en 2026. Première étape internationale, pour exporter le modèle d'assurance directe digitale de Belfius.</p></div>
+        </article>
+
+        <!-- 5 -->
+        <article class="chapter" id="ch-ia-belfius">
+          <header><span class="chnum">Chapitre 05</span><h2>L'IA chez Belfius</h2></header>
+          <h3>Chronologie</h3>
+          <div class="tbl"><table>
+            <tr><th>Quand</th><th>Quoi</th></tr>
+            <tr><td class="num">2018</td><td>Création d'un AI Lab data science (machine learning pour clients et collaborateurs). Cas connus : détection de fraude et de blanchiment sur Azure Machine Learning et Databricks.</td></tr>
+            <tr><td class="num">2023</td><td>Partenariat avec IBM (mainframe IBM Z, sécurité avec composants IA).</td></tr>
+            <tr><td class="num">06/2024</td><td>Belfius participe à la levée de fonds Série B de <b>Mistral AI</b>.</td></tr>
+            <tr><td class="num">09/2024</td><td>Alliance avec Alan et Mistral AI. Annonce d'un nouvel <b>AI Lab de plus de 50 spécialistes</b> et de Hey Belfius. « L'IA n'est pas un département, c'est une culture d'entreprise. »</td></tr>
+            <tr><td class="num">04/2026</td><td>Lancement de <b>Hey Belfius</b> dans l'app. Plus de 255 000 conversations en quelques semaines de soft launch.</td></tr>
+            <tr><td class="num">S1 2026</td><td>Hey Belfius traite <b>90,7 %</b> des demandes de façon entièrement autonome. Belfius Direct Assistant répond seul dans 85 % des cas dès la première semaine.</td></tr>
+          </table></div>
+
+          <h3>Le AI &amp; Tech Lab</h3>
+          <p>Dirigé par <b>Jonathan Neubourg</b>. Le Lab réunit des équipes comme Transaction &amp; Experience, AI &amp; Intelligent Automation tools, un officier CORM (compliance, audit et risque opérationnel) dédié, et le Project Office pour lequel tu postules. L'équipe Hey Belfius comptait environ <b>70 personnes</b>.</p>
+
+          <h3>Ce qu'ils ont raconté sur Hey Belfius (Miro Canvas, juin 2026)</h3>
+          <ul>
+            <li><b>Le problème</b> : l'app était devenue trop riche. Dans l'enquête de satisfaction, environ <b>70 % des fonctionnalités souhaitées par les clients existaient déjà</b>. Les clients ne les trouvaient pas.</li>
+            <li><b>La conclusion</b> : au lieu d'ajouter des features, montrer la bonne feature au bon moment.</li>
+            <li><b>Trois piliers</b> : <b>proactivité</b> (la bonne feature au bon moment), <b>personnalisation</b> (2,2 millions de profils différents), <b>multimodalité</b> (chat, interface, voix).</li>
+            <li><b>Méthode</b> : démarrage sans plan figé, idées et veille centralisées, prototypes testés en labo d'usabilité, un « tone of voice » vérifié par IA, un <b>knowledge hub</b> central alimenté par produit, marketing et business.</li>
+            <li><b>Format de réponse</b> en trois temps : accusé de compréhension, réponse, suggestions de suite cliquables. L'information mène directement à l'action.</li>
+            <li><b>Usages principaux</b> : paiements, limites de carte, codes PIN oubliés, recherche de documents.</li>
+            <li><b>Suite</b> : bot de déclaration de sinistres (avec remboursement instantané des petits sinistres), investissement plus simple et explicable, assistant vocal multimodal.</li>
+          </ul>
+          <div class="note warn"><span class="tip">Pour l'entretien</span>Tu peux dire que tu as utilisé Hey Belfius ou regardé la présentation Canvas. Une observation précise (par exemple le constat des 70 % de features « invisibles ») vaut plus que dix compliments généraux. Si tu n'es pas client, ouvre un compte gratuit ou demande une démo à un proche avant mardi.</div>
+        </article>
+
+        <!-- 6 -->
+        <article class="chapter" id="ch-pmo">
+          <header><span class="chnum">Chapitre 06</span><h2>Gestion de projet &amp; Project Office</h2></header>
+          <div class="def"><span class="term">Project Office / PMO (Project Management Office)</span><p>Équipe qui standardise la façon de gérer les projets : cadrage, gouvernance, suivi du portefeuille, reporting, gestion des risques, méthodes et outils. Trois niveaux possibles : <b>support</b> (templates et reporting), <b>contrôle</b> (impose des standards) et <b>directif</b> (pilote lui-même les projets). L'annonce décrit un rôle hybride : tu gères toi-même des initiatives tout en faisant progresser les pratiques.</p></div>
+          <div class="def"><span class="term">Projet, produit, programme, portefeuille</span><p><b>Projet</b> : temporaire, avec un périmètre, un budget et une date de fin. <b>Produit</b> : continu, il vit tant qu'il crée de la valeur. <b>Programme</b> : ensemble de projets liés vers un même objectif (par exemple la Corporate AI Platform). <b>Portefeuille</b> : l'ensemble des initiatives, arbitré selon la stratégie et le budget.</p></div>
+          <div class="def"><span class="term">Project Manager, Product Owner, Product Manager</span><p>Le <b>PO</b> maximise la valeur du backlog d'une équipe. Le <b>Product Manager</b> porte la vision et la stratégie d'un produit. Le <b>Project Manager</b> garantit la livraison d'un résultat dans un cadre (scope, temps, budget, qualité) et coordonne les parties prenantes. Toi, tu as fait PO et une partie du travail de Product Manager ; ici tu ajoutes la casquette de livraison transversale.</p></div>
+          <div class="def"><span class="term">Triangle de fer</span><p>Périmètre, délai, coût, avec la qualité au centre. Si l'un bouge, un autre doit bouger. En IA, on ajoute souvent une quatrième variable : la <b>performance du modèle</b>, qui n'est pas garantie à l'avance.</p></div>
+          <div class="def"><span class="term">Business case</span><p>Document qui justifie un investissement : problème, solution, coûts (build et run), bénéfices chiffrés (temps gagné, appels évités, revenus), risques, retour sur investissement. Pour l'IA, pense aussi au coût d'inférence (prix par requête) et au coût de supervision humaine.</p></div>
+          <div class="def"><span class="term">Roadmap</span><p>Vue dans le temps de ce qu'on va livrer et pourquoi. Une bonne roadmap est organisée par <b>résultats</b> (outcomes) plutôt que par features, avec un horizon Now / Next / Later et des dépendances visibles (data, plateforme, juridique).</p></div>
+          <div class="def"><span class="term">Priorisation</span><p><b>Valeur / effort</b> (matrice 2x2), <b>RICE</b> (Reach, Impact, Confidence, Effort), <b>WSJF</b> de SAFe (coût du retard divisé par la taille du travail), <b>MoSCoW</b> (Must, Should, Could, Won't). En IA, ajoute la <b>faisabilité data</b> et le <b>niveau de risque réglementaire</b>.</p></div>
+          <div class="def"><span class="term">RAID log</span><p>Registre des <b>R</b>isques, <b>A</b>ssumptions (hypothèses), <b>I</b>ssues (problèmes avérés) et <b>D</b>épendances. Un risque peut arriver, une issue est déjà là.</p></div>
+          <div class="def"><span class="term">RACI</span><p>Matrice qui dit, pour chaque tâche, qui est <b>R</b>esponsible (fait), <b>A</b>ccountable (décide et rend compte, une seule personne), <b>C</b>onsulted (donne son avis) et <b>I</b>nformed (tenu au courant).</p></div>
+          <div class="def"><span class="term">Gouvernance</span><p>Qui décide quoi et quand : comité de pilotage (steerco), revues de portefeuille, jalons de passage (stage gates : idée, PoC, pilote, production). En banque, les fonctions de contrôle (Risk, Compliance, DPO, Security) doivent être embarquées tôt, pas au dernier jalon.</p></div>
+          <div class="def"><span class="term">Agile à l'échelle</span><p>Scrum (sprints, PO, Scrum Master), Kanban (flux continu), SAFe (PI Planning trimestriel, trains de release). Tu as l'expérience des PI : c'est un point fort, car un Project Office doit synchroniser plusieurs équipes.</p></div>
+          <div class="def"><span class="term">Change management</span><p>Accompagner les personnes vers une nouvelle façon de travailler. Modèle ADKAR : Awareness, Desire, Knowledge, Ability, Reinforcement. Crucial pour le programme « workforce transformation » : un outil IA que personne n'utilise ne crée aucune valeur.</p></div>
+        </article>
+
+        <!-- 7 bis : rôles du PM -->
+        <article class="chapter" id="ch-role-pm">
+          <header><span class="chnum">Chapitre 07</span><h2>Rôles et responsabilités du Project Manager</h2></header>
+          <p class="lead">Le Project Manager est <b>accountable de la livraison</b> d'un résultat convenu, dans un cadre convenu (périmètre, délai, budget, qualité). Il y arrive en alignant des gens qui ne dépendent pas de lui. Il ne fait pas le travail technique : il crée les conditions pour qu'il soit fait, et il rend compte quand ça dérape.</p>
+
+          <h3>Les responsabilités tout au long du cycle de vie</h3>
+          <p>Le référentiel PMBOK (PMI) découpe un projet en cinq groupes de processus. C'est le squelette à avoir en tête si on te demande « que fait un project manager ? ».</p>
+          <div class="tbl"><table>
+            <tr><th>Phase</th><th>Ce que fait le PM</th><th>Livrables typiques</th></tr>
+            <tr><td><b>1. Initialisation</b></td><td>Clarifier le besoin et l'objectif avec le sponsor. Identifier les parties prenantes. Définir ce qu'est un succès, chiffres à l'appui. Vérifier que le projet mérite d'exister.</td><td>Project charter, business case, cartographie des parties prenantes</td></tr>
+            <tr><td><b>2. Planification</b></td><td>Découper le périmètre (WBS ou epics), estimer avec les équipes, fixer jalons et budget, réserver les ressources, identifier les risques, organiser la gouvernance et la communication.</td><td>Plan de projet, planning et jalons, budget, RACI, RAID log, plan de communication</td></tr>
+            <tr><td><b>3. Exécution</b></td><td>Coordonner les équipes et les fournisseurs, animer les rituels, lever les blocages, prendre ou faire prendre les décisions, embarquer Risk et Compliance, préparer le changement chez les utilisateurs.</td><td>Comptes rendus, journal des décisions, livrables intermédiaires</td></tr>
+            <tr><td><b>4. Suivi et contrôle</b></td><td>Comparer le réalisé au plan (avancement, coûts, qualité), gérer les demandes de changement de périmètre, escalader à temps, rendre compte au comité de pilotage.</td><td>Status reports, dashboard, change requests, escalades</td></tr>
+            <tr><td><b>5. Clôture</b></td><td>Faire valider le résultat, transférer au run, mesurer les bénéfices, tirer les leçons, libérer les ressources.</td><td>PV d'acceptation, dossier de transfert, lessons learned, bilan des bénéfices</td></tr>
+          </table></div>
+
+          <h3>Les dix domaines dont il est responsable</h3>
+          <p>Toujours selon le PMBOK, le PM pilote dix domaines de connaissance. Pas besoin de les réciter, mais ils forment une bonne liste de contrôle.</p>
+          <div class="tbl"><table>
+            <tr><th>Domaine</th><th>Question que se pose le PM</th></tr>
+            <tr><td>Intégration</td><td>Est-ce que toutes les pièces tiennent ensemble, et qui décide des arbitrages ?</td></tr>
+            <tr><td>Périmètre (scope)</td><td>Qu'est-ce qui est dedans, qu'est-ce qui est dehors, et comment gère-t-on les ajouts ?</td></tr>
+            <tr><td>Délais (schedule)</td><td>Quels sont les jalons, le chemin critique, les dépendances ?</td></tr>
+            <tr><td>Coûts</td><td>Quel budget, quelle consommation, quelle prévision à terminaison ?</td></tr>
+            <tr><td>Qualité</td><td>Comment sait-on que le résultat est bon (tests, critères d'acceptation, évaluations IA) ?</td></tr>
+            <tr><td>Ressources</td><td>Qui travaille dessus, à quel pourcentage, avec quelles compétences ?</td></tr>
+            <tr><td>Communication</td><td>Qui doit savoir quoi, quand et sous quelle forme ?</td></tr>
+            <tr><td>Risques</td><td>Qu'est-ce qui peut mal tourner, avec quelle probabilité, et quelle parade ?</td></tr>
+            <tr><td>Achats et fournisseurs</td><td>Quels contrats, quels prestataires, quelles obligations (DORA en banque) ?</td></tr>
+            <tr><td>Parties prenantes</td><td>Qui a de l'influence, qui est impacté, qui peut bloquer, et comment les embarquer ?</td></tr>
+          </table></div>
+
+          <h3>Qui fait quoi dans une initiative IA</h3>
+          <p>Le plus important en entretien : montrer que tu sais où s'arrête ton rôle et où commence celui des autres.</p>
+          <div class="tbl"><table>
+            <tr><th>Rôle</th><th>Responsabilité</th></tr>
+            <tr><td><b>Sponsor métier</b></td><td>Porte le besoin, finance, arbitre. <b>Accountable des bénéfices</b> business.</td></tr>
+            <tr><td><b>Project Manager</b> (toi)</td><td><b>Accountable de la livraison</b> : cadrage, planning, budget, risques, coordination, reporting, passage en run.</td></tr>
+            <tr><td>Project owner / Product Owner</td><td>Contenu fonctionnel : backlog, priorisation des features, acceptation des livrables.</td></tr>
+            <tr><td>Data scientists, ML engineers</td><td>Données, modèle, évaluation technique, performance.</td></tr>
+            <tr><td>Architectes, équipe plateforme</td><td>Intégration, Corporate AI Platform, sécurité technique.</td></tr>
+            <tr><td>Risk, Compliance, DPO, CORM</td><td>Analyse de risque, conformité (AI Act, RGPD, DORA), validation avant mise en production.</td></tr>
+            <tr><td>Équipe run / IT Ops</td><td>Exploitation et monitoring après la mise en production.</td></tr>
+            <tr><td>Comité de pilotage (steerco)</td><td>Décisions go/no-go, budget, arbitrages entre initiatives.</td></tr>
+          </table></div>
+          <div class="note"><span class="tip">Dans l'annonce</span>Tu contribues à la livraison « en étroite collaboration avec les project owners ». Le partage est donc clair : le project owner porte le <b>quoi</b> (le contenu), toi tu portes le <b>comment</b> et le <b>quand</b> (le cadre et la livraison transversale).</div>
+
+          <h3>Ce qui change pour un PM IA dans un Project Office</h3>
+          <ul>
+            <li><b>Gérer l'incertitude.</b> On ne sait pas à l'avance si le modèle sera assez bon. Le PM fixe des critères de succès avant le PoC, limite sa durée et prévoit des points go/no-go explicites.</li>
+            <li><b>Les données sont souvent le chemin critique.</b> Accès, qualité, base légale : le PM les traite dès le cadrage, pas au sprint 4.</li>
+            <li><b>Embarquer les fonctions de contrôle tôt.</b> Catégorie AI Act, analyse d'impact RGPD, DORA pour tout fournisseur, model risk. En fin de projet, c'est trop tard.</li>
+            <li><b>Penser au coût de run.</b> Coût d'inférence, monitoring, supervision humaine, ré-entraînement. Ils entrent dans le business case.</li>
+            <li><b>Le projet ne s'arrête pas au go-live.</b> Le PM organise la mesure des bénéfices (autonomie, appels évités, temps gagné) et le transfert à un propriétaire du run.</li>
+            <li><b>L'adoption fait partie de la livraison.</b> Formation, champions dans les équipes, communication, surtout pour la « workforce transformation ».</li>
+            <li><b>La casquette Project Office.</b> En plus de ses propres initiatives : standards et templates (dont le design de features IA), reporting de portefeuille, processus d'entrée et de priorisation des demandes, partage de connaissances dans la communauté IA.</li>
+          </ul>
+
+          <h3>Compétences attendues</h3>
+          <div class="tbl"><table>
+            <tr><th>Techniques (hard skills)</th><th>Comportementales (soft skills)</th></tr>
+            <tr><td>Planification et estimation · suivi budgétaire · gestion des risques · méthodes agile, waterfall et hybrides · outils (Jira, Confluence, MS Project, Power BI) · compréhension du cycle de vie data et IA</td><td>Leadership sans autorité hiérarchique · communication vers le haut et vers le bas · négociation et gestion des conflits · sens de la décision · rigueur · capacité à dire non de façon argumentée</td></tr>
+          </table></div>
+          <div class="def"><span class="term">Leadership sans autorité</span><p>Faire avancer des personnes qui ne dépendent pas de toi (data scientists, métiers, fournisseurs). Les leviers : un objectif clair et partagé, la transparence sur les priorités, la crédibilité (faire ce qu'on dit), et l'escalade utilisée rarement mais au bon moment.</p></div>
+          <div class="def"><span class="term">Accountable ou responsible</span><p><b>Responsible</b> : celui qui fait le travail. <b>Accountable</b> : celui qui répond du résultat, une seule personne. Le PM est accountable de la livraison sans en faire lui-même chaque tâche.</p></div>
+
+          <div class="note warn"><span class="tip">Ton pont PO → PM</span>Tu fais déjà une grande partie du métier : parties prenantes, backlog, PI planning, coordination des fournisseurs (itsme, e-signature), travail avec Compliance. Ce qui est plus nouveau : <b>la responsabilité du budget</b>, <b>la gestion formelle des risques</b>, <b>le reporting au steerco</b> et <b>le suivi des bénéfices après le go-live</b>. Dis-le toi-même en entretien, et montre comment tu t'en es déjà approché (ton deck PI pour le CEO, ta roadmap 2027).</div>
+        </article>
+
+        <!-- 7 -->
+        <article class="chapter" id="ch-concepts-ia">
+          <header><span class="chnum">Chapitre 08</span><h2>Concepts IA à maîtriser</h2></header>
+          <div class="def"><span class="term">IA, machine learning, IA générative</span><p><b>Machine learning « classique »</b> : un modèle apprend à prédire ou classer à partir de données (scoring de crédit, détection de fraude, churn). <b>IA générative</b> : un modèle produit du contenu (texte, image, code). Chez Belfius les deux coexistent : fraude et AML d'un côté, Hey Belfius de l'autre.</p></div>
+          <div class="def"><span class="term">LLM (Large Language Model)</span><p>Modèle entraîné sur d'énormes quantités de texte, qui prédit le mot suivant. Exemples : Mistral, GPT, Claude, Llama. Il ne « sait » que ce qu'il a vu à l'entraînement, d'où le besoin de lui fournir les informations de la banque.</p></div>
+          <div class="def"><span class="term">RAG (Retrieval-Augmented Generation)</span><p>On cherche d'abord les documents pertinents dans une base de connaissance (le « knowledge hub » de Hey Belfius), puis on les donne au LLM pour qu'il réponde en s'appuyant dessus. Avantages : réponses à jour, sources traçables, moins d'inventions.</p></div>
+          <div class="def"><span class="term">Hallucination</span><p>Réponse fausse formulée avec assurance. Parades : RAG et ancrage dans des sources, garde-fous (guardrails), refus de répondre hors périmètre, évaluation systématique, escalade vers un humain.</p></div>
+          <div class="def"><span class="term">Agent IA</span><p>Un LLM qui ne se contente pas de répondre mais agit : il appelle des outils (API bancaires, changement de limite de carte, blocage de carte). Plus puissant, donc plus risqué : il faut des permissions limitées, des confirmations et des journaux d'audit.</p></div>
+          <div class="def"><span class="term">Copilote</span><p>Assistant qui aide un humain sans le remplacer (Hey Belfius pour le client, assistants internes pour les conseillers). Les copilotes internes sont au cœur de la « workforce transformation ».</p></div>
+          <div class="def"><span class="term">Prompt engineering et évaluation</span><p>Le prompt est l'instruction donnée au modèle. L'<b>évaluation</b> (evals) consiste à tester le système sur un jeu de questions de référence avant et après chaque changement : exactitude, ton, conformité, refus appropriés. C'est l'équivalent IA des tests de non-régression.</p></div>
+          <div class="def"><span class="term">Corporate AI Platform</span><p>Socle commun (accès aux modèles, sécurité, données, monitoring, gestion des coûts) que toutes les équipes réutilisent au lieu de reconstruire chacune leur pile. Elle évite la prolifération de projets isolés et facilite la conformité.</p></div>
+          <div class="def"><span class="term">MLOps / LLMOps</span><p>Pratiques pour mettre et maintenir des modèles en production : versioning, déploiement, monitoring de la performance et de la dérive, ré-entraînement, suivi des coûts. Sans MLOps, les PoC restent des PoC.</p></div>
+          <div class="def"><span class="term">Big Data et plateformes</span><p>Traitement de volumes de données trop grands pour un outil classique. Outils cités publiquement chez Belfius : Azure Machine Learning, Azure Synapse Analytics, Azure Databricks. Notions à connaître : data lake, pipeline (ETL/ELT), feature store, qualité de données, data owner.</p></div>
+          <div class="def"><span class="term">Migration cloud</span><p>Déplacer applications et données de datacenters internes vers un cloud (ici Azure). Elle conditionne l'IA : les modèles et la puissance de calcul y sont disponibles. En banque, elle est encadrée par DORA et par les exigences de l'EBA sur l'externalisation.</p></div>
+          <h3>Cycle de vie d'un cas d'usage IA</h3>
+          <div class="flow"><span>Idée</span><i>→</i><span>Cadrage &amp; business case</span><i>→</i><span>Faisabilité data</span><i>→</i><span>PoC</span><i>→</i><span>Pilote</span><i>→</i><span>MVP en production</span><i>→</i><span>Industrialisation &amp; run</span><i>→</i><span>Mesure de valeur</span></div>
+          <div class="def"><span class="term">« Pilot purgatory »</span><p>Le piège classique : beaucoup de PoC réussis, peu en production, faute de plateforme, de données propres, de validation risque ou de sponsor pour le run. Un Project Office sert justement à faire passer les initiatives de l'étape PoC à l'étape valeur.</p></div>
+          <h3>KPI d'une feature IA</h3>
+          <ul>
+            <li><b>Taux d'autonomie (containment)</b> : part des demandes résolues sans humain. Hey Belfius : 90,7 %.</li>
+            <li><b>Adoption</b> : utilisateurs actifs, conversations par mois, taux de retour.</li>
+            <li><b>Qualité</b> : exactitude évaluée, satisfaction (CSAT, pouce haut/bas), taux d'escalade.</li>
+            <li><b>Impact business</b> : appels évités en agence et au call center, temps gagné par les collaborateurs, conversion.</li>
+            <li><b>Coût</b> : coût par interaction (inférence plus supervision).</li>
+            <li><b>Risque</b> : incidents, plaintes, réponses non conformes.</li>
+          </ul>
+        </article>
+
+        <!-- 8 -->
+        <article class="chapter" id="ch-regulation">
+          <header><span class="chnum">Chapitre 09</span><h2>Cadre réglementaire</h2></header>
+          <div class="def"><span class="term">AI Act (règlement européen sur l'IA)</span><p>Entré en vigueur le 1er août 2024, appliqué par étapes. Il classe les systèmes par niveau de risque : <b>inacceptable</b> (interdit, depuis février 2025), <b>haut risque</b>, <b>risque limité</b> (obligation de transparence : dire à l'utilisateur qu'il parle à une IA, ce qui concerne Hey Belfius) et <b>minimal</b>. Les modèles d'IA à usage général ont des obligations depuis août 2025.</p><p>En banque et assurance, sont <b>à haut risque</b> : l'évaluation de la solvabilité et le scoring de crédit des personnes physiques, et l'évaluation des risques et la tarification en assurance vie et santé. Obligations : gestion des risques, qualité des données, documentation, supervision humaine, robustesse. Le calendrier des obligations haut risque a fait l'objet d'une proposition de report (« Digital Omnibus » fin 2025). Vérifie le statut avant l'entretien si tu veux citer une date.</p></div>
+          <div class="def"><span class="term">DORA (Digital Operational Resilience Act)</span><p>Applicable depuis le <b>17 janvier 2025</b>. Résilience opérationnelle numérique : gestion des risques ICT, déclaration des incidents, tests de résilience, et surtout <b>gestion des prestataires tiers</b> (cloud, fournisseur de LLM comme Mistral). Tout nouveau fournisseur IA passe par ce filtre.</p></div>
+          <div class="def"><span class="term">RGPD</span><p>Données personnelles : base légale, minimisation, droit d'accès et d'opposition, analyse d'impact (DPIA) pour les traitements à risque, et l'article 22 sur les décisions entièrement automatisées. Le DPO doit être embarqué dès le cadrage.</p></div>
+          <div class="def"><span class="term">Model risk management</span><p>Gestion du risque de modèle : inventaire des modèles, validation indépendante, monitoring. Attendu par la BCE pour les banques importantes (Belfius est supervisée directement par la BCE depuis 2014).</p></div>
+          <div class="def"><span class="term">IA responsable</span><p>Principes appliqués au quotidien : transparence, explicabilité, équité (pas de biais discriminants), supervision humaine, sécurité, protection des données. Chez Belfius, le discours est « IA humaine, empathique ». Le Lab dispose d'un officier CORM pour en faire une pratique concrète.</p></div>
+          <div class="note"><span class="tip">Ton atout</span>Tu viens de l'onboarding, du MiFID et de l'AML/KYC. Tu sais déjà travailler avec Compliance et Risk sans les subir. Dis-le : c'est rare chez les profils IA.</div>
+        </article>
+
+        <!-- 9 -->
+        <article class="chapter" id="ch-pourquoi">
+          <header><span class="chnum">Chapitre 10</span><h2>Pourquoi Belfius, pourquoi toi</h2></header>
+          <h3>Pourquoi Belfius (trois raisons à retenir)</h3>
+          <ol>
+            <li><b>L'IA est un choix stratégique, pas une expérience.</b> 1,2 Md€ sur cinq ans, un Lab dédié, un assistant déjà en production avec 90,7 % d'autonomie et un objectif de 80 % des interactions à distance en 2030. Tu veux construire là où l'IA a un sponsor au comité de direction.</li>
+            <li><b>L'échelle et l'impact.</b> Un Belge sur trois est client. Une amélioration dans l'app touche 2,2 millions de personnes. C'est un autre ordre de grandeur que la banque privée.</li>
+            <li><b>Un ancrage belge et européen.</b> Banque qui finance l'économie et le secteur public, choix de Mistral par souveraineté. Un projet qui a du sens, dans ta ville (la tour est à côté de chez toi).</li>
+          </ol>
+
+          <h3>Correspondance exigences ↔ ton expérience</h3>
+          <div class="tbl"><table>
+            <tr><th>Exigence</th><th>Ta preuve</th></tr>
+            <tr><td>Business partner</td><td>Product Owner CLM Private Banking &amp; DPnxt Onboarding chez Degroof Petercam. Interface quotidienne entre métiers (Onboarding, MiFID, AML/KYC) et IT. Consulting chez EY.</td></tr>
+            <tr><td>Livraison end-to-end, transversale</td><td>Relance de l'onboarding digital : itsme, e-signature, Dynamics 365, contrôles AML/KYC. Plusieurs équipes, plusieurs fournisseurs.</td></tr>
+            <tr><td>Roadmap</td><td>Roadmap 2027 et inventaire d'epics, PI planning trimestriel, deck PI niveau CEO.</td></tr>
+            <tr><td>Feature design</td><td>Epics et user stories (dont un epic Document Management), critères d'acceptation, arbitrages de périmètre.</td></tr>
+            <tr><td>Expérience IA</td><td>Projets personnels concrets : outil LazyPO (génération de documents et emails structurés à partir d'Excel avec un LLM), assistant vocal « Jarvis », CV interactif à avatar parlant. Usage quotidien des LLM dans ton travail de PO.</td></tr>
+            <tr><td>Analytics, reporting, data</td><td>Analyse de données dans ton parcours, Power BI et DAX, bootcamp full-stack Le Wagon.</td></tr>
+            <tr><td>Contexte réglementaire</td><td>MiFID, AML/KYC, identification digitale, signature électronique.</td></tr>
+          </table></div>
+
+          <h3>Les points faibles à anticiper</h3>
+          <ul>
+            <li><b>Pas de projet IA en production dans un cadre professionnel.</b> Réponse : tu as géré la livraison de produits régulés en production, et tu construis avec des LLM toi-même. Le métier du poste, c'est la livraison et le partenariat, pas l'entraînement de modèles.</li>
+            <li><b>Profondeur Big Data / data science.</b> Réponse honnête : tu n'es pas data scientist, tu comprends le cycle de vie, les dépendances data et tu sais challenger une estimation.</li>
+            <li><b>Pourquoi quitter un poste de PO pour un poste de Project Manager ?</b> Réponse : ce n'est pas un pas de côté, c'est passer d'un produit à un portefeuille, dans le domaine qui va redessiner la banque.</li>
+            <li><b>Néerlandais</b> : l'annonce demande NL <i>ou</i> FR. Si ton néerlandais est fonctionnel, dis-le simplement. S'il est moyen, dis-le tôt et positivement.</li>
+          </ul>
+
+          <h3>Ton pitch en 60 secondes (à dire en français ou en anglais)</h3>
+          <p>« Je suis Product Owner chez Degroof Petercam, sur l'onboarding digital et le CLM de la banque privée. Mon métier, c'est de traduire des besoins métier et réglementaires, MiFID, AML, KYC, en produits livrés, avec plusieurs équipes et fournisseurs autour de la table. Avant ça, j'ai fait du conseil chez EY et des opérations en banque privée, donc je connais le terrain. En parallèle, je construis moi-même des outils avec des LLM, parce que je crois que l'IA va changer la façon dont une banque parle à ses clients et dont ses collaborateurs travaillent. Belfius l'a compris avant les autres avec Hey Belfius. Je veux apporter au Lab ce que je fais de mieux : être le pont entre le business et la tech, et faire passer les idées du PoC à la production. »</p>
+        </article>
+
+        <!-- 10 -->
+        <article class="chapter" id="ch-jourj">
+          <header><span class="chnum">Chapitre 11</span><h2>Le jour J</h2></header>
+          <h3>Logistique</h3>
+          <ul>
+            <li>Mardi 29/09/2026, 15h00, 45 min à 1 h. Arrive vers 14h45.</li>
+            <li>Belfius Tower, Place Charles Rogier 11, 1210 Bruxelles (métro Rogier). À l'accueil : « entretien avec Belfius ».</li>
+            <li>À emporter : CV imprimé, une page avec tes 3 histoires STAR, tes questions.</li>
+          </ul>
+          <h3>Les interlocuteurs</h3>
+          <ul>
+            <li><b>Stéphane Kageruka</b> : son profil public montre un parcours dans le recrutement (fondateur de Find4You, « international headhunter », publications liées aux carrières tech chez ING). Il représente probablement le Talent Acquisition. Attends-toi à des questions de motivation, de parcours, de fit culturel et de conditions.</li>
+            <li><b>Amandine Bastiaens</b> : aucune information publique trouvée. Probablement le côté métier (Project Office ou Lab). Prépare-toi à des questions de fond sur la gestion de portefeuille et la livraison.</li>
+          </ul>
+          <h3>Tes questions à poser</h3>
+          <ol>
+            <li>Comment le Project Office est-il organisé aujourd'hui : combien de personnes, combien d'initiatives en portefeuille ?</li>
+            <li>Qu'est-ce qui distingue un projet réussi d'un projet raté au Lab aujourd'hui ?</li>
+            <li>Quelles seraient les deux ou trois initiatives sur lesquelles je travaillerais en premier ?</li>
+            <li>Comment les métiers soumettent-ils une idée au Lab, et qui arbitre ?</li>
+            <li>Où en est la Corporate AI Platform, et comment se répartit le travail entre elle et les équipes produit ?</li>
+            <li>Comment Risk, Compliance et le CORM sont-ils intégrés dans le cycle d'une initiative ?</li>
+            <li>À quoi ressemblerait un succès pour cette personne après six mois ?</li>
+            <li>Quelles sont les prochaines étapes du processus ?</li>
+          </ol>
+        </article>
+
+        <article class="chapter" id="ch-sources">
+          <header><span class="chnum">Annexe</span><h2>Sources</h2></header>
+          <ul class="sources">
+            <li><a href="https://workopia.io/jobs/063900ff88fce81a3c82171b959dec47" target="_blank" rel="noopener">Workopia : Project Manager - Project Office AI &amp; Tech Lab (résumé de l'offre)</a></li>
+            <li><a href="https://www.belfius.be/about-us/dam/corporate/investors/results/fr/BEL_H1_Results_2026_FR.pdf" target="_blank" rel="noopener">Belfius : communiqué résultats S1 2026 (07/08/2026)</a></li>
+            <li><a href="https://www.belfius.be/about-us/dam/corporate/investors/results/en/Results-2025.pdf" target="_blank" rel="noopener">Belfius : résultats annuels 2025 (27/02/2026)</a></li>
+            <li><a href="https://www.belfius.be/common/FR/multimedia/MMDownloadableFile/PressReleases/2026/260429-strategy-Unlock-2030.pdf" target="_blank" rel="noopener">Belfius : Unlock 2030, nouvelle direction (29/04/2026)</a></li>
+            <li><a href="https://www.lavenir.net/actu/2026/04/01/intelligence-artificielle-developpement-a-linternational-belfius-devoile-sa-strategie-a-lhorizon-2030-et-veut-une-europe-solide-GZX7Y3JJYJHLRBLJNPQRQIPO64/" target="_blank" rel="noopener">L'Avenir : Belfius dévoile sa stratégie 2030</a></li>
+            <li><a href="https://www.lalibre.be/economie/entreprises-startup/2026/04/01/internationalisation-assistant-digital-neobanque-rebel-belfius-devoile-son-plan-2030-3FI6ZNQOYZGGXOBWODVNJYQD3A/" target="_blank" rel="noopener">La Libre : le plan 2030 de Belfius</a></li>
+            <li><a href="https://www.lalibre.be/dernieres-depeches/2026/09/21/belfius-adapte-son-capital-et-ses-dividendes-pour-attirer-des-investisseurs-WLXSFIWRMBCVNKQTXZ6L3MOCQE/" target="_blank" rel="noopener">La Libre : capital et dividendes avant l'ouverture (21/09/2026)</a></li>
+            <li><a href="https://miro.com/blog/belfius-canvas-26/" target="_blank" rel="noopener">Miro : comment Belfius a conçu Hey Belfius (11/06/2026)</a></li>
+            <li><a href="https://www.belfius.be/retail/fr/bam/index.aspx" target="_blank" rel="noopener">Belfius : alliance avec Alan et Mistral AI, création de l'AI Lab</a></li>
+            <li><a href="https://www.microsoft.com/en/customers/story/1702060165230346513-belfius-azure-machine-learning-belgium" target="_blank" rel="noopener">Microsoft : Belfius, Azure ML contre la fraude et le blanchiment</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Belfius" target="_blank" rel="noopener">Wikipedia : Belfius (historique)</a></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QCM ===================== -->
+  <section id="p-qcm" role="tabpanel" aria-labelledby="tab-qcm" hidden>
+    <div class="panel">
+      <div class="qbar">
+        <span class="score" id="score">0 répondues · <b>0</b> correctes</span>
+        <div class="progress" aria-hidden="true"><div id="bar"></div></div>
+        <label class="chk"><input type="checkbox" id="onlywrong"> Seulement mes erreurs</label>
+        <button class="btn" id="resetq" type="button">Recommencer</button>
+      </div>
+      <section class="catscore" id="catscore" aria-label="Score par catégorie">
+        <div class="cs-head">
+          <h2>Score par catégorie</h2>
+          <span class="cs-total" id="cstotal"></span>
+          <button class="cs-all" id="csall" type="button" hidden>← Toutes les catégories</button>
+        </div>
+        <div class="cs-grid" id="csgrid"></div>
+        <div class="cs-weak" id="csweak" hidden></div>
+      </section>
+      <div class="qlist" id="qlist"></div>
+      <div class="qempty" id="qempty" hidden>Aucune question à afficher avec ces filtres.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Q&A ===================== -->
+  <section id="p-qa" role="tabpanel" aria-labelledby="tab-qa" hidden>
+    <div class="panel">
+      <div class="qa-intro">
+        <p>Model answers written in the first person, from your real background. Treat them as drafts: rephrase in your own words, check every fact about yourself, and aim for 60 to 90 seconds per answer. Behavioural questions follow the <b>STAR</b> structure (Situation, Task, Action, Result). The job ad asks for French or Dutch plus good English, so expect part of the interview in French and a switch to English at some point.</p>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div style="margin-bottom:14px"><button class="btn" id="toggleall" type="button">Open all</button></div>
+      <div class="qa" id="qa"></div>
+    </div>
+  </section>
+
+  <footer class="page">Préparé le 26/09/2026 à partir de sources publiques. Chiffres Belfius : résultats S1 2026 et annuels 2025.</footer>
+</div>
+
+<button class="btn primary backfloat" id="backq" type="button" hidden>← Retour au QCM</button>
+
+<script>
+(function(){
+  /* ---------- Tabs ---------- */
+  const tabs=[...document.querySelectorAll('.tab')];
+  const panels={syllabus:document.getElementById('p-syllabus'),qcm:document.getElementById('p-qcm'),qa:document.getElementById('p-qa')};
+  function show(name,noScroll){
+    tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.tab===name)));
+    Object.entries(panels).forEach(([k,p])=>p.hidden=(k!==name));
+    if(!noScroll) window.scrollTo({top:document.querySelector('.tabs').offsetTop,behavior:'auto'});
+    try{history.replaceState(null,'','#'+name)}catch(e){}
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>{show(t.dataset.tab);document.getElementById('backq').hidden=true;}));
+
+  /* ---------- TOC highlight ---------- */
+  const tocLinks=[...document.querySelectorAll('.toc a')];
+  const chapters=tocLinks.map(a=>document.querySelector(a.getAttribute('href')));
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){tocLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}})},{rootMargin:'-20% 0px -70% 0px'});
+    chapters.forEach(c=>c&&io.observe(c));
+  }
+  function goChapter(id){
+    show('syllabus',true);
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
+  }
+
+  /* ---------- QCM data ---------- */
+  const CH={'ch-poste':'Le poste décodé','ch-belfius':'Belfius en bref','ch-chiffres':'Chiffres clés','ch-strategie':'Unlock 2030 & direction','ch-ia-belfius':"L'IA chez Belfius",'ch-pmo':'Gestion de projet & PMO','ch-role-pm':'Rôles du Project Manager','ch-concepts-ia':'Concepts IA','ch-regulation':'Cadre réglementaire','ch-pourquoi':'Pourquoi Belfius, pourquoi toi'};
+  const Q=[
+    {q:"Quel est le résultat net consolidé de Belfius au premier semestre 2026 ?",o:["476 millions d'euros","521 millions d'euros","872 millions d'euros","1,160 milliard d'euros"],a:1,e:"521 M€, +9,3 % sur un an. C'est la première fois qu'un semestre dépasse 500 M€. 476 M€ était le S1 2025, 1,160 Md€ l'année 2025 complète.",c:'ch-chiffres'},
+    {q:"Quel est le ratio CET1 de Belfius à fin juin 2026 ?",o:["12,1 %","15,5 %","19,2 %","193 %"],a:1,e:"15,5 % (15,9 % fin 2025). 19,2 % est le ratio de fonds propres total, 193 % le Solvency II de l'assureur.",c:'ch-chiffres'},
+    {q:"Quel est le ratio coûts/revenus du S1 2026 ?",o:["37,9 %","42,0 %","55,3 %","64,0 %"],a:1,e:"42,0 %, en amélioration de 3,4 points. 37,9 % est le même ratio hors taxes bancaires.",c:'ch-chiffres'},
+    {q:"À combien s'élève l'encours total d'épargne et de placements des clients à fin juin 2026 ?",o:["95,2 Md€","126,5 Md€","212,8 Md€","300 Md€"],a:2,e:"212,8 Md€. Le cap des 200 Md€ a été franchi pour la première fois en 2025. 95,2 Md€ correspond aux seuls comptes à vue et d'épargne, 126,5 Md€ à l'encours de crédits.",c:'ch-chiffres'},
+    {q:"Que signifie « 14ᵉ année de croissance » dans les résultats 2025 ?",o:["Le résultat net progresse chaque année depuis 2012, sauf 2020 (COVID)","Belfius a 14 ans d'existence sous ce nom","Le nombre de clients augmente depuis 14 ans","Le CET1 progresse depuis 14 ans"],a:0,e:"Hors 2020, le résultat net de Belfius progresse chaque année depuis sa création en 2012.",c:'ch-chiffres'},
+    {q:"Qui est l'actionnaire de Belfius aujourd'hui ?",o:["KBC","L'État belge à 100 %, via la SFPIM","La Région bruxelloise","Un consortium de fonds de pension"],a:1,e:"L'État belge via la SFPIM. Une ouverture d'environ 20 % du capital a été validée en décembre 2025.",c:'ch-belfius'},
+    {q:"De quelle entité Belfius est-elle issue ?",o:["Fortis Banque","ING Belgique","Dexia Banque Belgique","Crédit Agricole"],a:2,e:"Dexia Banque Belgique, rachetée par l'État en octobre 2011 et renommée Belfius le 1er mars 2012. Ses racines remontent au Crédit Communal de 1860.",c:'ch-belfius'},
+    {q:"Dans le cadre de l'ouverture du capital, quel nouveau taux de distribution du dividende Belfius a-t-il annoncé en septembre 2026 ?",o:["30 %","40 %","50 %","70 %"],a:2,e:"50 % du bénéfice, contre 40 % auparavant, sous réserve de la signature de l'ouverture du capital.",c:'ch-belfius'},
+    {q:"Comment s'appelle la stratégie présentée le 30 mars 2026 ?",o:["Love 2030","Unlock 2030","Belfius Next","Be Digital 2030"],a:1,e:"Unlock 2030, avec pour raison d'être « Unlocking potential with optimism » et la campagne « Be Unstoppable ».",c:'ch-strategie'},
+    {q:"Combien Belfius prévoit-il d'investir dans la technologie, la cybersécurité et les talents sur cinq ans ?",o:["250 M€","600 M€","1,2 Md€","5 Md€"],a:2,e:"1,2 milliard d'euros sur cinq ans.",c:'ch-strategie'},
+    {q:"Qui est CEO de Belfius Banque depuis le 29 avril 2026 ?",o:["Marc Raisière","Olivier Onclin","Dirk Gyselinck","Marianne Collin"],a:1,e:"Olivier Onclin. Marc Raisière, CEO pendant 14 ans, préside désormais le conseil d'administration.",c:'ch-strategie'},
+    {q:"Quel est le titre de Bram Somers au comité de direction ?",o:["Chief Risk Officer","Chief People Officer","Chief Technology & Operations Officer","Head of AI & Tech Lab"],a:2,e:"Il a repris les Opérations en plus de la Technologie. Le Head of AI & Tech Lab est Jonathan Neubourg.",c:'ch-strategie'},
+    {q:"Qu'est-ce que Leocare ?",o:["Une fintech belge de paiement","Une insurtech française rachetée par Belfius","Le nouveau nom de DVV","Un fournisseur de LLM"],a:1,e:"Insurtech française rachetée en 2026. Première étape internationale, dans l'assurance directe digitale.",c:'ch-strategie'},
+    {q:"Avec quelle entreprise Belfius a-t-il développé Hey Belfius ?",o:["OpenAI","Google","Mistral AI","IBM"],a:2,e:"Mistral AI, champion européen de l'IA générative dans lequel Belfius a investi en 2024. Un choix assumé de souveraineté européenne.",c:'ch-ia-belfius'},
+    {q:"Quelle ambition Belfius fixe-t-il à Hey Belfius pour 2030 ?",o:["Remplacer toutes les agences","Traiter 80 % des interactions à distance","Atteindre 1 million d'utilisateurs","Réduire les effectifs de 20 %"],a:1,e:"80 % des interactions à distance via Hey Belfius en 2030, contre 20 % dans la première phase. La direction exclut des plans sociaux.",c:'ch-ia-belfius'},
+    {q:"Quelle part des demandes Hey Belfius traite-t-il de façon entièrement autonome au S1 2026 ?",o:["45,0 %","70,0 %","85,0 %","90,7 %"],a:3,e:"90,7 %. Les 85 % concernent Belfius Direct Assistant (assurance) dès sa première semaine.",c:'ch-ia-belfius'},
+    {q:"Quels sont les trois piliers de conception de Hey Belfius présentés par l'équipe ?",o:["Sécurité, rapidité, coût","Proactivité, personnalisation, multimodalité","Cloud, data, IA","Love, Efficiency, Growth"],a:1,e:"Proactivité (la bonne feature au bon moment), personnalisation (2,2 millions de profils) et multimodalité (chat, interface, voix).",c:'ch-ia-belfius'},
+    {q:"Quel constat de l'enquête clients a déclenché la démarche Hey Belfius ?",o:["70 % des fonctionnalités demandées existaient déjà dans l'app","Les clients trouvaient l'app trop lente","70 % des clients voulaient plus d'agences","L'app avait une note de 2/5"],a:0,e:"Environ 70 % des souhaits décrivaient des fonctionnalités existantes : un problème de découvrabilité, pas de manque de features.",c:'ch-ia-belfius'},
+    {q:"Selon l'annonce, quels grands programmes l'IA porte-t-elle chez Belfius ?",o:["Fermeture d'agences, offshoring, fusion","Transformation du workforce, migration cloud, Corporate AI Platform","Crypto, blockchain, metaverse","Nouveau core banking, SEPA, PSD3"],a:1,e:"Workforce transformation, cloud migration et la nouvelle Corporate AI Platform.",c:'ch-poste'},
+    {q:"Quelles langues l'annonce exige-t-elle ?",o:["Français et néerlandais parfaits, anglais facultatif","Excellent néerlandais ou français, et bonne connaissance de l'anglais","Anglais uniquement","Trilingue parfait obligatoire"],a:1,e:"Excellente maîtrise du NL ou du FR, plus une bonne connaissance de l'anglais.",c:'ch-poste'},
+    {q:"Quel est le rôle premier d'un Project Office (PMO) ?",o:["Coder les modèles d'IA","Standardiser la gouvernance, le suivi du portefeuille et le reporting des projets","Recruter les data scientists","Valider les budgets à la place du CFO"],a:1,e:"Le PMO structure la façon dont les projets sont cadrés, arbitrés, suivis et rapportés.",c:'ch-pmo'},
+    {q:"Qu'est-ce qui distingue un projet d'un produit ?",o:["Un projet est temporaire avec un périmètre et une fin, un produit vit tant qu'il crée de la valeur","Un produit a toujours un budget plus élevé","Un projet est toujours agile","Il n'y a aucune différence"],a:0,e:"Projet : temporaire, borné. Produit : continu. Une initiative IA part souvent en projet et doit devenir un produit à maintenir.",c:'ch-pmo'},
+    {q:"Que signifie RAID dans « RAID log » ?",o:["Roles, Actions, Ideas, Decisions","Risks, Assumptions, Issues, Dependencies","Requirements, Architecture, Integration, Delivery","Release, Approval, Implementation, Deployment"],a:1,e:"Risques, hypothèses, problèmes avérés et dépendances.",c:'ch-pmo'},
+    {q:"Comment se calcule le WSJF (SAFe) ?",o:["Valeur business multipliée par la taille","Coût du retard divisé par la taille du travail","Effort divisé par le nombre d'équipes","Budget divisé par la durée"],a:1,e:"Weighted Shortest Job First : on fait d'abord ce qui a le plus grand coût du retard par unité d'effort.",c:'ch-pmo'},
+    {q:"Quels sont les cinq groupes de processus d'un projet selon le PMBOK ?",o:["Idée, PoC, pilote, MVP, run","Initialisation, planification, exécution, suivi et contrôle, clôture","Analyse, design, build, test, déploiement","Sprint planning, daily, review, rétro, release"],a:1,e:"Initialisation, planification, exécution, suivi et contrôle, clôture. Les autres listes décrivent un cycle de cas d'usage IA, un cycle de développement ou des rituels Scrum.",c:'ch-role-pm'},
+    {q:"Dans une initiative IA, qui est accountable de la réalisation des bénéfices business ?",o:["Le Project Manager","Le data scientist","Le sponsor métier","Le DPO"],a:2,e:"Le sponsor métier répond des bénéfices. Le Project Manager est accountable de la livraison : cadre, planning, budget, risques, coordination.",c:'ch-role-pm'},
+    {q:"Qu'est-ce qu'un project charter ?",o:["Le contrat de travail du chef de projet","Le document d'initialisation qui autorise le projet : objectifs, périmètre, sponsor, PM, budget indicatif","Le rapport final de clôture","La liste des bugs ouverts"],a:1,e:"C'est le livrable clé de la phase d'initialisation. Il donne au PM son mandat.",c:'ch-role-pm'},
+    {q:"D'après l'annonce, comment se partagent les rôles entre toi et les project owners ?",o:["Tu écris le code, eux gèrent le budget","Le project owner porte le contenu fonctionnel, tu portes le cadre et la livraison de bout en bout","Tu es leur manager hiérarchique","Il n'y a pas de project owners au Lab"],a:1,e:"Tu contribues à la livraison « en étroite collaboration avec les project owners » : eux le quoi, toi le comment et le quand.",c:'ch-role-pm'},
+    {q:"Que fait le Project Manager lors de la clôture d'un projet ?",o:["Rien, le projet est fini à la mise en production","Il lance immédiatement le projet suivant","Il fait valider le résultat, transfère au run, mesure les bénéfices et tire les leçons","Il supprime la documentation"],a:2,e:"Acceptation, handover au run, bilan des bénéfices et lessons learned. En IA, la mesure des bénéfices après le go-live est essentielle.",c:'ch-role-pm'},
+    {q:"Qu'est-ce que le RAG (Retrieval-Augmented Generation) ?",o:["Un modèle entraîné uniquement sur des données bancaires","Récupérer des documents pertinents puis les fournir au LLM pour qu'il réponde en s'appuyant dessus","Un tableau de bord rouge-orange-vert","Une technique pour réduire la taille des modèles"],a:1,e:"C'est le principe du knowledge hub de Hey Belfius : réponses à jour et traçables, moins d'hallucinations.",c:'ch-concepts-ia'},
+    {q:"Laquelle de ces mesures réduit le plus directement les hallucinations d'un assistant ?",o:["Augmenter le budget marketing","Ancrer les réponses dans des sources (RAG) et évaluer systématiquement","Utiliser le plus gros modèle disponible, sans autre mesure","Répondre plus vite"],a:1,e:"Ancrage dans les sources, garde-fous, évaluations régulières et escalade humaine.",c:'ch-concepts-ia'},
+    {q:"Qu'appelle-t-on le « pilot purgatory » ?",o:["Un pilote qui dépasse son budget","Beaucoup de PoC réussis mais peu mis en production","Un projet bloqué par les syndicats","Un test A/B raté"],a:1,e:"Faute de plateforme, de données, de validation risque ou de sponsor de run. Le Project Office sert à en sortir.",c:'ch-concepts-ia'},
+    {q:"Que mesure le taux d'autonomie (containment rate) d'un assistant ?",o:["Le temps de réponse moyen","La part des demandes résolues sans intervention humaine","Le nombre de téléchargements de l'app","Le coût du modèle"],a:1,e:"C'est l'indicateur des 90,7 % de Hey Belfius. À lire avec la satisfaction et l'exactitude, pour éviter de « contenir » des clients insatisfaits.",c:'ch-concepts-ia'},
+    {q:"Selon l'AI Act, lequel de ces usages bancaires est classé « à haut risque » ?",o:["Un filtre anti-spam","Le scoring de crédit des personnes physiques","La traduction automatique d'un site web","La recommandation d'articles de blog"],a:1,e:"Évaluation de solvabilité et scoring de crédit des personnes physiques, ainsi que tarification vie et santé en assurance.",c:'ch-regulation'},
+    {q:"Depuis quand DORA s'applique-t-il, et qu'impose-t-il notamment ?",o:["Depuis 2018, la protection des données personnelles","Depuis le 17 janvier 2025, la résilience ICT et la gestion des prestataires tiers","Depuis 2024, l'interdiction des chatbots","Depuis 2026, la publication des algorithmes"],a:1,e:"DORA encadre les risques ICT, les incidents, les tests et les fournisseurs tiers comme le cloud ou un fournisseur de LLM.",c:'ch-regulation'}
+  ];
+
+  /* ---------- QCM render ---------- */
+  const KEY='belfius-qcm-v2';
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){state={}}
+  const qlist=document.getElementById('qlist');
+  const letters=['A','B','C','D'];
+  /* ---------- Score par catégorie ---------- */
+  const CATS=Object.keys(CH).filter(c=>Q.some(q=>q.c===c));
+  let catFilter=null;
+  function catStats(){
+    const s={};CATS.forEach(c=>s[c]={t:0,d:0,g:0});
+    Q.forEach((it,i)=>{const st=s[it.c];st.t++;const v=state[i];if(v!==undefined){st.d++;if(v===it.a)st.g++;}});
+    return s;
+  }
+  function pctClass(p){return p>=80?'hi':p>=50?'mid':'lo'}
+  function renderCats(){
+    const s=catStats();
+    const grid=document.getElementById('csgrid');grid.innerHTML='';
+    let done=0,good=0,weak=null;
+    CATS.forEach(c=>{
+      const st=s[c];done+=st.d;good+=st.g;
+      const wrong=st.d-st.g;
+      const p=st.d?Math.round(st.g/st.d*100):null;
+      if(wrong>0){const r=st.g/st.d;if(!weak||r<weak.r||(r===weak.r&&wrong>weak.wrong))weak={c,r,wrong,st};}
+      const b=document.createElement('button');b.type='button';b.className='cs-tile';b.dataset.cat=c;
+      b.setAttribute('aria-pressed',String(catFilter===c));
+      b.innerHTML='<span class="cl"></span><span class="cv"><span><b>'+st.g+'</b>/'+st.t+'</span><span class="pct '+(p===null?'':pctClass(p))+'">'+(p===null?'—':p+'\u00a0%')+'</span></span><span class="cs-bar"><span class="g" style="width:'+(st.g/st.t*100)+'%"></span><span class="b" style="width:'+(wrong/st.t*100)+'%"></span></span>';
+      b.querySelector('.cl').textContent=CH[c];
+      b.title=st.d+' répondue'+(st.d>1?'s':'')+' sur '+st.t+(st.d?' · '+st.g+' correcte'+(st.g>1?'s':''):'');
+      b.setAttribute('aria-label',CH[c]+' : '+st.g+' correctes sur '+st.d+' répondues, '+st.t+' questions');
+      b.addEventListener('click',()=>{catFilter=(catFilter===c?null:c);render();renderCats();});
+      grid.appendChild(b);
+    });
+    document.getElementById('cstotal').innerHTML=done?'<b>'+Math.round(good/done*100)+'\u00a0%</b> de bonnes réponses':'Réponds pour voir ton score';
+    document.getElementById('csall').hidden=!catFilter;
+    const w=document.getElementById('csweak');
+    if(weak){
+      w.hidden=false;
+      w.innerHTML='<b>À revoir en priorité :</b> <span class="wc"></span> ('+weak.st.g+'/'+weak.st.d+' correctes) · <a href="#'+weak.c+'" data-goto="'+weak.c+'">→ Revoir le chapitre</a>';
+      w.querySelector('.wc').textContent=CH[weak.c];
+    }else{w.hidden=true;w.innerHTML='';}
+  }
+  document.getElementById('csall').addEventListener('click',()=>{catFilter=null;render();renderCats();});
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  function render(){
+    qlist.innerHTML='';
+    Q.forEach((it,i)=>{
+      const card=document.createElement('div');card.className='q';card.id='q'+(i+1);
+      const ans=state[i];
+      card.innerHTML='<span class="chiptag">'+CH[it.c]+'</span><h3><span class="n">'+String(i+1).padStart(2,'0')+'</span><span></span></h3><div class="opts"></div>';
+      card.querySelector('h3 span:last-child').textContent=it.q;
+      const opts=card.querySelector('.opts');
+      it.o.forEach((txt,j)=>{
+        const b=document.createElement('button');b.type='button';b.className='opt';
+        b.innerHTML='<span class="k">'+letters[j]+'</span><span></span>';
+        b.lastChild.textContent=txt;
+        if(ans!==undefined){b.disabled=true;if(j===it.a)b.classList.add('right');else if(j===ans)b.classList.add('wrong');}
+        b.addEventListener('click',()=>{state[i]=j;save();render();updateScore();});
+        opts.appendChild(b);
+      });
+      if(ans!==undefined){
+        const ok=ans===it.a;
+        const fb=document.createElement('div');fb.className='fb';
+        fb.innerHTML='<p><span class="verdict '+(ok?'ok':'ko')+'">'+(ok?'Correct.':'Pas tout à fait.')+'</span> <span class="ex"></span></p><a href="#'+it.c+'" data-goto="'+it.c+'">→ Revoir le chapitre « '+CH[it.c]+' »</a>';
+        fb.querySelector('.ex').textContent=it.e;
+        card.appendChild(fb);
+        if(document.getElementById('onlywrong').checked && ok) card.classList.add('hide');
+      }
+      if(catFilter && it.c!==catFilter) card.classList.add('hide');
+      qlist.appendChild(card);
+    });
+    document.getElementById('qempty').hidden=!!qlist.querySelector('.q:not(.hide)');
+  }
+  let lastQ=null;
+  panels.qcm.addEventListener('click',e=>{
+    const a=e.target.closest('[data-goto]');if(!a)return;
+    e.preventDefault();
+    const qc=a.closest('.q');lastQ=qc?qc.id:null;
+    goChapter(a.dataset.goto);
+    document.getElementById('backq').hidden=false;
+  });
+  document.getElementById('backq').addEventListener('click',()=>{
+    show('qcm',true);document.getElementById('backq').hidden=true;
+    const el=lastQ&&document.getElementById(lastQ);if(el)el.scrollIntoView({block:'center'});
+  });
+  function updateScore(){
+    const done=Object.keys(state).length;
+    const good=Object.entries(state).filter(([i,v])=>Q[i]&&Q[i].a===v).length;
+    document.getElementById('score').innerHTML=done+' répondues sur '+Q.length+' · <b>'+good+'</b> correctes';
+    document.getElementById('bar').style.width=(done/Q.length*100)+'%';
+    document.getElementById('tabcount').textContent=good+'/'+Q.length;
+    renderCats();
+  }
+  document.getElementById('onlywrong').addEventListener('change',render);
+  document.getElementById('resetq').addEventListener('click',()=>{state={};save();render();updateScore();});
+  render();updateScore();
+
+  /* ---------- Q&A data ---------- */
+  const QA=[
+    {c:'Opening',q:"Tell us about yourself.",a:`<p>I'm a Product Owner at Degroof Petercam, in the Private Banking digital team. I own two products: client lifecycle management for private banking, and DPnxt, our digital onboarding. In practice that means cross-functional teams covering onboarding, MiFID, AML and KYC, digital identification with itsme, e-signature and our Dynamics 365 CRM.</p><p>Before that I was a consultant at EY in financial services, and I worked in private banking operations and data analysis, so I know the business from the inside. I have a management degree from Solvay, and I did the Le Wagon full-stack bootcamp because I wanted to understand how software is actually built.</p><p>Over the last two years I've been building my own tools with large language models, for example a tool that generates structured documents and emails for my PO work. That's what brings me here: I want to take what I do best, bridging business and technology in a regulated bank, and apply it where Belfius is investing most, which is AI.</p>`,w:"Keep it under 90 seconds. End on why you are in the room today."},
+    {c:'Opening',q:"Why Belfius?",a:`<p>Three reasons. First, AI at Belfius is a strategic choice, not an experiment. You're putting 1.2 billion euros into technology and talent over five years, you have a dedicated AI and Tech Lab, and Hey Belfius is already in production handling over 90 percent of requests on its own. I want to work where AI has real sponsorship at executive level.</p><p>Second, scale. One Belgian in three banks with you and the app has 2.2 million active users. An improvement here changes the daily life of millions of people.</p><p>Third, the anchoring. Belfius finances the Belgian economy and public sector, and it chose a European AI partner in Mistral. I find that meaningful, and it's a project I want to be part of.</p>`,w:"Quote one figure, not five. The 90.7% autonomy rate shows you read the H1 results."},
+    {c:'Opening',q:"Why this role, and why a Project Office?",a:`<p>Because the hard part of AI in a bank is no longer the model. It's getting from a promising proof of concept to something in production that the business actually uses, that Risk and Compliance have signed off, and whose value you can measure. That's a delivery and partnership problem, and that's my core skill.</p><p>A Project Office also gives me a portfolio view. As a PO I've optimised one backlog at a time. Here I can help decide which initiatives deserve investment and make sure they land. It's the natural next step for me.</p>`,w:"Frame the move from PO to PM as scope growth: one product to a portfolio."},
+    {c:'Opening',q:"Why are you leaving your current position?",a:`<p>I'm proud of what we built. When I took over digital onboarding it was close to being shelved, and we brought it back to a working product. Today the focus of my scope has shifted towards platform migration and group requirements, which is important work but it's mostly run and maintenance. I'm at my best when I'm building something new with business impact, and AI is where that is happening now.</p>`,w:"Positive, forward-looking. No criticism of Degroof Petercam or of management."},
+    {c:'Role',q:"How do you understand the role of a project manager in the Project Office of the AI & Tech Lab?",a:`<p>I see three parts. One: business partner. I sit with a business line, understand its priorities and pain points, and turn a vague request into a use case with a clear problem, users, data, success metrics and a business case.</p><p>Two: end-to-end delivery. I coordinate the project owners, data scientists, engineers, Risk, Compliance and Security from framing to production, and I keep scope, timing and budget under control.</p><p>Three: continuous improvement of how the Lab works. Templates for AI feature design, a clear intake and prioritisation process, stage gates from PoC to production, and shared learnings so the next initiative goes faster.</p>`,w:"Mirror the ad: business partner, feature design, end-to-end delivery, roadmap, continuous improvement."},
+    {c:'Role',q:"What are the key responsibilities of a project manager?",a:`<p>A project manager is accountable for delivering an agreed result within an agreed frame: scope, time, budget and quality. I see it across the lifecycle.</p><ul><li><b>Initiation:</b> clarify the objective with the sponsor, define what success looks like in numbers, identify the stakeholders.</li><li><b>Planning:</b> break down the scope, estimate with the teams, set milestones and budget, map risks, agree governance and a RACI.</li><li><b>Execution:</b> coordinate teams and vendors, remove blockers, make sure decisions get taken, bring Risk and Compliance in early.</li><li><b>Monitoring:</b> track progress, cost and quality against plan, manage scope changes, escalate early, report to the steering committee.</li><li><b>Closure:</b> acceptance, handover to run, benefits measurement and lessons learned.</li></ul><p>For AI I'd add two things: managing uncertainty with clear go or no-go points, because model performance isn't known upfront, and making sure value is measured after go-live. In a Project Office, there's also the portfolio side: standards, templates, prioritisation and reporting across initiatives.</p>`,w:"Lifecycle structure, then the AI twist, then the Project Office layer. Don't recite all ten PMBOK knowledge areas."},
+    {c:'Role',q:"What's the difference between your role as project manager and the project owner's role?",a:`<p>The project owner owns the what: the functional content, the backlog, the priorities within the product and the acceptance of what's delivered. The project manager owns the how and the when: the frame, the plan, the budget, the risks, the coordination across teams and control functions, and the path to production. The business sponsor owns the benefits.</p><p>Having been a Product Owner myself, I know exactly where that line is, and I think that makes me a better partner for the project owners, not a competitor.</p>`,w:"Your PO background is an asset here. Make that explicit."},
+    {c:'Experience',q:"How do you lead people who don't report to you?",a:`<p>Almost everything I do today works that way. The developers, the compliance officers and the vendors I work with don't report to me. What works for me: a clear objective everyone can repeat, transparency on priorities and trade-offs, doing what I say I'll do so people trust my word, and escalating rarely but at the right moment, with options rather than complaints.</p><p>[Add a concrete example, for instance getting the itsme or e-signature vendor and our compliance team aligned on a deadline.]</p>`,w:"Classic PM question. Anchor it in a real vendor or compliance example."},
+    {c:'Role',q:"What does being a business partner mean to you?",a:`<p>It means the business sees me as someone who helps them reach their objectives, not as an IT gatekeeper. Concretely: I learn their KPIs, I challenge the request to find the real problem, and I'm honest when AI isn't the right answer. Sometimes the best outcome is a process fix or a simple rule.</p><p>At Degroof Petercam, the onboarding and compliance teams came to me with requests like "we need a new field". By asking why, we often found the real issue was a manual check we could automate with the right data, which saved far more time than the field would have.</p>`,w:"Add one concrete example from your own work."},
+    {c:'Role',q:"How would you build and prioritise an AI roadmap?",a:`<p>I start from the strategy, Unlock 2030 in your case, and from business outcomes: fewer calls, faster claims, more investing customers, time saved for advisers. Then I collect candidate use cases and score them on value, feasibility and risk. Feasibility includes data availability and whether the Corporate AI Platform already offers what's needed. Risk includes the AI Act category and customer impact.</p><p>I'd use a method like WSJF or a simple value versus effort matrix, but the method matters less than making the trade-offs visible to the decision makers. The roadmap itself is organised as Now, Next, Later by outcome, with dependencies on data, platform and legal shown explicitly, and it is reviewed every quarter, the way we run PI planning today.</p>`,w:"Mention the AI-specific criteria: data feasibility and regulatory risk."},
+    {c:'Role',q:"How do you translate a vague business question into a feature design?",a:`<p>I use a short framing canvas. Who is the user and in which moment? What decision or task are they trying to complete? What does success look like in numbers? What data do we have, and is it allowed to be used? What happens when the AI is wrong, and who takes over?</p><p>From there I write the feature the way I write epics today: the problem, the user journey, acceptance criteria, and for AI specifically an evaluation set of real questions with expected answers, plus the guardrails. Then we prototype quickly and test with users before investing in industrialisation. That's close to how the Hey Belfius team worked, with usability labs before scaling.</p>`,w:"The evaluation set is the AI-specific addition to classic user stories."},
+    {c:'Role',q:"What would your first 90 days look like?",a:`<p>First 30 days: listen and map. Meet the Lab leads, the project owners and the main business sponsors, understand the current portfolio, the governance and where initiatives get stuck.</p><p>Days 30 to 60: take ownership of one or two initiatives and deliver visible progress, while proposing quick improvements to the way work flows through the Project Office, for example a clearer intake or a portfolio dashboard.</p><p>Days 60 to 90: agree with my manager on the standards I'll drive, such as the AI feature design template or the stage gates from PoC to production, and have my initiatives on a clear path with measurable KPIs.</p>`,w:"Show you'll learn before you change anything."},
+    {c:'Experience',q:"Tell us about a complex cross-functional project you delivered.",a:`<p><b>Situation.</b> When I took over DPnxt, our digital onboarding for private banking, the product was close to being abandoned.</p><p><b>Task.</b> Make it a real channel for new clients while meeting MiFID, AML and KYC obligations.</p><p><b>Action.</b> I brought together onboarding operations, compliance, IT and external vendors for digital identification with itsme and for e-signature, integrated with Dynamics 365. I reset the backlog around the client journey, got compliance involved from the design stage rather than at the end, and ran the work in quarterly increments with clear priorities.</p><p><b>Result.</b> [Add your real figures: onboarding time, share of digital onboardings, number of clients, reduction of manual checks.] The product went from almost shelved to a working channel.</p>`,w:"Fill in the result with real numbers. This is your strongest story."},
+    {c:'Experience',q:"Tell me about a time you had to say no to a stakeholder or manage conflicting priorities.",a:`<p><b>Situation.</b> [Pick a real case, for example two business lines both wanting their request in the same quarter with capacity for one.]</p><p><b>Action.</b> I made the trade-off explicit: value, urgency, regulatory deadline and effort for each request, and brought it to the people who own the decision instead of deciding alone behind closed doors. For the request that didn't make it, I offered a concrete alternative or a date.</p><p><b>Result.</b> The decision was accepted because it was transparent, and the relationship with the stakeholder stayed good. That's the reflex I'd bring to a Project Office where many business lines compete for the same AI capacity.</p>`,w:"Prepare a true example before Tuesday. Structure matters as much as outcome."},
+    {c:'Experience',q:"Tell us about a project that didn't go as planned.",a:`<p>[Choose a real case with a lesson learned, for example a vendor integration that slipped or a requirement discovered late by compliance.]</p><p>What I learned is to surface risk early and loudly. Now I keep a RAID log that I review with the team every week, and I involve control functions at the framing stage rather than just before go-live. In AI this matters even more, because model performance is uncertain until you test on real data, so I plan explicit go or no-go points.</p>`,w:"Own the mistake, show the lesson, show the new habit."},
+    {c:'Experience',q:"How do you report to senior management?",a:`<p>Short, visual and decision oriented. One page per initiative: status, value delivered, key risks, and the decisions I need from them. I recently prepared a quarterly PI deck for our CEO covering the digital portfolio, and the rule I follow is that every slide should either inform a decision or report a result, never just activity.</p>`,w:"Your CEO-level PI deck is a strong proof point."},
+    {c:'AI',q:"What hands-on experience do you have with AI?",a:`<p>Professionally, I haven't yet delivered a production AI model in a bank, and I'll be straightforward about that. But I use LLMs every day in my PO work and I build with them. I built a tool that turns Excel inputs into structured documents and emails for my backlog and stakeholder communication. I've built a voice assistant prototype and an interactive CV with a talking avatar. That taught me the practical side: prompting, the limits of the models, hallucinations, cost and latency.</p><p>Combined with my delivery experience in regulated banking, that's the profile this role describes: someone who understands the technology well enough to challenge it, and knows how to get things into production in a bank.</p>`,w:"Honesty first, then evidence. Adjust the project list to what you can demo."},
+    {c:'AI',q:"How do you take an AI use case from proof of concept to production?",a:`<p>By planning for production from day one. At framing I check the data, the platform, the risk category and who will own the product in run. The PoC has success criteria agreed upfront, measured on an evaluation set. If it passes, a pilot with real users follows, with monitoring and human fallback. Before scaling, Risk, Compliance, DPO and Security sign off, and we check DORA requirements for any third-party provider.</p><p>The main reason use cases die in "pilot purgatory" is that nobody owns the run and the value was never measured. So I'd make sure every initiative has a business owner, a run team and KPIs before it leaves the Lab.</p>`,w:"Name the pilot purgatory problem and how you prevent it."},
+    {c:'AI',q:"How would you measure the success of an AI feature like Hey Belfius?",a:`<p>On four levels. Adoption: active users, conversations, returning users. Quality: accuracy on the evaluation set, customer satisfaction, escalation rate. Business impact: calls avoided in branches and at Belfius Connect, time saved, conversion to actions like raising a card limit. And cost and risk: cost per interaction, incidents and complaints.</p><p>I'd be careful with the autonomy rate alone. Ninety percent handled autonomously is great, but only if the customer actually got what they needed. So I'd always pair it with satisfaction and a check on repeat contacts.</p>`,w:"Shows maturity: you know the KPI trap."},
+    {c:'AI',q:"What are the main risks of generative AI in a bank, and how do you manage them?",a:`<ul><li><b>Wrong answers.</b> Ground answers in approved sources, evaluate continuously, escalate to a human when confidence is low.</li><li><b>Data protection.</b> Minimise personal data, control where it is processed, involve the DPO early.</li><li><b>Regulation.</b> Map each use case to its AI Act category. Credit scoring or insurance pricing are high risk and need much more governance than an FAQ assistant.</li><li><b>Third-party dependency.</b> DORA requires managing providers like cloud or model vendors, with exit plans.</li><li><b>Security.</b> Prompt injection and misuse, especially when the assistant can take actions.</li><li><b>Adoption and trust.</b> Customers and employees must understand what the AI does and keep a human option.</li></ul>`,w:"Your AML/KYC background makes this credible. Say so."},
+    {c:'AI',q:"What do you think of Hey Belfius?",a:`<p>I think the starting insight is the smartest part: customers were asking for features that already existed in the app. Solving discoverability with a conversational layer is better than adding more menus. The three-part answer format, acknowledging, answering and suggesting next actions, turns information into action, which is what makes it useful.</p><p>If I had one question, it would be how you scale beyond service requests into advice, for example investing, while staying within MiFID. That's where proactivity and personalisation meet regulation, and it's an area where my background could help.</p>`,w:"Use it before Tuesday so you can add one personal observation."},
+    {c:'AI',q:"How would you drive AI adoption among employees?",a:`<p>Start from the tasks people find painful, not from the tool. Pick a few teams, measure the time spent today, deploy a copilot for a specific task, and measure again. Train people on real cases, create champions in each team, and share the wins. And make it safe: clear rules on what data can be used, and reassurance that the goal is to free time for customers. Your leadership has said clearly that this is not about job cuts, which helps a lot.</p>`,w:"Links to the workforce transformation programme in the ad."},
+    {c:'AI',q:"How comfortable are you with data science tools and big data technologies?",a:`<p>I'm not a data scientist and I won't pretend to be. What I bring is enough technical literacy to work closely with them: I've done data analysis and Power BI in my career, I learned web development and databases at Le Wagon, and I understand the lifecycle of a model, from data preparation to training, evaluation, deployment and monitoring. I know what a pipeline, a data lake or a platform like Databricks is for, and I know the questions to ask when an estimate looks optimistic. I learn fast, and I'd invest in going deeper on your stack.</p>`,w:"Honest and confident. Don't overclaim."},
+    {c:'Closing',q:"Where do you see yourself in three to five years?",a:`<p>Leading larger AI programmes or a portfolio, with a track record of initiatives that went into production and created measurable value for Belfius customers and employees. I'd like to be one of the people who made Unlock 2030 real on the AI side.</p>`,w:"Ambitious but anchored in this role."},
+    {c:'Closing',q:"What are your salary expectations?",a:`<p>I'd like to understand the full package and the level of the role first. Based on my experience and the market for similar positions in Brussels, I'm confident we can find an agreement. [If pushed, give a range you have prepared, based on your current gross salary plus the increase you are targeting.]</p>`,w:"Prepare a number beforehand. Don't improvise it in the room."},
+    {c:'Closing',q:"Are you interviewing elsewhere?",a:`<p>Yes, I'm in a few processes, which is normal at this stage. This role is the one I'm most interested in, because it combines AI, delivery and banking at a scale few other institutions offer.</p>`,w:"Short, true, no names."},
+    {c:'Closing',q:"Do you have any questions for us?",a:`<ul><li>How is the Project Office organised today, and how many initiatives are in the portfolio?</li><li>What separates a successful initiative from one that stalls in the Lab?</li><li>Which initiatives would I work on first?</li><li>How do business lines bring ideas to the Lab, and who decides priorities?</li><li>Where is the Corporate AI Platform today, and how does it split work with product teams?</li><li>How are Risk, Compliance and the CORM officer involved in the lifecycle?</li><li>What would success look like for this person after six months?</li><li>What are the next steps in the process?</li></ul>`,w:"Always ask at least two. Pick based on what was already covered."}
+  ];
+  const cats=['All','Opening','Role','Experience','AI','Closing'];
+  const qaEl=document.getElementById('qa');
+  QA.forEach((it,i)=>{
+    const d=document.createElement('details');d.className='item';d.dataset.cat=it.c;d.id='qa'+(i+1);
+    d.innerHTML='<summary><span class="qq"></span><span class="cat">'+it.c+'</span></summary><div class="ans">'+it.a+'<div class="why"><b>Coach note.</b> '+it.w+'</div></div>';
+    d.querySelector('.qq').textContent=it.q;
+    qaEl.appendChild(d);
+  });
+  const fwrap=document.getElementById('filters');
+  cats.forEach(c=>{
+    const b=document.createElement('button');b.type='button';b.className='fchip';b.textContent=c==='All'?'All ('+QA.length+')':c;b.setAttribute('aria-pressed',String(c==='All'));
+    b.addEventListener('click',()=>{
+      fwrap.querySelectorAll('.fchip').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');
+      qaEl.querySelectorAll('details').forEach(d=>d.hidden=!(c==='All'||d.dataset.cat===c));
+    });
+    fwrap.appendChild(b);
+  });
+  const tog=document.getElementById('toggleall');
+  tog.addEventListener('click',()=>{
+    const open=tog.textContent==='Open all';
+    qaEl.querySelectorAll('details:not([hidden])').forEach(d=>d.open=open);
+    tog.textContent=open?'Close all':'Open all';
+  });
+
+  /* ---------- initial hash ---------- */
+  const h=(location.hash||'').slice(1);
+  if(h==='qcm'||h==='qa'||h==='syllabus') show(h,true);
+  else if(h && document.getElementById(h) && document.getElementById(h).closest('#p-syllabus')) goChapter(h);
+})();
+</script>
+</body>
+</html>
