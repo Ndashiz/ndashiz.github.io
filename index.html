@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* =========================================================
-     LA GOFFINERIE v2 — mock-up
+     LA GOFFINERIE v2.1
      Design language: "paper & shapes" — Bauhaus-leaning,
      hard edges, offset shadows, logo geometry as ornament.
      Locked to LIGHT scheme (phone dark-mode must not invert).
@@ -354,6 +354,81 @@
   .live-pill .pulse{width:8px;height:8px;border-radius:50%;background:#43d17c;animation:pulse 1.6s infinite;}
   @media(max-width:900px){.live-pill{bottom:84px;}}
 
+
+  /* ---------- founder photo ---------- */
+  img.avatar{width:120px;height:120px;object-fit:cover;display:block;padding:0;font-size:0;background:var(--paper-2);}
+  .avatar-fb{width:120px;height:120px;}
+
+  /* ---------- methodology illustration ---------- */
+  .journey-wrap{margin-top:36px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .journey-wrap::-webkit-scrollbar{display:none;}
+  .journey{display:block;width:100%;min-width:760px;height:auto;}
+  .journey .jpath{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-dasharray:7 8;stroke-linecap:round;opacity:.5;}
+  .journey .jn{opacity:.42;transition:opacity .35s ease;}
+  /* The zoom lives on an INNER group: a CSS transform on the outer one would replace its translate() attribute. */
+  .journey .jn .jin{transition:transform .45s cubic-bezier(.34,1.56,.64,1);transform-box:fill-box;transform-origin:center;}
+  .journey .jn.on{opacity:1;}
+  .journey .jn.on .jin{transform:scale(1.1);}
+  .journey .jn .shape{mix-blend-mode:multiply;}
+  .journey .jn .num{font-family:var(--disp);font-weight:800;font-size:21px;fill:#fff;text-anchor:middle;}
+  .journey .jn .num.dark{fill:var(--ink);}
+  .journey .jn .lbl{font-family:var(--disp);font-weight:700;font-size:13.5px;fill:var(--ink);text-anchor:middle;}
+  .journey .jn .ico{color:var(--ink-2);}
+  .journey .jn.on .ico{color:var(--blue);}
+  .journey .jn.on .lbl{fill:var(--blue);}
+  .step .n{transition:background .25s, color .25s, transform .3s cubic-bezier(.34,1.56,.64,1);}
+  .step.act .n{background:var(--ink);color:var(--yellow);transform:scale(1.1);}
+  .step h3 .ico{width:22px;height:22px;flex:none;color:var(--ink-2);}
+  .step.act h3 .ico{color:var(--blue);}
+  .step h3 > span[data-i18n]{display:contents;}
+  @media (prefers-reduced-motion: reduce){.journey .jn,.journey .jn .jin,.step .n{transition:none;}}
+
+  /* ---------- contact modal ---------- */
+  body.modal-open{overflow:hidden;}
+  .modal-bg{position:fixed;inset:0;z-index:200;background:rgba(21,21,21,.55);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;padding:20px;animation:bgIn .25s ease both;}
+  .modal-bg[hidden]{display:none;}
+  .modal-bg.closing{animation:bgOut .2s ease both;}
+  .modal-wrap{position:relative;width:min(640px,100%);}
+  .modal{position:relative;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow:auto;
+    background:#fff;border:2px solid var(--ink);border-radius:22px;padding:34px 32px 28px;
+    box-shadow:10px 10px 0 var(--blue);animation:mdIn .55s cubic-bezier(.22,1.4,.36,1) both;}
+  .modal-bg.closing .modal{animation:mdOut .2s ease both;}
+  .modal .kick{margin-bottom:10px;}
+  .modal h3{font-size:clamp(22px,3vw,30px);font-weight:800;line-height:1.15;max-width:20ch;padding-right:40px;}
+  .modal .lede{margin-top:10px;font-size:15.5px;color:var(--ink-2);max-width:52ch;}
+  .modal form{margin-top:22px;padding:0;border:0;box-shadow:none;border-radius:0;background:transparent;}
+  .modal-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;
+    border:2px solid var(--ink);background:#fff;cursor:pointer;font-size:22px;line-height:1;color:var(--ink);
+    font-family:var(--disp);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;}
+  .modal-close:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);}
+  .modal-wrap .geo{position:absolute;pointer-events:none;z-index:2;}
+  .modal-wrap .geo.mg1{--r:12deg;--o:1;right:-28px;top:-34px;width:110px;height:104px;animation:geoPop .6s .15s cubic-bezier(.22,1.4,.36,1) both;}
+  .modal-wrap .geo.mg2{--r:-16deg;--o:.5;left:-36px;bottom:-36px;width:90px;height:84px;animation:geoPop .6s .25s cubic-bezier(.22,1.4,.36,1) both;}
+  @keyframes bgIn{from{opacity:0}to{opacity:1}}
+  @keyframes bgOut{from{opacity:1}to{opacity:0}}
+  @keyframes mdIn{from{opacity:0;transform:translateY(46px) scale(.9)}to{opacity:1;transform:none}}
+  @keyframes mdOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(20px) scale(.96)}}
+  @keyframes geoPop{from{opacity:0;transform:scale(.2) rotate(60deg)}to{opacity:var(--o);transform:scale(1) rotate(var(--r))}}
+  @media(max-width:640px){.modal{padding:28px 20px 22px;border-radius:18px;} .modal-wrap .geo{display:none;} .modal-bg{padding:12px;}}
+  @media (prefers-reduced-motion: reduce){.modal,.modal-bg,.modal-wrap .geo{animation:none!important;}}
+
+  /* ---------- form states ---------- */
+  .honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;}
+  .form-ok{display:flex;gap:16px;align-items:flex-start;padding:8px 0;animation:evin .35s ease;}
+  .form-ok .tick{flex:none;width:52px;height:52px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;font-family:var(--disp);}
+  .form-ok h4{font-family:var(--disp);font-size:20px;font-weight:800;margin-bottom:6px;}
+  .form-ok p{color:var(--ink-2);font-size:15px;}
+  .btn[disabled]{opacity:.6;cursor:progress;transform:none!important;}
+  .form-note a{color:var(--ink);font-weight:600;}
+
+  /* ---------- footer links ---------- */
+  footer .flinks{display:flex;gap:18px;flex-wrap:wrap;}
+  footer .flinks a{font-family:var(--disp);font-weight:600;font-size:13px;color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent;}
+  footer .flinks a:hover{color:var(--ink);border-color:var(--blue);}
+
   /* ---------- reveal ---------- */
   .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
   .rv.on{opacity:1;transform:none;}
@@ -388,7 +463,7 @@
         <button id="lang-en" onclick="setLang('en')">EN</button>
         <button id="lang-fr" onclick="setLang('fr')">FR</button>
       </div>
-      <a class="btn primary" href="#contact" data-track="nav_book" data-i18n="nav_book">Book a call</a>
+      <a class="btn primary" href="#contact" data-track="nav_book" data-open="nav" data-i18n="nav_book">Book a call</a>
     </div>
   </div>
 </nav>
@@ -397,7 +472,7 @@
   <a href="#top" data-track="bb_home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg><span data-i18n="nav_home">Home</span></a>
   <a href="#work" data-track="bb_work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg><span data-i18n="nav_work">Work</span></a>
   <a href="#process" data-track="bb_process"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/></svg><span data-i18n="nav_process">Method</span></a>
-  <a href="#contact" data-track="bb_contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.7 0-3.3-.5-4.6-1.3L3 20l1.3-4.9A8.5 8.5 0 1 1 21 11.5z"/></svg><span data-i18n="nav_contact">Contact</span></a>
+  <a href="#contact" data-track="bb_contact" data-open="bottombar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.7 0-3.3-.5-4.6-1.3L3 20l1.3-4.9A8.5 8.5 0 1 1 21 11.5z"/></svg><span data-i18n="nav_contact">Contact</span></a>
 </nav>
 
 <!-- ================= HERO ================= -->
@@ -417,7 +492,7 @@
     <h1 data-i18n="hero_h1">I build websites that <span class="u">get to work.<svg viewBox="0 0 300 14" preserveAspectRatio="none"><path d="M4 10 Q 75 2, 150 8 T 296 6"/></svg></span></h1>
     <p class="sub" data-i18n="hero_sub">Most websites just sit there. Yours can talk to your Odoo, fill your calendar, summarise your client interactions with AI, and tell you exactly what visitors do. One fixed price. No subscriptions. <strong>You own it.</strong></p>
     <div class="ctas">
-      <a class="btn primary" href="#contact" data-track="cta_hero_book" data-i18n="hero_cta1">Book a free call</a>
+      <a class="btn primary" href="#contact" data-track="cta_hero_book" data-open="hero" data-i18n="hero_cta1">Book a free call</a>
       <a class="btn ghost" href="#work" data-track="cta_hero_work" data-i18n="hero_cta2">See our work ↓</a>
     </div>
     <p class="note" data-i18n="hero_note">30 minutes, no obligation. I'll tell you honestly what's worth building — and what it would be worth to your business.</p>
@@ -503,13 +578,68 @@
     <div class="kick rv" data-i18n="proc_kick">How it works</div>
     <h2 class="rv" data-i18n="proc_h2">Transparent from the first meeting to the handover.</h2>
     <p class="sub rv" data-i18n="proc_sub">You validate every step. You see everything. And you test the solution yourself — so by delivery day, you already know how to run it.</p>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="gi-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.5"/><circle cx="16.5" cy="9" r="3"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M15 15c3 0 5.5 2.2 5.5 5"/></symbol>
+      <symbol id="gi-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 14l2 2 4-4"/></symbol>
+      <symbol id="gi-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/><circle cx="15" cy="15" r="2.5"/></symbol>
+      <symbol id="gi-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="13" width="7.5" height="7"/><rect x="13" y="13" width="7.5" height="7"/><rect x="8.25" y="4" width="7.5" height="7"/></symbol>
+      <symbol id="gi-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l7 16 2.5-6.5L20 11z"/></symbol>
+      <symbol id="gi-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9"/><path d="M18 12v3"/><path d="M15 12v2"/></symbol>
+    </svg>
+    <div class="journey-wrap rv" aria-hidden="true">
+      <svg class="journey" viewBox="0 0 960 250" xmlns="http://www.w3.org/2000/svg" style="isolation:isolate">
+        <path class="jpath" d="M100 95 C176 95 176 155 252 155 S328 95 404 95 S480 155 556 155 S632 95 708 95 S784 155 860 155"/>
+        <g class="jn on" data-step="1" transform="translate(100,95)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-1" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <circle class="shape" r="31" fill="#E2452C"/><text class="num" y="8">1</text>
+          <text class="lbl" y="58" data-i18n="j1">We meet</text>
+          </g>
+        </g>
+        <g class="jn" data-step="2" transform="translate(252,155)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-2" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <rect class="shape" x="-30" y="-30" width="60" height="60" rx="15" fill="#2823EE"/><text class="num" y="8">2</text>
+          <text class="lbl" y="58" data-i18n="j2">Plan &amp; price</text>
+          </g>
+        </g>
+        <g class="jn" data-step="3" transform="translate(404,95)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-3" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <path class="shape" d="M0 -36 L36 26 L-36 26 Z" fill="#EDAF2F"/><text class="num dark" y="19">3</text>
+          <text class="lbl" y="58" data-i18n="j3">Design</text>
+          </g>
+        </g>
+        <g class="jn" data-step="4" transform="translate(556,155)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-4" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <circle class="shape" r="31" fill="#E2452C"/><text class="num" y="8">4</text>
+          <text class="lbl" y="58" data-i18n="j4">Build in the open</text>
+          </g>
+        </g>
+        <g class="jn" data-step="5" transform="translate(708,95)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-5" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <rect class="shape" x="-30" y="-30" width="60" height="60" rx="15" fill="#2823EE"/><text class="num" y="8">5</text>
+          <text class="lbl" y="58" data-i18n="j5">You test</text>
+          </g>
+        </g>
+        <g class="jn" data-step="6" transform="translate(860,155)">
+          <g class="jin">
+          <g transform="translate(0,-66)"><use href="#gi-6" class="ico" x="-14" y="-14" width="28" height="28"/></g>
+          <path class="shape" d="M0 -36 L36 26 L-36 26 Z" fill="#EDAF2F"/><text class="num dark" y="19">6</text>
+          <text class="lbl" y="58" data-i18n="j6">Handover</text>
+          </g>
+        </g>
+      </svg>
+    </div>
     <div class="steps">
-      <div class="step rv"><div class="n">1</div><div><h3 data-i18n="st1_h">We meet</h3><p data-i18n="st1_p">A free introduction call to understand your needs and how you work today.</p></div></div>
-      <div class="step rv"><div class="n">2</div><div><h3 data-i18n="st2_h">We agree on the plan <span class="flag">You validate</span></h3><p data-i18n="st2_p">I propose an approach, define exactly what will be delivered, and give you one fixed price. Nothing starts without your green light.</p></div></div>
-      <div class="step rv"><div class="n">3</div><div><h3 data-i18n="st3_h">We design</h3><p data-i18n="st3_p">Full architecture and documentation — the blueprint we both work from.</p></div></div>
-      <div class="step rv"><div class="n">4</div><div><h3 data-i18n="st4_h">We build, in the open</h3><p data-i18n="st4_p">You see progress throughout. Along the way, I train you to use — and change — what's being built.</p></div></div>
-      <div class="step rv"><div class="n">5</div><div><h3 data-i18n="st5_h">You test it</h3><p data-i18n="st5_p">You use the solution on real work before delivery. What doesn't fit gets fixed.</p></div></div>
-      <div class="step rv"><div class="n">6</div><div><h3 data-i18n="st6_h">Delivery &amp; handover</h3><p data-i18n="st6_p">It's yours — code, data, and the keys. You can run it, and with AI tools, even change it yourself.</p></div></div>
+      <div class="step rv" data-step="1"><div class="n">1</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-1"/></svg><span data-i18n="st1_h">We meet</span></h3><p data-i18n="st1_p">A free introduction call to understand your needs and how you work today.</p></div></div>
+      <div class="step rv" data-step="2"><div class="n">2</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-2"/></svg><span data-i18n="st2_h">We agree on the plan <span class="flag">You validate</span></span></h3><p data-i18n="st2_p">I propose an approach, define exactly what will be delivered, and give you one fixed price. Nothing starts without your green light.</p></div></div>
+      <div class="step rv" data-step="3"><div class="n">3</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-3"/></svg><span data-i18n="st3_h">We design</span></h3><p data-i18n="st3_p">Full architecture and documentation — the blueprint we both work from.</p></div></div>
+      <div class="step rv" data-step="4"><div class="n">4</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-4"/></svg><span data-i18n="st4_h">We build, in the open</span></h3><p data-i18n="st4_p">You see progress throughout. Along the way, I train you to use — and change — what's being built.</p></div></div>
+      <div class="step rv" data-step="5"><div class="n">5</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-5"/></svg><span data-i18n="st5_h">You test it</span></h3><p data-i18n="st5_p">You use the solution on real work before delivery. What doesn't fit gets fixed.</p></div></div>
+      <div class="step rv" data-step="6"><div class="n">6</div><div><h3><svg class="ico" aria-hidden="true"><use href="#gi-6"/></svg><span data-i18n="st6_h">Delivery &amp; handover</span></h3><p data-i18n="st6_p">It's yours — code, data, and the keys. You can run it, and with AI tools, even change it yourself.</p></div></div>
     </div>
     <div class="support rv">
       <div data-i18n="sup1"><b>1 month</b> of general support included</div>
@@ -525,7 +655,8 @@
     <div class="kick rv" data-i18n="ab_kick">Who's behind it</div>
     <h2 class="rv" data-i18n="ab_h2">Simon Goffin — founder</h2>
     <div class="about rv">
-      <div class="avatar">SG</div>
+      <img class="avatar" src="assets/simon.jpg" alt="Simon Goffin" width="120" height="120" loading="lazy" decoding="async"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar avatar-fb',textContent:'SG'}))">
       <div>
         <p data-i18n="ab_p1">By day, I'm a <strong>Product Manager at a leading Belgian private bank</strong>, where I lead cross-functional teams of 10+ senior experts digitising client onboarding — the flagship being a fully digital account opening in under 15 minutes. Before that: senior financial services consultant at <strong>EY</strong>.</p>
         <p data-i18n="ab_p2">I trained as a full-stack developer at <strong>Le Wagon</strong> and hold a Master in Management Science from <strong>Solvay</strong>. La Goffinerie is where both sides meet: enterprise discipline, applied to businesses like yours.</p>
@@ -547,9 +678,12 @@
       <a href="mailto:goffin.simon@gmail.com" data-track="cta_email">✉&nbsp; goffin.simon@gmail.com</a>
       <a href="https://www.linkedin.com/in/ndashiz/" target="_blank" rel="noopener" data-track="cta_linkedin"><span class="li-ic">in</span>&nbsp;<span data-i18n="ct_li"> Connect on LinkedIn</span></a>
     </div>
-    <form class="rv" id="leadform" action="https://formsubmit.co/goffin.simon@gmail.com" method="POST">
+    <form class="rv" id="leadform" data-via="inline" action="https://formsubmit.co/goffin.simon@gmail.com" method="POST">
       <input type="hidden" name="_subject" value="New automation lead — lagoffinerie">
       <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://ndashiz.be/?sent=1#contact">
+      <input class="honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="language" id="f-lang" value="en">
       <div class="frow">
         <div><label for="f-name" data-i18n="f_name">Your name</label><input id="f-name" name="name" type="text" placeholder="Jean Dupont" required></div>
@@ -570,10 +704,29 @@
       </div>
       <div><label for="f-message" data-i18n="f_msg">Anything else I should know? (optional)</label><textarea id="f-message" name="message" data-i18n-ph="f_msg_ph" placeholder="Tell me a bit about your business and what takes you the most time…"></textarea></div>
       <button class="btn primary" type="submit" data-track="cta_form_submit" data-i18n="f_send">Request my free call</button>
-      <p class="form-note" data-i18n="f_note">I reply personally within one business day. Your details are only used to contact you back.</p>
+      <p class="form-note" data-i18n="f_note">I reply personally within one business day. Your details are only used to contact you back. <a href="cookies.html">Privacy &amp; cookies.</a></p>
     </form>
   </div>
 </section>
+
+<!-- ================= CONTACT MODAL ================= -->
+<div class="modal-bg" id="leadmodal" hidden>
+  <div class="modal-wrap">
+    <svg class="geo mg1" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" style="isolation:isolate" aria-hidden="true">
+      <path d="M62 6 L102 80 L22 80 Z" fill="#EDAF2F"/><rect x="12" y="48" width="58" height="58" rx="15" fill="#2823EE"/><circle cx="90" cy="78" r="27" fill="#E2452C"/>
+    </svg>
+    <svg class="geo mg2" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" style="isolation:isolate" aria-hidden="true">
+      <path d="M62 6 L102 80 L22 80 Z" fill="#EDAF2F"/><rect x="12" y="48" width="58" height="58" rx="15" fill="#2823EE"/><circle cx="90" cy="78" r="27" fill="#E2452C"/>
+    </svg>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lm-title">
+      <button class="modal-close" type="button" id="lm-close" aria-label="Close">×</button>
+      <div class="kick" id="lm-kick">Let's talk</div>
+      <h3 id="lm-title">Book a free 30-minute call</h3>
+      <p class="lede" id="lm-lede">Tell me how you work today — I'll tell you honestly what's worth automating, and what it would be worth.</p>
+      <div id="lm-slot"></div>
+    </div>
+  </div>
+</div>
 
 <footer>
   <div class="wrap">
@@ -585,6 +738,7 @@
       </svg>
       La Goffinerie
     </span>
+    <nav class="flinks"><a href="cookies.html" data-track="foot_cookies" data-i18n="foot_cookies">Cookies &amp; privacy</a><a href="mailto:goffin.simon@gmail.com">goffin.simon@gmail.com</a></nav>
     <p data-i18n="foot">© 2026 La Goffinerie · Brussels &amp; Liège, Belgium · Built by hand (and a bit of AI).</p>
   </div>
 </footer>
@@ -662,7 +816,9 @@ const FR = {
   f_opt0:"Choisissez un moment", f_opt1:"Matin (9h–12h)", f_opt2:"Après-midi (12h–17h)", f_opt3:"Soir (17h–19h)", f_opt4:"N'importe quand",
   f_msg:"Autre chose à savoir ? (optionnel)", f_msg_ph:"Parlez-moi un peu de votre entreprise et de ce qui vous prend le plus de temps…",
   f_send:"Demander mon appel gratuit",
-  f_note:"Je réponds personnellement sous un jour ouvrable. Vos coordonnées ne servent qu'à vous recontacter.",
+  f_note:"Je réponds personnellement sous un jour ouvrable. Vos coordonnées ne servent qu'à vous recontacter. <a href=\"cookies.html\">Vie privée &amp; cookies.</a>",
+  j1:"On se rencontre", j2:"Plan &amp; prix", j3:"Conception", j4:"Construction ouverte", j5:"Vous testez", j6:"Remise des clés",
+  foot_cookies:"Cookies &amp; vie privée",
   foot:"© 2026 La Goffinerie · Bruxelles &amp; Liège, Belgique · Fait main (et un peu d'IA)."
 };
 const MARQ = {
@@ -694,7 +850,8 @@ function setLang(l, silent){
   document.getElementById('lang-fr').classList.toggle('active', LANG==='fr');
   const fl = document.getElementById('f-lang'); if(fl) fl.value = LANG;
   try{ localStorage.setItem('lg_lang', LANG); }catch(e){}
-  if(!silent && typeof trackEvent==='function') trackEvent('lang_switch',{lang:LANG});
+  // Not on the silent init call: the modal dictionary is declared further down the script.
+  if(!silent){ if(typeof track==='function') track('lang', LANG); if(typeof applyModalText==='function') applyModalText(); }
 }
 (function initLang(){
   let l = null;
@@ -708,57 +865,66 @@ function setLang(l, silent){
 })();
 
 /* =========================================================
-   JARVIS INTEGRATION — analytics events + lead capture
-   Endpoint base is live; the two PATHS below are marked
-   TODO: align them with Jarvis's actual API routes.
-   All network calls fail silently — the page never breaks
-   if Jarvis is unreachable.
+   JARVIS — audience + leads. Public routes on jarvis.ndashiz.be
+   (backend/src/routes/gf.ts). JSON is sent as text/plain so the
+   browser never preflights: Jarvis's global cors() answers every
+   preflight WITHOUT a grant, so a preflight can never succeed.
+   Fire-and-forget: the page never reads an answer, never waits,
+   never breaks. No cookie, no IP, no fingerprint. The referrer is
+   sent as a hostname and reduced to a bucket server-side.
    ========================================================= */
-const JARVIS = {
-  base: 'https://jarvis.ndashiz.be',
-  eventsPath: '/api/goffinerie/events',  // TODO: confirm route in Jarvis
-  leadsPath:  '/api/goffinerie/leads',   // TODO: confirm route in Jarvis
-  send: true                              // set false to disable posting
-};
-const SESSION = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2));
+const JARVIS = { base:'https://jarvis.ndashiz.be', events:'/api/gf/events', leads:'/api/gf/leads' };
+const IS_LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const DNT = navigator.doNotTrack==='1' || navigator.globalPrivacyControl===true;
+const SESSION = (function(){
+  const a='abcdefghijklmnopqrstuvwxyz0123456789', r=new Uint8Array(12); let s='';
+  if(crypto.getRandomValues) crypto.getRandomValues(r); else for(let i=0;i<r.length;i++) r[i]=Math.random()*256;
+  for(const b of r) s+=a[b%36]; return s;
+})();
+/* Simon's own devices declare themselves (?crew=goffinerie arms, ?crew=off disarms); localhost is always crew. */
+let CREW = IS_LOCAL;
+try{
+  const q=new URLSearchParams(location.search); const crew=q.get('crew');
+  if(crew==='goffinerie') localStorage.setItem('lg_crew','1');
+  else if(crew==='off') localStorage.removeItem('lg_crew');
+  if(crew!==null){ q.delete('crew'); history.replaceState(null,'',location.pathname+(q.toString()?'?'+q.toString():'')+location.hash); }
+  if(localStorage.getItem('lg_crew')==='1') CREW=true;
+}catch(e){}
+const CAMP = (function(){ try{ return new URLSearchParams(location.search).get('c')||undefined; }catch(e){ return undefined; } })();
+const REF_HOST = (function(){ try{ return document.referrer ? new URL(document.referrer).hostname : ''; }catch(e){ return ''; } })();
+const DEVICE = (function(){ const w=Math.min(screen.width||innerWidth, screen.height||innerHeight); return w<600?'mobile':(w<1024?'tablet':'desktop'); })();
 
-function post(path, payload){
-  if(!JARVIS.send) return;
+function send(path, obj, beacon){
+  const body = JSON.stringify(obj);
   try{
-    fetch(JARVIS.base + path, {
-      method:'POST', keepalive:true, mode:'cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    }).catch(()=>{});
+    if(beacon && navigator.sendBeacon){ navigator.sendBeacon(JARVIS.base+path, new Blob([body],{type:'text/plain'})); return; }
+    fetch(JARVIS.base+path,{method:'POST',keepalive:true,mode:'cors',credentials:'omit',headers:{'Content-Type':'text/plain'},body}).catch(()=>{});
   }catch(e){}
 }
-
-function trackEvent(event, meta){
-  const payload = {
-    event, meta: meta||{},
-    page:'goffinerie-home', lang:LANG, session:SESSION,
-    ts:new Date().toISOString(), ref:document.referrer||null
-  };
-  post(JARVIS.eventsPath, payload);
+/* Do Not Track / Global Privacy Control: one anonymous page count, nothing else. */
+function track(e, i, extra, beacon){
+  if(DNT && e!=='view') return;
+  const p = Object.assign({e, s:SESSION, l:LANG}, extra||{});
+  if(i!==undefined && i!==null) p.i = String(i);
+  if(CREW) p.k = 1;
+  if(DNT){ delete p.s; delete p.l; delete p.r; delete p.c; delete p.dv; }
+  send(JARVIS.events, p, beacon);
 }
 
 /* --- page view --- */
-trackEvent('page_view', {path: location.pathname});
+track('view', undefined, {r:REF_HOST, c:CAMP, dv:DEVICE});
 
 /* --- clicks on anything tagged data-track --- */
 document.addEventListener('click', e=>{
   const el = e.target.closest('[data-track]');
-  if(el) trackEvent('click', {id: el.getAttribute('data-track')});
+  if(el) track('click', el.getAttribute('data-track'));
 });
 
 /* --- sections viewed --- */
 const seen = new Set();
 const secObs = new IntersectionObserver(es=>{
   es.forEach(en=>{
-    if(en.isIntersecting && !seen.has(en.target.id)){
-      seen.add(en.target.id);
-      trackEvent('section_view', {id: en.target.id});
-    }
+    if(en.isIntersecting && !seen.has(en.target.id)){ seen.add(en.target.id); track('section', en.target.id); }
   });
 },{threshold:.3});
 document.querySelectorAll('section[id],header[id]').forEach(s=>secObs.observe(s));
@@ -767,22 +933,161 @@ document.querySelectorAll('section[id],header[id]').forEach(s=>secObs.observe(s)
 const marks = [25,50,75,100]; const hit = new Set();
 addEventListener('scroll', ()=>{
   const d = Math.round((scrollY + innerHeight) / document.body.scrollHeight * 100);
-  marks.forEach(m=>{ if(d>=m && !hit.has(m)){ hit.add(m); trackEvent('scroll_depth', {pct:m}); } });
+  marks.forEach(m=>{ if(d>=m && !hit.has(m)){ hit.add(m); track('scroll', m); } });
 },{passive:true});
 
-/* --- lead capture: form → Jarvis lead + FormSubmit email --- */
-document.getElementById('leadform').addEventListener('submit', ()=>{
-  const f = document.getElementById('leadform');
-  const lead = {
-    source:'goffinerie-home', lang:LANG, session:SESSION, ts:new Date().toISOString(),
-    name:f.name.value, email:f.email.value, subject:f.subject.value,
-    phone:f.phone.value||null, availability:f.availability.value,
-    message:f.message.value||null, status:'new'
-  };
-  post(JARVIS.leadsPath, lead);   // keepalive survives the navigation
-  trackEvent('form_submit', {form:'contact'});
-  // no preventDefault: FormSubmit still emails a copy
+/* --- time on site: visible seconds with a sign of life, heartbeat every 15 s, cumulative --- */
+let visSecs=0, lastAlive=Date.now(), lastSent=0;
+['pointermove','pointerdown','keydown','scroll','touchstart'].forEach(ev=>addEventListener(ev,()=>{ lastAlive=Date.now(); },{passive:true}));
+setInterval(()=>{
+  if(document.hidden) return;
+  if(Date.now()-lastAlive > 180000) return;           // abandoned tab: stop counting after 3 min
+  visSecs++;
+  if(visSecs-lastSent >= 15){ lastSent=visSecs; track('hb', undefined, {d:visSecs}); }
+  if(visSecs===60) maybeAutoPopup();
+},1000);
+function flushTime(){ if(visSecs>lastSent){ lastSent=visSecs; track('hb', undefined, {d:visSecs}, true); } }
+addEventListener('pagehide', flushTime);
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) flushTime(); });
+
+/* =========================================================
+   CONTACT MODAL — the permanent CTA opens the form in a pop-up;
+   after a minute on the page it opens by itself, once per tab.
+   The modal's form is a clone of the page form (ids prefixed m-).
+   ========================================================= */
+const LM = {
+  en:{ book:{kick:"Let's talk", h:"Book a free 30-minute call", lede:"Tell me how you work today — I'll tell you honestly what's worth automating, and what it would be worth."},
+       auto:{kick:"Still here?", h:"Need more information?", lede:"You can contact us — leave your details and I'll call you back within one business day, no obligation."} },
+  fr:{ book:{kick:"Parlons-en", h:"Réserver un appel gratuit de 30 minutes", lede:"Racontez-moi comment vous travaillez aujourd'hui — je vous dirai honnêtement ce qui vaut la peine d'être automatisé, et ce que ça peut rapporter."},
+       auto:{kick:"Toujours là ?", h:"Besoin de plus d'informations ?", lede:"Vous pouvez nous contacter — laissez vos coordonnées et je vous rappelle sous un jour ouvrable, sans engagement."} }
+};
+const FS = {
+  en:{ ok_h:n=>'Thanks'+(n?', '+n:'')+'!', ok_p:"I've got your request and will call you back within one business day.", sending:"Sending…" },
+  fr:{ ok_h:n=>'Merci'+(n?', '+n:'')+' !', ok_p:"J'ai bien reçu votre demande et je vous rappelle sous un jour ouvrable.", sending:"Envoi…" }
+};
+const FORMSUBMIT_AJAX = 'https://formsubmit.co/ajax/goffin.simon@gmail.com';
+const FORM_TEMPLATE = document.getElementById('leadform').cloneNode(true);
+const modalBg = document.getElementById('leadmodal');
+let VARIANT='book', lastFocus=null, MODAL_OPENED=false, SUBMITTED=false, POPPED=false;
+
+function applyModalText(){
+  const t=(LM[LANG]||LM.en)[VARIANT];
+  document.getElementById('lm-kick').textContent=t.kick;
+  document.getElementById('lm-title').textContent=t.h;
+  document.getElementById('lm-lede').textContent=t.lede;
+}
+function buildModalForm(){
+  const slot=document.getElementById('lm-slot');
+  if(slot.querySelector('form')) return;
+  slot.innerHTML='';
+  const f=FORM_TEMPLATE.cloneNode(true);
+  f.id='leadform-modal'; f.setAttribute('data-via','modal');
+  f.querySelectorAll('[id]').forEach(el=>{ el.id='m-'+el.id; });
+  f.querySelectorAll('label[for]').forEach(el=>{ el.setAttribute('for','m-'+el.getAttribute('for')); });
+  f.classList.remove('rv');
+  slot.appendChild(f);
+  setLang(LANG, true);   // the clone was taken before any translation
+  bindForm(f);
+}
+function openLead(variant, source){
+  VARIANT = variant==='auto' ? 'auto' : 'book';
+  buildModalForm(); applyModalText();
+  lastFocus=document.activeElement;
+  modalBg.hidden=false; modalBg.classList.remove('closing'); document.body.classList.add('modal-open');
+  MODAL_OPENED=true;
+  const first=modalBg.querySelector('input:not([type=hidden]):not(.honey)');
+  if(first && matchMedia('(hover: hover)').matches) setTimeout(()=>first.focus(), 400);
+  track('modal', source||'other');
+}
+function closeLead(){
+  if(modalBg.hidden) return;
+  modalBg.classList.add('closing');
+  const done=()=>{ modalBg.hidden=true; modalBg.classList.remove('closing'); document.body.classList.remove('modal-open'); if(lastFocus && lastFocus.focus) lastFocus.focus(); };
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) done(); else setTimeout(done, 200);
+}
+document.getElementById('lm-close').addEventListener('click', closeLead);
+modalBg.addEventListener('click', e=>{ if(e.target===modalBg) closeLead(); });
+addEventListener('keydown', e=>{ if(e.key==='Escape') closeLead(); });
+document.querySelectorAll('[data-open]').forEach(el=>{
+  el.addEventListener('click', e=>{ e.preventDefault(); openLead('book', el.getAttribute('data-open')); });
 });
+
+/* --- after a minute of real presence: "need more information?" — once per tab, never over a form being filled --- */
+function maybeAutoPopup(){
+  if(POPPED || SUBMITTED || MODAL_OPENED) return;
+  try{ if(sessionStorage.getItem('lg_pop')==='1') return; }catch(e){}
+  const a=document.activeElement;
+  if(a && a.closest && a.closest('form')){ setTimeout(maybeAutoPopup, 20000); return; }
+  POPPED=true; try{ sessionStorage.setItem('lg_pop','1'); }catch(e){}
+  openLead('auto','auto');
+  track('popup');
+}
+
+/* =========================================================
+   LEAD CAPTURE — Jarvis copy (keepalive) + FormSubmit e-mail over
+   AJAX; if that fails, a plain form POST (FormSubmit's own page).
+   ========================================================= */
+function showOk(f, name){
+  const t=FS[LANG]||FS.en;
+  const box=document.createElement('div'); box.className='form-ok';
+  box.innerHTML='<div class="tick">✓</div><div><h4></h4><p></p></div>';
+  box.querySelector('h4').textContent=t.ok_h((name||'').split(' ')[0]);
+  box.querySelector('p').textContent=t.ok_p;
+  f.replaceWith(box);
+  if(box.closest('#leadmodal')) setTimeout(closeLead, 4500);
+}
+function bindForm(f){
+  f.addEventListener('submit', async e=>{
+    e.preventDefault();
+    if(f.dataset.busy) return;
+    if(f.querySelector('[name=_honey]').value) return;            // a bot filled the hidden field
+    const via = f.getAttribute('data-via')||'inline';
+    const v = n=>(f.elements[n] && f.elements[n].value || '').trim();
+    const fields = { name:v('name'), email:v('email'), subject:v('subject'), phone:v('phone')||null, availability:v('availability'), message:v('message')||null };
+    send(JARVIS.leads, Object.assign({ s:SESSION, l:LANG, via }, fields));   // keepalive: survives a navigation
+    track('submit', via);
+    SUBMITTED=true;
+    const btn=f.querySelector('button[type=submit]'); const label=btn.innerHTML;
+    f.dataset.busy='1'; btn.disabled=true; btn.textContent=(FS[LANG]||FS.en).sending;
+    let ok=false;
+    try{
+      const res=await fetch(FORMSUBMIT_AJAX,{ method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({ name:fields.name, email:fields.email, subject:fields.subject, phone:fields.phone||'', availability:fields.availability,
+          message:fields.message||'', language:LANG, _subject:'New automation lead — lagoffinerie', _template:'table', _captcha:'false' }) });
+      const data=await res.json().catch(()=>({}));
+      ok = res.ok && String(data.success)!=='false';
+    }catch(err){ ok=false; }
+    if(ok){ showOk(f, fields.name); }
+    else { delete f.dataset.busy; btn.disabled=false; btn.innerHTML=label; f.submit(); }
+  });
+}
+bindForm(document.getElementById('leadform'));
+/* Back from FormSubmit's plain POST (no-JS or AJAX fallback): show the thanks in place. */
+try{
+  if(new URLSearchParams(location.search).get('sent')==='1'){
+    showOk(document.getElementById('leadform'), '');
+    history.replaceState(null,'',location.pathname+'#contact');
+    setTimeout(()=>document.getElementById('contact').scrollIntoView({block:'start'}), 50);
+  }
+}catch(e){}
+
+/* =========================================================
+   METHOD — the illustration follows the step being read
+   ========================================================= */
+const stepObs = new IntersectionObserver(es=>{
+  es.forEach(en=>{
+    if(!en.isIntersecting) return;
+    const n=en.target.getAttribute('data-step');
+    document.querySelectorAll('.journey .jn').forEach(g=>g.classList.toggle('on', g.getAttribute('data-step')===n));
+    document.querySelectorAll('.step').forEach(st=>st.classList.toggle('act', st===en.target));
+    const wrap=document.querySelector('.journey-wrap'), node=document.querySelector('.journey .jn[data-step="'+n+'"]');
+    if(wrap && node && wrap.scrollWidth>wrap.clientWidth+4){
+      try{ const b=node.getBBox(), scale=wrap.querySelector('svg').clientWidth/960;
+        wrap.scrollTo({left:Math.max(0,(b.x+b.width/2)*scale - wrap.clientWidth/2), behavior:'smooth'}); }catch(e){}
+    }
+  });
+},{rootMargin:'-42% 0px -42% 0px', threshold:0});
+document.querySelectorAll('.step[data-step]').forEach(st=>stepObs.observe(st));
 
 /* --- scroll reveal --- */
 const rvObs = new IntersectionObserver(es=>{
