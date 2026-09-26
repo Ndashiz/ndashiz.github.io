@@ -173,6 +173,32 @@ td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:now
 .qempty{max-width:820px;font-family:var(--display);color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:12px}
 .qempty[hidden]{display:none}
 
+/* set of 10 */
+.panel.inset .qbar,.panel.inset .catscore,.panel.inset .qlist,.panel.inset .qempty{display:none}
+#setpanel[hidden]{display:none}
+#setpanel{scroll-margin-top:70px}
+.setwrap{max-width:820px;display:grid;gap:16px}
+.sethead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:var(--display);font-size:14px}
+.sethead .stitle{font-weight:700;font-size:16px}
+.sethead .progress{flex:1 1 160px}
+.sethead .quit{margin-left:auto;background:none;border:0;color:var(--muted);cursor:pointer;font-family:var(--display);font-size:13px;text-decoration:underline;text-underline-offset:3px;padding:0}
+.sethead .quit:hover{color:var(--accent)}
+.setpick{font-family:var(--display);font-size:13px;color:var(--muted)}
+.setnav{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.setnav .hint{font-family:var(--display);font-size:13px;color:var(--muted)}
+.setres{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:18px}
+.setres .stitle{font-family:var(--display);font-weight:700;font-size:18px}
+.setres .big{font-family:var(--mono);font-size:44px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.setres .big small{font-size:16px;color:var(--muted);font-weight:400;font-family:var(--display);margin-left:6px}
+.setres h3{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:700}
+.setres .bycat{display:grid;gap:8px;font-family:var(--display);font-size:14px}
+.setres .bycat div{display:grid;grid-template-columns:1fr auto 120px;gap:10px;align-items:center}
+.setres .bycat .num{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.setres ul{margin:0;padding-left:20px;font-size:16px}
+.setres li{margin-bottom:8px}
+.setres li a{font-family:var(--display);font-size:14px;font-weight:600;white-space:nowrap}
+.setres p{margin:0;color:var(--muted);font-family:var(--display);font-size:15px}
+
 /* Q&A */
 .qa-intro{max-width:760px;margin-bottom:18px}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
@@ -616,8 +642,10 @@ footer.page{font-family:var(--display);font-size:13px;color:var(--muted);padding
         <span class="score" id="score">0 répondues · <b>0</b> correctes</span>
         <div class="progress" aria-hidden="true"><div id="bar"></div></div>
         <label class="chk"><input type="checkbox" id="onlywrong"> Seulement mes erreurs</label>
+        <button class="btn primary" id="startset" type="button" title="Dix questions, une à la fois. Les erreurs et les questions jamais vues passent en premier ; une catégorie sélectionnée restreint le tirage.">Série de 10</button>
         <button class="btn" id="resetq" type="button">Recommencer</button>
       </div>
+      <div id="setpanel" hidden></div>
       <section class="catscore" id="catscore" aria-label="Score par catégorie">
         <div class="cs-head">
           <h2>Score par catégorie</h2>
@@ -813,6 +841,123 @@ footer.page{font-family:var(--display);font-size:13px;color:var(--muted);padding
   document.getElementById('onlywrong').addEventListener('change',render);
   document.getElementById('resetq').addEventListener('click',()=>{state={};save();render();updateScore();});
   render();updateScore();
+
+  /* ---------- Série de 10 ---------- */
+  const SET_KEY='belfius-qcm-set-v1',SET_SIZE=10;
+  const qpanel=document.querySelector('#p-qcm .panel');
+  const setPanel=document.getElementById('setpanel');
+  let set=null;
+  try{set=JSON.parse(localStorage.getItem(SET_KEY)||'null')}catch(e){set=null}
+  if(set&&!(Array.isArray(set.ids)&&set.ids.length&&set.ans&&set.ids.every(i=>Q[i])))set=null;
+  function saveSet(){try{if(set)localStorage.setItem(SET_KEY,JSON.stringify(set));else localStorage.removeItem(SET_KEY)}catch(e){}}
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  function pickSet(){
+    const pool=Q.map((q,i)=>i).filter(i=>!catFilter||Q[i].c===catFilter);
+    const wrong=shuffle(pool.filter(i=>state[i]!==undefined&&state[i]!==Q[i].a));
+    const fresh=shuffle(pool.filter(i=>state[i]===undefined));
+    const good=shuffle(pool.filter(i=>state[i]===Q[i].a));
+    return wrong.concat(fresh,good).slice(0,SET_SIZE);
+  }
+  function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+  function startSet(){
+    set={ids:pickSet(),idx:0,ans:{},cat:catFilter||null};saveSet();renderSet();
+    window.scrollTo({top:document.querySelector('.tabs').offsetTop,behavior:'auto'});
+  }
+  function endSet(){set=null;saveSet();renderSet();render();updateScore();}
+  function renderSet(){
+    if(!set){qpanel.classList.remove('inset');setPanel.hidden=true;setPanel.innerHTML='';return;}
+    qpanel.classList.add('inset');setPanel.hidden=false;setPanel.innerHTML='';
+    const n=set.ids.length;
+    const wrap=el('div','setwrap');setPanel.appendChild(wrap);
+    if(set.idx>=n){renderSetResult(wrap);return;}
+    const qi=set.ids[set.idx],it=Q[qi],ans=set.ans[qi];
+    const head=el('div','sethead');
+    head.appendChild(el('span','stitle','Question {i} sur {n}'.replace('{i}',set.idx+1).replace('{n}',n)));
+    const prog=el('div','progress');prog.setAttribute('aria-hidden','true');const pb=el('div');pb.style.width=(set.idx/n*100)+'%';prog.appendChild(pb);head.appendChild(prog);
+    if(set.cat&&CH[set.cat])head.appendChild(el('span','setpick','Catégorie : '+CH[set.cat]));
+    const quit=el('button','quit','Quitter la série');quit.type='button';quit.addEventListener('click',endSet);head.appendChild(quit);
+    wrap.appendChild(head);
+    const card=el('div','q');card.id='setcard';
+    card.appendChild(el('span','chiptag',CH[it.c]));
+    const h=el('h3');h.appendChild(el('span','n',String(qi+1).padStart(2,'0')));h.appendChild(el('span','',it.q));card.appendChild(h);
+    const opts=el('div','opts');
+    it.o.forEach((txt,j)=>{
+      const b=el('button','opt');b.type='button';b.appendChild(el('span','k',letters[j]));b.appendChild(el('span','',txt));
+      if(ans!==undefined){b.disabled=true;if(j===it.a)b.classList.add('right');else if(j===ans)b.classList.add('wrong');}
+      b.addEventListener('click',()=>answerSet(j));
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    if(ans!==undefined){
+      const ok=ans===it.a;
+      const fb=el('div','fb');
+      const p=el('p');p.appendChild(el('span','verdict '+(ok?'ok':'ko'),ok?'Correct.':'Pas tout à fait.'));p.appendChild(document.createTextNode(' '));p.appendChild(el('span','ex',it.e));fb.appendChild(p);
+      const a=el('a','','→ Revoir le chapitre « {c} »'.replace('{c}',CH[it.c]));a.href='#'+it.c;a.dataset.goto=it.c;fb.appendChild(a);
+      card.appendChild(fb);
+    }
+    wrap.appendChild(card);
+    const nav=el('div','setnav');
+    if(ans!==undefined){
+      const nb=el('button','btn primary',set.idx+1<n?'Question suivante →':'Voir le résultat →');nb.type='button';nb.id='setnext';
+      nb.addEventListener('click',nextSet);nav.appendChild(nb);
+      nav.appendChild(el('span','hint','Entrée ou → pour la question suivante'));
+    }else{
+      nav.appendChild(el('span','hint','Touches 1 à 4 (ou A à D) pour répondre'));
+    }
+    wrap.appendChild(nav);
+  }
+  function answerSet(j){
+    if(!set||set.idx>=set.ids.length)return;
+    const qi=set.ids[set.idx];if(set.ans[qi]!==undefined)return;
+    set.ans[qi]=j;state[qi]=j;save();saveSet();updateScore();renderSet();
+  }
+  function nextSet(){
+    if(!set||set.idx>=set.ids.length)return;
+    const qi=set.ids[set.idx];if(set.ans[qi]===undefined)return;
+    set.idx++;saveSet();renderSet();
+    if(setPanel.getBoundingClientRect().top<0)setPanel.scrollIntoView({block:'start'});
+  }
+  function renderSetResult(wrap){
+    const n=set.ids.length;
+    const good=set.ids.filter(qi=>set.ans[qi]===Q[qi].a).length;
+    const pct=Math.round(good/n*100);
+    const res=el('div','setres');
+    res.appendChild(el('div','stitle','Série terminée'));
+    const big=el('div','big',good+' / '+n);big.appendChild(el('small','','{p} % de bonnes réponses'.replace('{p}',pct)));res.appendChild(big);
+    const cats={};set.ids.forEach(qi=>{const c=Q[qi].c;cats[c]=cats[c]||{t:0,g:0};cats[c].t++;if(set.ans[qi]===Q[qi].a)cats[c].g++;});
+    const bc=el('div');bc.appendChild(el('h3','','Par catégorie'));const grid=el('div','bycat');
+    Object.keys(CH).filter(c=>cats[c]).forEach(c=>{
+      const row=el('div');row.appendChild(el('span','',CH[c]));row.appendChild(el('span','num',cats[c].g+'/'+cats[c].t));
+      const bar=el('span','cs-bar');const g=el('span','g');g.style.width=(cats[c].g/cats[c].t*100)+'%';const b=el('span','b');b.style.width=((cats[c].t-cats[c].g)/cats[c].t*100)+'%';bar.appendChild(g);bar.appendChild(b);row.appendChild(bar);
+      grid.appendChild(row);
+    });
+    bc.appendChild(grid);res.appendChild(bc);
+    const missed=set.ids.filter(qi=>set.ans[qi]!==Q[qi].a);
+    const mw=el('div');mw.appendChild(el('h3','','À revoir'));
+    if(!missed.length){mw.appendChild(el('p','','Sans faute, rien à revoir.'));}
+    else{
+      const ul=el('ul');
+      missed.forEach(qi=>{const li=el('li');li.appendChild(el('span','',String(qi+1).padStart(2,'0')+' · '+Q[qi].q+' '));const a=el('a','','→ Revoir « {c} »'.replace('{c}',CH[Q[qi].c]));a.href='#'+Q[qi].c;a.dataset.goto=Q[qi].c;li.appendChild(a);ul.appendChild(li);});
+      mw.appendChild(ul);
+    }
+    res.appendChild(mw);
+    const nav=el('div','setnav');
+    const again=el('button','btn primary','Nouvelle série de 10');again.type='button';again.addEventListener('click',startSet);nav.appendChild(again);
+    const back=el('button','btn','Retour à la liste complète');back.type='button';back.addEventListener('click',endSet);nav.appendChild(back);
+    res.appendChild(nav);
+    wrap.appendChild(res);
+  }
+  document.getElementById('startset').addEventListener('click',startSet);
+  document.addEventListener('keydown',e=>{
+    if(!set||panels.qcm.hidden||setPanel.hidden)return;
+    if(e.target&&/^(input|textarea|select)$/i.test(e.target.tagName))return;
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    const k=e.key;let j=-1;
+    if(/^[1-4]$/.test(k))j=+k-1;else if(/^[a-dA-D]$/.test(k))j=k.toUpperCase().charCodeAt(0)-65;
+    if(j>=0){const b=setPanel.querySelectorAll('.opt')[j];if(b&&!b.disabled){e.preventDefault();b.click();}return;}
+    if(k==='Enter'||k==='ArrowRight'){const nb=document.getElementById('setnext');if(nb){e.preventDefault();nb.click();}}
+  });
+  if(set)renderSet();
 
   /* ---------- Q&A data ---------- */
   const QA=[
