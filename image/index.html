@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HEIC → JPG</title>
+<meta name="description" content="Convertir des photos HEIC (iPhone) en JPG directement dans le navigateur. Rien n’est envoyé : tout se passe sur l’appareil.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f5cff'/%3E%3Cpath d='M8 21l5-6 4 4 3-3 4 5z' fill='%23fff'/%3E%3Ccircle cx='21' cy='11' r='2.5' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-2: #efede7;
+    --ink: #16171b;
+    --ink-2: #565862;
+    --ink-3: #8a8c95;
+    --line: #e1ded5;
+    --accent: #2f5cff;
+    --accent-2: #2448d6;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(47, 92, 255, .08);
+    --ok: #17804a;
+    --err: #c2352b;
+    --shadow: 0 1px 2px rgba(20, 20, 30, .05), 0 10px 28px -14px rgba(20, 20, 30, .22);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e0f12;
+      --surface: #17181d;
+      --surface-2: #202128;
+      --ink: #ecedf1;
+      --ink-2: #a4a7b2;
+      --ink-3: #6e717c;
+      --line: #2a2c34;
+      --accent: #7d9bff;
+      --accent-2: #9bb2ff;
+      --accent-ink: #0b0d14;
+      --accent-soft: rgba(125, 155, 255, .10);
+      --ok: #4cc584;
+      --err: #ff6b5e;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -14px rgba(0, 0, 0, .7);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100vh; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 40px 16px 28px; }
+
+  header { margin-bottom: 26px; }
+  .crumb { font-size: 13px; color: var(--ink-3); letter-spacing: .02em; }
+  .crumb a { color: inherit; text-decoration: none; }
+  .crumb a:hover { color: var(--ink); }
+  h1 {
+    margin-top: 6px; font-size: clamp(34px, 7vw, 48px); line-height: 1.05;
+    font-weight: 750; letter-spacing: -.035em;
+  }
+  h1 .arrow { color: var(--accent); font-weight: 500; padding: 0 .08em; }
+  .lede { margin-top: 12px; max-width: 54ch; color: var(--ink-2); font-size: 16px; }
+  .lede svg { width: 15px; height: 15px; vertical-align: -2px; margin-right: 4px; color: var(--ok); }
+
+  /* ---------- drop zone ---------- */
+  .drop {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    min-height: 210px; padding: 28px 20px; text-align: center; cursor: pointer;
+    background: var(--surface); border: 1.5px dashed var(--line); border-radius: var(--radius);
+    transition: border-color .15s, background .15s, transform .15s;
+  }
+  .drop:hover, .drop:focus-visible, body.dragging .drop {
+    border-color: var(--accent); background: var(--accent-soft); outline: none;
+  }
+  body.dragging .drop { transform: scale(1.01); }
+  .drop .ico {
+    width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 6px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .drop .ico svg { width: 26px; height: 26px; }
+  .drop strong { font-size: 18px; font-weight: 650; letter-spacing: -.01em; }
+  .drop span { color: var(--ink-2); font-size: 14px; }
+  .drop kbd {
+    font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 2px 5px; border-radius: 5px;
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2);
+  }
+
+  /* ---------- options ---------- */
+  .opts {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+    margin-top: 14px; padding: 14px 18px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius);
+  }
+  .opt { display: flex; align-items: center; gap: 10px; }
+  .opt > label:first-child { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .opt input[type=range] { width: 120px; accent-color: var(--accent); }
+  .opt output { min-width: 2.2em; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .opt select {
+    padding: 6px 28px 6px 10px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface-2);
+    appearance: none; -webkit-appearance: none; cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+    background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  .chk { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: var(--ink-2); user-select: none; }
+  .chk input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+  .chk.off { opacity: .45; pointer-events: none; }
+  .reapply {
+    margin-left: auto; padding: 6px 12px; border-radius: 9px; border: 1px solid var(--accent);
+    background: transparent; color: var(--accent); font-size: 13.5px; font-weight: 600; cursor: pointer;
+  }
+  .reapply:hover { background: var(--accent-soft); }
+
+  /* ---------- list ---------- */
+  .list { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .row {
+    display: grid; grid-template-columns: 52px minmax(0, 1fr) auto auto; align-items: center; gap: 14px;
+    padding: 10px 10px 10px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    animation: in .2s ease-out;
+  }
+  @keyframes in { from { opacity: 0; transform: translateY(4px); } }
+  .thumb {
+    width: 52px; height: 52px; border-radius: 9px; overflow: hidden; border: 0; padding: 0; cursor: zoom-in;
+    background: var(--surface-2); display: grid; place-items: center; color: var(--ink-3);
+  }
+  .thumb:disabled { cursor: default; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb svg { width: 20px; height: 20px; }
+  .info { min-width: 0; }
+  .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub { margin-top: 2px; font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+  .sub .tag {
+    display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 5px; font-size: 11.5px; line-height: 18px;
+    background: var(--surface-2); color: var(--ink-2);
+  }
+  .row.error .sub { color: var(--err); white-space: normal; }
+  .state { font-size: 13px; color: var(--ink-3); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .spin {
+    width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--accent);
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .dl {
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none;
+  }
+  .dl:hover { background: var(--accent); color: var(--accent-ink); }
+  .dl svg, .btn svg { width: 15px; height: 15px; flex: none; }
+  .x {
+    width: 30px; height: 30px; border-radius: 8px; border: 0; background: transparent; color: var(--ink-3);
+    cursor: pointer; display: grid; place-items: center;
+  }
+  .x:hover { background: var(--surface-2); color: var(--ink); }
+  .x svg { width: 14px; height: 14px; }
+  .end { display: flex; align-items: center; gap: 4px; }
+
+  /* ---------- bottom bar ---------- */
+  .bar {
+    position: sticky; bottom: 14px; z-index: 5; margin-top: 16px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 12px 12px 12px 18px; border-radius: var(--radius);
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .bar[hidden] { display: none; }
+  .summary { font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .summary b { color: var(--ink); font-weight: 650; }
+  .actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 10px; white-space: nowrap;
+    border: 1px solid var(--line); background: var(--surface); font-weight: 600; font-size: 14px; cursor: pointer;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn[hidden] { display: none; }
+
+  footer {
+    max-width: 780px; margin: 0 auto; padding: 8px 16px 40px; font-size: 12.5px; color: var(--ink-3);
+  }
+  footer p + p { margin-top: 4px; }
+  footer a { color: inherit; }
+
+  /* ---------- drag overlay, toast, viewer ---------- */
+  .dropover {
+    position: fixed; inset: 0; z-index: 20; pointer-events: none; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--bg) 70%, transparent); opacity: 0; transition: opacity .12s;
+  }
+  .dropover div {
+    padding: 18px 26px; border-radius: 16px; border: 2px dashed var(--accent);
+    background: var(--surface); color: var(--accent); font-weight: 650; font-size: 18px; box-shadow: var(--shadow);
+  }
+  body.dragging .dropover { opacity: 1; }
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; z-index: 30; transform: translate(-50%, 20px);
+    padding: 10px 16px; border-radius: 10px; background: var(--ink); color: var(--bg);
+    font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; max-width: calc(100% - 32px);
+  }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+  dialog.viewer {
+    margin: auto; padding: 0; border: 0; background: transparent; max-width: 94vw; max-height: 92vh; color: #fff;
+  }
+  dialog.viewer::backdrop { background: rgba(8, 9, 12, .86); }
+  dialog.viewer img { display: block; max-width: 94vw; max-height: calc(92vh - 40px); border-radius: 8px; margin: 0 auto; }
+  dialog.viewer p { margin-top: 10px; text-align: center; font-size: 13px; color: rgba(255, 255, 255, .7); }
+
+  @media (max-width: 560px) {
+    .wrap { padding-top: 26px; }
+    .drop { min-height: 170px; }
+    .drop .kb { display: none; }
+    .opts { gap: 12px 16px; padding: 14px; }
+    .opt input[type=range] { width: 100px; }
+    .reapply { margin-left: 0; }
+    .row { grid-template-columns: 46px minmax(0, 1fr) auto; gap: 10px; }
+    .thumb { width: 46px; height: 46px; }
+    .row .state { grid-column: 2 / 4; grid-row: 2; }
+    .row .state:empty { display: none; }
+    .dl span { display: none; }
+    .dl { padding: 8px; }
+    .bar { padding: 12px; }
+    .actions { margin-left: 0; width: 100%; }
+    .actions .btn { justify-content: center; }
+    .actions .btn.primary { flex: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="crumb"><a href="/">ndashiz.be</a> / image</div>
+    <h1>HEIC <span class="arrow">→</span> JPG</h1>
+    <p class="lede">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Convertir les photos d’iPhone en JPG lisibles partout. La conversion se fait dans ce navigateur&nbsp;: aucune photo n’est envoyée.
+    </p>
+  </header>
+
+  <label class="drop" id="drop" tabindex="0">
+    <input type="file" id="file" class="sr" multiple accept="image/heic,image/heif,.heic,.heif,.hif,image/*">
+    <div class="ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+    </div>
+    <strong>Glisser des photos ici</strong>
+    <span>ou cliquer pour choisir — HEIC, HEIF, mais aussi PNG, WebP, AVIF…</span>
+    <span class="kb">Un dossier entier marche aussi, et <kbd>⌘V</kbd> / <kbd>Ctrl V</kbd> colle une image.</span>
+  </label>
+
+  <section class="opts" aria-label="Réglages">
+    <div class="opt">
+      <label for="q">Qualité</label>
+      <input type="range" id="q" min="50" max="100" step="1" value="90">
+      <output id="qv" for="q">90</output>
+    </div>
+    <div class="opt">
+      <label for="size">Taille</label>
+      <select id="size">
+        <option value="0">Originale</option>
+        <option value="3840">3840 px</option>
+        <option value="2560">2560 px</option>
+        <option value="2048">2048 px</option>
+        <option value="1600">1600 px</option>
+        <option value="1080">1080 px</option>
+      </select>
+    </div>
+    <label class="chk" title="Date de prise de vue, appareil, réglages photo (EXIF)"><input type="checkbox" id="meta" checked> Garder date et appareil</label>
+    <label class="chk" id="gpsWrap"><input type="checkbox" id="gps"> Garder la position GPS</label>
+    <button class="reapply" id="reapply" type="button" hidden></button>
+  </section>
+
+  <section class="list" id="list" aria-live="polite"></section>
+
+  <div class="bar" id="bar" hidden>
+    <div class="summary" id="summary"></div>
+    <div class="actions">
+      <button class="btn" id="clear" type="button">Vider</button>
+      <button class="btn" id="share" type="button" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+        Partager
+      </button>
+      <button class="btn primary" id="zip" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span id="zipLabel">Tout télécharger</span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Décodage HEIC&nbsp;: libheif 1.23.5 via <a href="https://github.com/hoppergee/heic-to" rel="noopener">heic-to</a> (<a href="heic-to.LICENSE.txt">LGPL-3.0</a>), chargé seulement si le navigateur ne lit pas le HEIC lui-même.</p>
+  <p>Pas de cookie, pas de mesure d’audience&nbsp;; seuls les réglages sont retenus dans ce navigateur.</p>
+</footer>
+
+<div class="dropover" aria-hidden="true"><div>Déposer pour convertir</div></div>
+<div class="toast" id="toast" role="status"></div>
+<dialog class="viewer" id="viewer"><img alt=""><p></p></dialog>
+
+<script>
+(() => {
+'use strict';
+
+/* IMAGE-PURE-BEGIN — no DOM, no network: HEIF/JPEG metadata, EXIF patching, ZIP. Tested under Node. */
+const TYPE_SIZE = [0, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8];
+const HEIF_BRANDS = new Set(['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'hevm', 'hevs', 'mif1', 'mif2', 'msf1', 'avif', 'avis']);
+
+const fourcc = (u8, p) => String.fromCharCode(u8[p], u8[p + 1], u8[p + 2], u8[p + 3]);
+const u16be = (u8, p) => (u8[p] << 8) | u8[p + 1];
+const u32be = (u8, p) => ((u8[p] << 24) | (u8[p + 1] << 16) | (u8[p + 2] << 8) | u8[p + 3]) >>> 0;
+const uN = (u8, p, n) => { let v = 0; for (let i = 0; i < n; i++) v = v * 256 + u8[p + i]; return v; };
+
+function boxes(u8, start, end) {
+  const out = [];
+  let p = start;
+  while (p + 8 <= end) {
+    let size = u32be(u8, p), hdr = 8;
+    const type = fourcc(u8, p + 4);
+    if (size === 1) { if (p + 16 > end) break; size = uN(u8, p + 8, 8); hdr = 16; }
+    else if (size === 0) size = end - p;
+    if (size < hdr || p + size > end) break;
+    out.push({ type, start: p + hdr, end: p + size });
+    p += size;
+  }
+  return out;
+}
+
+function sniffHeif(u8) {
+  if (u8.length < 16 || fourcc(u8, 4) !== 'ftyp') return false;
+  const end = Math.min(u32be(u8, 0), u8.length);
+  if (HEIF_BRANDS.has(fourcc(u8, 8))) return true;
+  for (let p = 16; p + 4 <= end; p += 4) if (HEIF_BRANDS.has(fourcc(u8, p))) return true;
+  return false;
+}
+
+const isTiff = (u8, s) =>
+  (u8[s] === 0x49 && u8[s + 1] === 0x49 && u8[s + 2] === 0x2a && u8[s + 3] === 0) ||
+  (u8[s] === 0x4d && u8[s + 1] === 0x4d && u8[s + 2] === 0 && u8[s + 3] === 0x2a);
+
+// HEIF "Exif" item payload = u32 offset to the TIFF header, then (usually) "Exif\0\0" + TIFF.
+function tiffFromExifItem(buf) {
+  if (buf.length < 12) return null;
+  const s = 4 + u32be(buf, 0);
+  if (s + 8 <= buf.length && isTiff(buf, s)) return buf.slice(s);
+  for (let i = 4; i < Math.min(40, buf.length - 8); i++) if (isTiff(buf, i)) return buf.slice(i);
+  return null;
+}
+
+// Exif (TIFF block) + ICC profile of a HEIF/AVIF file. Never throws on garbage, returns nulls.
+function heifMeta(u8) {
+  const res = { exif: null, icc: null };
+  try {
+    const meta = boxes(u8, 0, u8.length).find(b => b.type === 'meta');
+    if (!meta) return res;
+    const kids = boxes(u8, meta.start + 4, meta.end);
+    const get = t => kids.find(b => b.type === t);
+
+    const iprp = get('iprp');
+    const ipco = iprp && boxes(u8, iprp.start, iprp.end).find(b => b.type === 'ipco');
+    if (ipco) {
+      for (const b of boxes(u8, ipco.start, ipco.end)) {
+        if (b.type !== 'colr' || b.end - b.start <= 4) continue;
+        const kind = fourcc(u8, b.start);
+        if (kind === 'prof' || kind === 'rICC') { res.icc = u8.slice(b.start + 4, b.end); break; }
+      }
+    }
+
+    const iinf = get('iinf'), iloc = get('iloc');
+    if (!iinf || !iloc) return res;
+    let p = iinf.start;
+    p += 4 + (u8[p] === 0 ? 2 : 4);
+    let exifId = -1;
+    for (const b of boxes(u8, p, iinf.end)) {
+      const v = u8[b.start];
+      if (b.type !== 'infe' || v < 2) continue;
+      let q = b.start + 4;
+      const id = v === 2 ? u16be(u8, q) : u32be(u8, q);
+      q += (v === 2 ? 2 : 4) + 2;
+      if (fourcc(u8, q) === 'Exif') { exifId = id; break; }
+    }
+    if (exifId < 0) return res;
+
+    p = iloc.start;
+    const v = u8[p]; p += 4;
+    const offSize = u8[p] >> 4, lenSize = u8[p] & 15, baseSize = u8[p + 1] >> 4, idxSize = v >= 1 ? u8[p + 1] & 15 : 0;
+    p += 2;
+    const count = v < 2 ? u16be(u8, p) : u32be(u8, p);
+    p += v < 2 ? 2 : 4;
+    for (let i = 0; i < count && p < iloc.end; i++) {
+      const id = v < 2 ? u16be(u8, p) : u32be(u8, p);
+      p += v < 2 ? 2 : 4;
+      let method = 0;
+      if (v >= 1) { method = u16be(u8, p) & 15; p += 2; }
+      p += 2;                                   // data_reference_index
+      const base = uN(u8, p, baseSize); p += baseSize;
+      const nExt = u16be(u8, p); p += 2;
+      const parts = [];
+      for (let e = 0; e < nExt; e++) {
+        p += idxSize;
+        const off = uN(u8, p, offSize); p += offSize;
+        const len = uN(u8, p, lenSize); p += lenSize;
+        parts.push([base + off, len]);
+      }
+      if (id !== exifId) continue;
+      let origin = 0;
+      if (method === 1) { const idat = get('idat'); if (!idat) return res; origin = idat.start; }
+      else if (method !== 0) return res;
+      const total = parts.reduce((s, x) => s + x[1], 0);
+      if (!total || parts.some(x => !x[1] || origin + x[0] + x[1] > u8.length)) return res;
+      const buf = new Uint8Array(total);
+      let w = 0;
+      for (const [o, l] of parts) { buf.set(u8.subarray(origin + o, origin + o + l), w); w += l; }
+      res.exif = tiffFromExifItem(buf);
+      break;
+    }
+  } catch (e) { /* malformed box tree: convert without metadata */ }
+  return res;
+}
+
+const isJpeg = u8 => u8[0] === 0xff && u8[1] === 0xd8;
+
+// Exif TIFF block of a JPEG (APP1 "Exif\0\0").
+function jpegExif(u8) {
+  if (!isJpeg(u8)) return null;
+  let p = 2;
+  while (p + 4 <= u8.length && u8[p] === 0xff) {
+    const m = u8[p + 1];
+    if (m === 0xff) { p++; continue; }
+    if (m === 0xda || m === 0xd9) break;
+    const len = u16be(u8, p + 2);
+    if (m === 0xe1 && len > 14 && fourcc(u8, p + 4) === 'Exif' && u8[p + 8] === 0 && isTiff(u8, p + 10)) {
+      return u8.slice(p + 10, p + 2 + len);
+    }
+    p += 2 + len;
+  }
+  return null;
+}
+
+// Copy of an Exif TIFF block fit for the new JPEG: orientation reset (pixels are already upright),
+// pixel dimensions updated, thumbnail IFD unlinked, and the GPS IFD wiped unless keepGps.
+function patchExif(src, o) {
+  if (!src || src.length < 8 || !isTiff(src, 0)) return null;
+  const t = src.slice();
+  const dv = new DataView(t.buffer);
+  const le = t[0] === 0x49;
+  const r16 = q => dv.getUint16(q, le), r32 = q => dv.getUint32(q, le);
+  const w16 = (q, x) => dv.setUint16(q, x, le), w32 = (q, x) => dv.setUint32(q, x, le);
+  const ok = (q, n) => q >= 8 && q + n <= t.length;
+  const setNum = (e, x) => { const ty = r16(e + 2); if (ty === 3) w16(e + 8, x); else if (ty === 4) w32(e + 8, x); };
+
+  const ifd0 = r32(4);
+  if (!ok(ifd0, 2)) return null;
+  const n = r16(ifd0);
+  const entriesEnd = ifd0 + 2 + n * 12;
+  if (!ok(ifd0, 2 + n * 12 + 4)) return null;
+  let exifIfd = 0, gpsIfd = 0, gpsIdx = -1;
+  for (let i = 0; i < n; i++) {
+    const e = ifd0 + 2 + i * 12, tag = r16(e);
+    if (tag === 0x0112) w16(e + 8, 1);
+    else if (tag === 0x0100) setNum(e, o.width);
+    else if (tag === 0x0101) setNum(e, o.height);
+    else if (tag === 0x8769) exifIfd = r32(e + 8);
+    else if (tag === 0x8825) { gpsIfd = r32(e + 8); gpsIdx = i; }
+  }
+  w32(entriesEnd, 0);
+
+  if (exifIfd && ok(exifIfd, 2)) {
+    const m = r16(exifIfd);
+    if (ok(exifIfd, 2 + m * 12)) {
+      for (let i = 0; i < m; i++) {
+        const e = exifIfd + 2 + i * 12, tag = r16(e);
+        if (tag === 0xa002) setNum(e, o.width);
+        else if (tag === 0xa003) setNum(e, o.height);
+      }
+    }
+  }
+
+  const hadGps = gpsIdx >= 0;
+  if (hadGps && !o.keepGps) {
+    if (ok(gpsIfd, 2)) {
+      const m = r16(gpsIfd);
+      if (ok(gpsIfd, 2 + m * 12 + 4)) {
+        for (let i = 0; i < m; i++) {
+          const e = gpsIfd + 2 + i * 12;
+          const size = (TYPE_SIZE[r16(e + 2)] || 1) * r32(e + 4);
+          if (size > 4) { const at = r32(e + 8); if (ok(at, size)) t.fill(0, at, at + size); }
+        }
+        t.fill(0, gpsIfd, gpsIfd + 2 + m * 12 + 4);
+      }
+    }
+    const e = ifd0 + 2 + gpsIdx * 12;
+    t.copyWithin(e, e + 12, entriesEnd + 4);     // later entries + next-IFD pointer move up one slot
+    t.fill(0, entriesEnd - 8, entriesEnd + 4);
+    w16(ifd0, n - 1);
+  }
+  return { tiff: t, hadGps };
+}
+
+function concat(parts) {
+  const out = new Uint8Array(parts.reduce((s, a) => s + a.length, 0));
+  let w = 0;
+  for (const a of parts) { out.set(a, w); w += a.length; }
+  return out;
+}
+
+function segment(marker, ...chunks) {
+  const body = concat(chunks);
+  const h = new Uint8Array([0xff, marker, (body.length + 2) >> 8, (body.length + 2) & 255]);
+  return concat([h, body]);
+}
+
+const ascii = s => Uint8Array.from(s, c => c.charCodeAt(0));
+
+// Rebuild the encoder's JPEG header: keep its JFIF APP0, drop any Exif/ICC it wrote, insert ours.
+function buildJpeg(jpg, tiff, icc) {
+  if (!isJpeg(jpg) || (!tiff && !icc)) return jpg;
+  const app0 = [], others = [];
+  let p = 2;
+  while (p + 4 <= jpg.length && jpg[p] === 0xff && ((jpg[p + 1] >= 0xe0 && jpg[p + 1] <= 0xef) || jpg[p + 1] === 0xfe)) {
+    const m = jpg[p + 1], len = u16be(jpg, p + 2), seg = jpg.subarray(p, p + 2 + len);
+    const exif = m === 0xe1 && fourcc(jpg, p + 4) === 'Exif';
+    const prof = m === 0xe2 && fourcc(jpg, p + 4) === 'ICC_';
+    if (m === 0xe0) app0.push(seg);
+    else if (!exif && !prof) others.push(seg);
+    p += 2 + len;
+  }
+  const add = [];
+  if (tiff && tiff.length + 8 <= 0xffff) add.push(segment(0xe1, ascii('Exif\0\0'), tiff));
+  if (icc && icc.length) {
+    const CH = 0xffff - 2 - 14, n = Math.ceil(icc.length / CH);
+    if (n <= 255) for (let i = 0; i < n; i++) {
+      add.push(segment(0xe2, ascii('ICC_PROFILE\0'), new Uint8Array([i + 1, n]), icc.subarray(i * CH, (i + 1) * CH)));
+    }
+  }
+  return concat([jpg.subarray(0, 2), ...app0, ...add, ...others, jpg.subarray(p)]);
+}
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(u8) {
+  let c = 0xffffffff;
+  for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 255] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+// Uncompressed ("stored") ZIP — JPEGs don't deflate anyway. Returns the parts of the file, in order.
+function zipStore(entries, now) {
+  const enc = new TextEncoder();
+  const time = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+  const date = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  const local = [], central = [];
+  let offset = 0;
+  for (const { name, data } of entries) {
+    const nm = enc.encode(name), crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+    lh.setUint16(10, time, true); lh.setUint16(12, date, true); lh.setUint32(14, crc, true);
+    lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, nm.length, true);
+    local.push(new Uint8Array(lh.buffer), nm, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+    ch.setUint16(12, time, true); ch.setUint16(14, date, true); ch.setUint32(16, crc, true);
+    ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, nm.length, true);
+    ch.setUint32(42, offset, true);
+    central.push(new Uint8Array(ch.buffer), nm);
+    offset += 30 + nm.length + data.length;
+  }
+  const cdSize = central.reduce((s, a) => s + a.length, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true);
+  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+  return [...local, ...central, new Uint8Array(end.buffer)];
+}
+
+// Output size: long side capped at maxSide (0 = original), total area capped at maxPixels.
+function fitSize(w, h, maxSide, maxPixels) {
+  let s = 1;
+  if (maxSide && Math.max(w, h) > maxSide) s = maxSide / Math.max(w, h);
+  if (w * h * s * s > maxPixels) s = Math.sqrt(maxPixels / (w * h));
+  if (s >= 1) return { w, h, scaled: false };
+  return { w: Math.max(1, Math.floor(w * s)), h: Math.max(1, Math.floor(h * s)), scaled: true };
+}
+
+function jpgName(name, taken) {
+  const base = (name.replace(/\.[^./\\]+$/, '') || 'image').replace(/[\\/:*?"<>|\x00-\x1f]+/g, '_');
+  let out = base + '.jpg';
+  for (let i = 2; taken.has(out.toLowerCase()); i++) out = `${base} (${i}).jpg`;
+  taken.add(out.toLowerCase());
+  return out;
+}
+/* IMAGE-PURE-END */
+
+if (typeof document === 'undefined') return;
+
+const $ = s => document.querySelector(s);
+const el = {
+  drop: $('#drop'), file: $('#file'), list: $('#list'), bar: $('#bar'), summary: $('#summary'),
+  q: $('#q'), qv: $('#qv'), size: $('#size'), meta: $('#meta'), gps: $('#gps'), gpsWrap: $('#gpsWrap'),
+  reapply: $('#reapply'), clear: $('#clear'), share: $('#share'), zip: $('#zip'), zipLabel: $('#zipLabel'),
+  toast: $('#toast'), viewer: $('#viewer')
+};
+
+// iOS Safari refuses canvases above ~16.7 MP (it hands back an empty image); desktop browsers go far higher.
+const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const MAX_PIXELS = IS_IOS ? 16777216 : 120e6;
+const MAX_SIDE = 16384;
+const IMAGE_EXT = /\.(heic|heif|hif|avif|jpe?g|png|webp|gif|bmp|tiff?)$/i;
+const KEY = 'ndashiz-image-v1';
+
+const ICON_FILE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>';
+const ICON_DL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>';
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+let opts = { q: 90, size: 0, meta: true, gps: false };
+try { Object.assign(opts, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* private mode */ }
+
+const items = [];
+const taken = new Set();
+let seq = 0, busy = false;
+
+/* ---------- formatting ---------- */
+const nf = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 1 });
+const bytes = n => n < 1e6 ? `${nf.format(Math.max(1, n / 1e3))} Ko` : `${nf.format(n / 1e6)} Mo`;
+const dims = (w, h) => `${w} × ${h}`;
+const plural = (n, one, many) => `${n} ${n > 1 ? many : one}`;
+const optsKey = o => `${o.q}|${o.size}|${o.meta}|${o.gps}`;
+const srcKind = (f, heif) => heif ? (/\.avif$/i.test(f.name) ? 'AVIF' : 'HEIC')
+  : ((f.name.match(/\.([a-z0-9]+)$/i) || [, 'image'])[1].toUpperCase().replace('JPEG', 'JPG'));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+let toastTimer = 0;
+function toast(msg) {
+  el.toast.textContent = msg;
+  el.toast.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.toast.classList.remove('on'), 3200);
+}
+
+/* ---------- options ---------- */
+function syncOptsUI() {
+  el.q.value = opts.q; el.qv.value = opts.q;
+  el.size.value = String(opts.size);
+  el.meta.checked = opts.meta; el.gps.checked = opts.gps;
+  el.gpsWrap.classList.toggle('off', !opts.meta);
+}
+function onOpts() {
+  opts = { q: +el.q.value, size: +el.size.value, meta: el.meta.checked, gps: el.gps.checked };
+  el.qv.value = opts.q;
+  el.gpsWrap.classList.toggle('off', !opts.meta);
+  try { localStorage.setItem(KEY, JSON.stringify(opts)); } catch (e) { /* ignore */ }
+  updateReapply();
+}
+const stale = () => items.filter(it => (it.status === 'done' || it.status === 'error') && it.key !== optsKey(opts));
+function updateReapply() {
+  const n = stale().length;
+  el.reapply.hidden = !n;
+  el.reapply.textContent = `Réappliquer à ${plural(n, 'photo', 'photos')}`;
+}
+
+/* ---------- adding files ---------- */
+function addFiles(files) {
+  let skipped = 0, added = 0;
+  for (const file of files) {
+    if (!(/^image\//.test(file.type) || IMAGE_EXT.test(file.name))) { skipped++; continue; }
+    const name = file.name || `image-${seq + 1}.png`;
+    const it = { id: ++seq, file, srcName: name, name: jpgName(name, taken), status: 'queued', key: '' };
+    it.row = renderRow(it);
+    el.list.appendChild(it.row);
+    items.push(it);
+    added++;
+  }
+  if (skipped) toast(`${plural(skipped, 'fichier ignoré', 'fichiers ignorés')} : pas une image.`);
+  if (added) { updateBar(); pump(); }
+}
+
+async function filesFromDrop(dt) {
+  const entries = [...(dt.items || [])].map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  if (!entries.length || !entries.some(e => e.isDirectory)) return [...dt.files];
+  const out = [];
+  const readAll = reader => new Promise(res => {
+    const acc = [];
+    const next = () => reader.readEntries(batch => { if (!batch.length) return res(acc); acc.push(...batch); next(); }, () => res(acc));
+    next();
+  });
+  const walk = async entry => {
+    if (entry.isFile) {
+      if (!IMAGE_EXT.test(entry.name) || entry.name.startsWith('.')) return;
+      out.push(await new Promise((res, rej) => entry.file(res, rej)).catch(() => null));
+    } else if (entry.isDirectory) {
+      for (const child of await readAll(entry.createReader())) await walk(child);
+    }
+  };
+  for (const e of entries) await walk(e);
+  return out.filter(Boolean).sort((a, b) => a.name.localeCompare(b.name, 'fr', { numeric: true }));
+}
+
+/* ---------- rows ---------- */
+function renderRow(it) {
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.innerHTML = `
+    <button class="thumb" type="button" disabled aria-label="Aperçu">${ICON_FILE}</button>
+    <div class="info"><div class="name"></div><div class="sub"></div></div>
+    <div class="state"></div>
+    <div class="end"><button class="x" type="button" aria-label="Retirer">${ICON_X}</button></div>`;
+  row.querySelector('.name').textContent = it.name;
+  row.querySelector('.sub').textContent = `${it.srcName} · ${bytes(it.file.size)}`;
+  row.querySelector('.x').addEventListener('click', () => removeItem(it));
+  row.querySelector('.thumb').addEventListener('click', () => openViewer(it));
+  paint(it);
+  return row;
+}
+
+function paint(it, note) {
+  const row = it.row;
+  if (!row) return;
+  row.classList.toggle('error', it.status === 'error');
+  const state = row.querySelector('.state'), sub = row.querySelector('.sub'), end = row.querySelector('.end');
+  const thumb = row.querySelector('.thumb');
+  let dl = end.querySelector('.dl');
+  if (it.status === 'queued') state.textContent = 'En attente';
+  else if (it.status === 'working') state.innerHTML = `<span class="spin"></span>${esc(note || 'Conversion…')}`;
+  else state.textContent = '';
+
+  if (it.status === 'done') {
+    const scaled = it.scaled ? ` <span class="tag">réduite de ${dims(it.srcW, it.srcH)}</span>` : '';
+    const tags = (it.exif ? ' <span class="tag">EXIF</span>' : '') + (it.gpsRemoved ? ' <span class="tag">GPS retiré</span>' : '');
+    sub.innerHTML = `${esc(it.kind)} ${bytes(it.file.size)} → JPG ${bytes(it.blob.size)} · ${dims(it.w, it.h)}${scaled}${tags}`;
+    thumb.disabled = false;
+    thumb.innerHTML = `<img alt="" src="${it.thumb}">`;
+    if (!dl) {
+      dl = document.createElement('a');
+      dl.className = 'dl';
+      dl.innerHTML = `${ICON_DL}<span>JPG</span>`;
+      end.prepend(dl);
+    }
+    dl.href = it.url;
+    dl.download = it.name;
+    dl.title = `Télécharger ${it.name}`;
+  } else {
+    if (dl) dl.remove();
+    if (it.status === 'error') sub.textContent = `${it.srcName} — ${it.err}`;
+    else sub.textContent = `${it.srcName} · ${bytes(it.file.size)}`;
+    if (it.status !== 'working') { thumb.disabled = true; thumb.innerHTML = ICON_FILE; }
+  }
+}
+
+function dropOutput(it) {
+  if (it.url) URL.revokeObjectURL(it.url);
+  if (it.thumb) URL.revokeObjectURL(it.thumb);
+  it.url = it.thumb = it.blob = null;
+}
+
+function removeItem(it) {
+  const i = items.indexOf(it);
+  if (i < 0) return;
+  items.splice(i, 1);
+  taken.delete(it.name.toLowerCase());
+  dropOutput(it);
+  it.removed = true;
+  it.row.remove();
+  updateBar();
+  updateReapply();
+}
+
+/* ---------- conversion ---------- */
+let libPromise = null;
+function loadLib() {
+  if (window.HeicTo) return Promise.resolve();
+  return libPromise || (libPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'heic-to.js';
+    s.onload = () => window.HeicTo ? resolve() : reject(new Error('décodeur HEIC indisponible.'));
+    s.onerror = () => { libPromise = null; s.remove(); reject(new Error('impossible de charger le décodeur HEIC (connexion ?).')); };
+    document.head.appendChild(s);
+  }));
+}
+
+function canvasOf(w, h) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  return c;
+}
+function release(c) { if (c) { c.width = 0; c.height = 0; } }
+
+function drawScaled(src, w, h) {
+  let cur = src, cw = src.width, ch = src.height, tmp = null;
+  // Halve in steps: one big drawImage downscale aliases badly on most browsers.
+  while (cw / 2 >= w && ch / 2 >= h) {
+    const nw = Math.round(cw / 2), nh = Math.round(ch / 2);
+    const c = canvasOf(nw, nh), ctx = c.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(cur, 0, 0, nw, nh);
+    release(tmp);
+    tmp = cur = c; cw = nw; ch = nh;
+  }
+  const out = canvasOf(w, h), ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff';                       // JPEG has no alpha: transparent PNGs land on white, not black
+  ctx.fillRect(0, 0, w, h);
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(cur, 0, 0, w, h);
+  release(tmp);
+  return out;
+}
+
+const toBlob = (canvas, type, q) => new Promise((resolve, reject) =>
+  canvas.toBlob(b => b && b.size ? resolve(b) : reject(new Error('encodage JPEG impossible (image trop grande pour ce navigateur ?).')), type, q));
+
+async function makeThumb(canvas) {
+  const S = 104, s = Math.min(canvas.width, canvas.height);
+  const c = canvasOf(S, S), ctx = c.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(canvas, (canvas.width - s) / 2, (canvas.height - s) / 2, s, s, 0, 0, S, S);
+  const b = await toBlob(c, 'image/jpeg', .8);
+  release(c);
+  return URL.createObjectURL(b);
+}
+
+const errText = e => (e && (e.message || (typeof e === 'string' ? e : ''))) || 'conversion impossible.';
+
+async function convert(it) {
+  const o = { ...opts };
+  dropOutput(it);
+  it.status = 'working'; paint(it);
+  let bmp = null, canvas = null;
+  try {
+    const u8 = new Uint8Array(await it.file.arrayBuffer());
+    const heif = sniffHeif(u8);
+    let viaLib = false;
+    try { bmp = await createImageBitmap(it.file); } catch (e) { bmp = null; }
+    if (!bmp || !bmp.width) {
+      if (!heif) throw new Error('format non lu par ce navigateur.');
+      if (!window.HeicTo) paint(it, 'Chargement du décodeur HEIC…');
+      await loadLib();
+      if (it.removed) return;
+      paint(it, 'Décodage HEIC…');
+      bmp = await window.HeicTo({ blob: it.file, type: 'bitmap' });
+      viaLib = true;
+    }
+    if (it.removed) return;
+    paint(it, 'Encodage JPG…');
+    const meta = heif ? heifMeta(u8) : { exif: isJpeg(u8) ? jpegExif(u8) : null, icc: null };
+    const fit = fitSize(bmp.width, bmp.height, Math.min(o.size || MAX_SIDE, MAX_SIDE), MAX_PIXELS);
+    it.srcW = bmp.width; it.srcH = bmp.height;
+    canvas = drawScaled(bmp, fit.w, fit.h);
+    bmp.close && bmp.close(); bmp = null;
+    const thumb = await makeThumb(canvas);
+    const raw = new Uint8Array(await (await toBlob(canvas, 'image/jpeg', o.q / 100)).arrayBuffer());
+    release(canvas); canvas = null;
+    const ex = o.meta ? patchExif(meta.exif, { width: fit.w, height: fit.h, keepGps: o.gps }) : null;
+    // libheif hands back the raw (often Display P3) pixels: carry the profile over. Native decodes are already sRGB.
+    const out = buildJpeg(raw, ex && ex.tiff, viaLib ? meta.icc : null);
+    if (it.removed) { URL.revokeObjectURL(thumb); return; }
+    Object.assign(it, {
+      status: 'done', key: optsKey(o), kind: srcKind(it.file, heif), w: fit.w, h: fit.h, scaled: fit.scaled,
+      exif: !!ex, gpsRemoved: !!(ex && ex.hadGps && !o.gps),
+      blob: new Blob([out], { type: 'image/jpeg' }), thumb
+    });
+    it.url = URL.createObjectURL(it.blob);
+  } catch (e) {
+    it.status = 'error'; it.key = optsKey(o); it.err = errText(e);
+    console.warn('[image]', it.srcName, e);
+  } finally {
+    if (bmp && bmp.close) bmp.close();
+    release(canvas);
+  }
+  paint(it);
+}
+
+async function pump() {
+  if (busy) return;
+  busy = true;
+  try {
+    for (let it; (it = items.find(x => x.status === 'queued'));) {
+      await convert(it);
+      updateBar();
+      await new Promise(r => setTimeout(r, 0));
+    }
+  } finally {
+    busy = false;
+    updateBar();
+    updateReapply();
+  }
+}
+
+/* ---------- bottom bar ---------- */
+const done = () => items.filter(it => it.status === 'done');
+function updateBar() {
+  el.bar.hidden = !items.length;
+  if (!items.length) return;
+  const ok = done(), errs = items.filter(it => it.status === 'error').length;
+  const pending = items.filter(it => it.status === 'queued' || it.status === 'working').length;
+  const total = ok.reduce((s, it) => s + it.blob.size, 0);
+  let txt = pending
+    ? `Conversion <b>${items.length - pending + 1} / ${items.length}</b>…`
+    : `<b>${plural(ok.length, 'photo prête', 'photos prêtes')}</b>${ok.length ? ` · ${bytes(total)}` : ''}`;
+  if (errs) txt += ` · ${plural(errs, 'erreur', 'erreurs')}`;
+  el.summary.innerHTML = txt;
+  el.zip.disabled = !ok.length || !!pending;
+  el.zipLabel.textContent = ok.length > 1 ? 'Tout télécharger (.zip)' : 'Télécharger';
+  el.share.hidden = !canShareFiles;
+  el.share.disabled = !ok.length || !!pending;
+}
+
+function save(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+}
+
+async function downloadAll() {
+  const ok = done();
+  if (!ok.length) return;
+  if (ok.length === 1) return save(ok[0].blob, ok[0].name);
+  el.zip.disabled = true;
+  try {
+    const entries = [];
+    for (const it of ok) entries.push({ name: it.name, data: new Uint8Array(await it.blob.arrayBuffer()) });
+    const now = new Date(), pad = n => String(n).padStart(2, '0');
+    const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    save(new Blob(zipStore(entries, now), { type: 'application/zip' }), `photos-jpg-${stamp}.zip`);
+  } catch (e) {
+    toast('Le .zip n’a pas pu être créé — télécharger les photos une par une.');
+  } finally {
+    updateBar();
+  }
+}
+
+const canShareFiles = (() => {
+  try { return !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'a.jpg', { type: 'image/jpeg' })] })); }
+  catch (e) { return false; }
+})();
+
+async function shareAll() {
+  const files = done().map(it => new File([it.blob], it.name, { type: 'image/jpeg' }));
+  if (!files.length) return;
+  try {
+    if (!navigator.canShare({ files })) throw new Error('too many');
+    await navigator.share({ files });
+  } catch (e) {
+    if (e && e.name === 'AbortError') return;
+    toast('Partage impossible ici — utiliser « Télécharger ».');
+  }
+}
+
+function openViewer(it) {
+  if (it.status !== 'done') return;
+  const img = el.viewer.querySelector('img');
+  img.src = it.url;
+  img.alt = it.name;
+  el.viewer.querySelector('p').textContent = `${it.name} · ${dims(it.w, it.h)} · ${bytes(it.blob.size)}`;
+  if (el.viewer.showModal) el.viewer.showModal(); else window.open(it.url, '_blank');
+}
+el.viewer.addEventListener('click', () => el.viewer.close());
+el.viewer.addEventListener('close', () => { el.viewer.querySelector('img').removeAttribute('src'); });
+
+/* ---------- wiring ---------- */
+syncOptsUI();
+[el.q, el.size, el.meta, el.gps].forEach(x => x.addEventListener('input', onOpts));
+el.size.addEventListener('change', onOpts);
+el.reapply.addEventListener('click', () => {
+  for (const it of stale()) { dropOutput(it); it.status = 'queued'; paint(it); }
+  updateReapply();
+  updateBar();
+  pump();
+});
+el.file.addEventListener('change', () => { addFiles([...el.file.files]); el.file.value = ''; });
+el.drop.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.file.click(); }
+});
+el.clear.addEventListener('click', () => { for (const it of [...items]) removeItem(it); });
+el.zip.addEventListener('click', downloadAll);
+el.share.addEventListener('click', shareAll);
+
+let dragDepth = 0;
+const hasFiles = e => [...(e.dataTransfer && e.dataTransfer.types || [])].includes('Files');
+window.addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; document.body.classList.add('dragging'); });
+window.addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+window.addEventListener('dragleave', e => { if (!hasFiles(e)) return; if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); } });
+window.addEventListener('drop', async e => {
+  if (!hasFiles(e)) return;
+  e.preventDefault();
+  dragDepth = 0;
+  document.body.classList.remove('dragging');
+  addFiles(await filesFromDrop(e.dataTransfer));
+});
+window.addEventListener('paste', e => {
+  const files = [...(e.clipboardData && e.clipboardData.files || [])];
+  if (files.length) { e.preventDefault(); addFiles(files); }
+});
+window.addEventListener('beforeunload', e => {
+  if (items.some(it => it.status === 'queued' || it.status === 'working')) { e.preventDefault(); e.returnValue = ''; }
+});
+
+})();
+</script>
+</body>
+</html>
