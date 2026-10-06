@@ -1,6 +1,6 @@
--- L'Ardoise — database schema. Run by hand in the SQL editor of a DEDICATED Supabase project
--- (EU region), not LazyPO's: every sign-up creates an auth user and ardoise_delete_me() deletes it.
--- Idempotent: safe to run again after an edit.
+-- L'Ardoise — database schema. Run by hand in the Supabase SQL editor. Idempotent: safe to run again.
+-- Works in a dedicated project or in the one shared with LazyPO / LazySyndic (hrvx…); in the shared
+-- one, also run shared_project.sql afterwards. Every object here is prefixed ardoise_.
 
 -- ---------------------------------------------------------------- tables
 create table if not exists public.ardoise_profiles (
@@ -174,14 +174,31 @@ create trigger ardoise_entries_activity after insert or update on public.ardoise
   for each row execute function public.ardoise_entries_activity();
 
 -- ---------------------------------------------------------------- account deletion (GDPR)
--- Deletes the caller's auth user; every row above goes with it (on delete cascade).
+-- Deletes all of the caller's L'Ardoise data. The login itself is deleted too, unless another app of
+-- the shared project still uses it (a LazyPO profile or a LazySyndic membership): then it stays.
 create or replace function public.ardoise_delete_me() returns void
 language plpgsql security definer set search_path = public, auth as $$
+declare
+  uid    uuid := auth.uid();
+  shared boolean := false;
 begin
-  if auth.uid() is null then
+  if uid is null then
     raise exception 'not authenticated';
   end if;
-  delete from auth.users where id = auth.uid();
+  delete from public.ardoise_entries      where user_id = uid;
+  delete from public.ardoise_weeks        where user_id = uid;
+  delete from public.ardoise_reminder_log where user_id = uid;
+  delete from public.ardoise_admins       where user_id = uid;
+  delete from public.ardoise_profiles     where user_id = uid;
+  if to_regclass('public.profiles') is not null then
+    execute 'select exists (select 1 from public.profiles where id = $1)' into shared using uid;
+  end if;
+  if not shared and to_regclass('public.ls_members') is not null then
+    execute 'select exists (select 1 from public.ls_members where id = $1)' into shared using uid;
+  end if;
+  if not shared then
+    delete from auth.users where id = uid;
+  end if;
 end $$;
 
 revoke all on function public.ardoise_delete_me() from public, anon;

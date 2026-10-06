@@ -13,26 +13,35 @@ Static vanilla JS (no build), Supabase for accounts and data. UI in French.
 | `avatar.js` | The character, four flat-vector scenes drawn in SVG (suit + convertible → city car → smoking wreck → cardboard + shopping cart), three looks (skin, hair colour, haircut) |
 | `app.js` | Views: landing + account, questionnaire, tutorial, main screen, weekly table, settings, weekly summary |
 | `schema.sql` | Tables, RLS, triggers, `ardoise_delete_me()` — run by hand |
+| `shared_project.sql` | Guards for the project shared with LazyPO: a ksar sign-up gets no LazyPO profile or admin notification — run by hand, after `schema.sql` |
 | `reminders.sql` | Weekly e-mail via `pg_cron` + `pg_net` + Resend — run by hand, after `schema.sql` |
 | `config.js` | Supabase URL + anon key (public by design, RLS protects the data) |
-| `supabase.min.js` | supabase-js 2.45.4, same vendored build as `scrumpoker/` |
+| `supabase.min.js` | supabase-js 2.108.2, same vendored build as LazyPO (works with the `sb_publishable_` key; its presence bug does not matter here, no realtime) |
 
 ## Setup (once)
 
-1. **Supabase project** — create a *dedicated* project (EU region, e.g. Frankfurt). Not LazyPO's `hrvx…`:
-   every sign-up creates an auth user, which would also be a valid LazyPO login, and `ardoise_delete_me()`
-   deletes auth users.
-2. **SQL editor** — run `schema.sql`.
-3. **Auth → URL configuration** — Site URL `https://ndashiz.be/ksar/`; redirect URLs
-   `https://ndashiz.be/ksar/` and `http://localhost:3100/ksar/`. Keep e-mail confirmation on.
-   Supabase's built-in SMTP is rate-limited (a few e-mails an hour): for real users, plug Resend in as
-   custom SMTP (Auth → SMTP settings) — same account as the reminders.
-4. **`config.js`** — paste the project URL and the anon public key.
-5. **Reminders** — on resend.com, create an API key and verify `ndashiz.be` (SPF + DKIM DNS records), then
+L'Ardoise runs in the Supabase project it shares with LazyPO and LazySyndic (`hrvx…`, same URL and
+publishable key as `lazypo/auth.js`, already in `config.js`). All its objects are prefixed `ardoise_`.
+
+1. **SQL editor** (hrvx project) — run `schema.sql`, then `shared_project.sql`.
+   The second file matters: LazyPO's `on_auth_user_created` trigger gives every new auth user a LazyPO
+   profile (quiz access) and a "s'est inscrit sur LazyPO" admin notification. L'Ardoise sign-ups are tagged
+   `raw_user_meta_data.app = 'ksar'` and the two guards there drop exactly those inserts.
+2. **Auth → URL configuration** — keep LazyPO's Site URL; *add* redirect URLs `https://ndashiz.be/ksar/`
+   and `http://localhost:3100/ksar/`. Auth e-mail templates are shared with LazyPO: keep their wording
+   neutral (no "LazyPO") or confirmation e-mails will name the wrong app.
+3. **Reminders** — on resend.com, create an API key and verify `ndashiz.be` (SPF + DKIM DNS records), then
    `select vault.create_secret('re_…', 'ardoise_resend_key');` and run `reminders.sql`.
    Test with `select public.ardoise_send_reminders();`.
-6. **Admin** — to edit the weighting matrix from the app (Settings → Administration):
+4. **Admin** — to edit the weighting matrix from the app (Settings → Administration):
    `insert into public.ardoise_admins (user_id) select id from auth.users where email = '…';`
+
+Accounts are shared across ndashiz.be: someone who already has a LazyPO or LazySyndic login signs in to
+L'Ardoise with the same password. "Supprimer mon compte" (`ardoise_delete_me()`) erases all L'Ardoise data
+and deletes the login only when no other app (LazyPO profile, LazySyndic membership) still uses it.
+
+To move to a dedicated project later: run `schema.sql` there (skip `shared_project.sql`), point
+`config.js` at it, and copy the `ardoise_*` rows over.
 
 Push to `main` → GitHub Pages. Bump the `?v=` query strings in `index.html` when shipping a change,
 or Cloudflare may serve the old JS for ~10 minutes.

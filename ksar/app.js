@@ -73,7 +73,7 @@
     const m = String((e && e.message) || '');
     if (/Invalid login credentials/i.test(m)) return 'E-mail ou mot de passe incorrect.';
     if (/Email not confirmed/i.test(m)) return 'Confirme d’abord ton adresse avec le lien reçu par e-mail.';
-    if (/already registered|already exists/i.test(m)) return 'Un compte existe déjà avec cette adresse. Connecte-toi.';
+    if (/already registered|already exists/i.test(m)) return 'Un compte existe déjà avec cette adresse, peut-être pour un autre outil ndashiz.be. Connecte-toi avec ce mot de passe, ou « Mot de passe oublié ».';
     if (/Password should be|password.*characters/i.test(m)) return 'Le mot de passe doit faire au moins 8 caractères.';
     if (/rate limit|too many/i.test(m)) return 'Trop d’essais d’affilée. Réessaie dans quelques minutes.';
     if (/valid email|invalid.*email/i.test(m)) return 'Cette adresse e-mail n’est pas valide.';
@@ -318,11 +318,11 @@
       if (password.length < 8) return setStatus('#auth-status', 'Le mot de passe doit faire au moins 8 caractères.', 'err');
       if (mode === 'signup') {
         if (!$('#a-consent').checked) return setStatus('#auth-status', 'Coche l’accord sur tes données : sans lui, on ne peut rien enregistrer.', 'err');
-        const { data, error } = await S.sb.auth.signUp({ email, password, options: { emailRedirectTo: APP_URL, data: { consent_at: new Date().toISOString() } } });
+        const { data, error } = await S.sb.auth.signUp({ email, password, options: { emailRedirectTo: APP_URL, data: { app: 'ksar', consent_at: new Date().toISOString() } } });
         if (error) throw error;
         if (data && data.session) return; // confirmations off: SIGNED_IN routes
         if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-          return setStatus('#auth-status', 'Un compte existe déjà avec cette adresse. Connecte-toi.', 'err');
+          return setStatus('#auth-status', 'Un compte existe déjà avec cette adresse, peut-être pour un autre outil ndashiz.be. Connecte-toi avec ce mot de passe, ou « Mot de passe oublié ».', 'err');
         }
         return renderLanding('login', 'Compte créé. Clique sur le lien de confirmation reçu par e-mail, puis connecte-toi ici.');
       }
@@ -1485,7 +1485,7 @@
       const b = $('#set-del');
       if (!delArmed) {
         delArmed = true; b.classList.add('armed'); b.textContent = 'Oui, tout supprimer définitivement';
-        setStatus('#set-del-status', 'Ton compte, ton personnage et tout ton historique seront effacés. Impossible de revenir en arrière.', 'err');
+        setStatus('#set-del-status', 'Ton personnage, tes réglages et tout ton historique L\u2019Ardoise seront effacés. Impossible de revenir en arrière.', 'err');
         return;
       }
       b.disabled = true;
@@ -1493,7 +1493,7 @@
       if (error) { b.disabled = false; return setStatus('#set-del-status', dbError(error), 'err'); }
       dlg.close();
       await S.sb.auth.signOut();
-      renderLanding('signup', 'Ton compte et toutes tes données ont été supprimés.');
+      renderLanding('signup', 'Tes données L\u2019Ardoise ont été supprimées.');
     });
     $('#set-form').addEventListener('submit', async ev => {
       ev.preventDefault();
