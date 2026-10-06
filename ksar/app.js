@@ -388,6 +388,84 @@
     });
   }
 
+  // ================================================================ AGE BENCHMARKS
+  // Belgian figures for the user's age band (Sciensano HIS 2023-2024, core.js BE_HIS), shown next to the
+  // objectives: the health limit, what people of that age actually do, where the user stands today.
+  const HIS_URL = 'https://www.sciensano.be/fr/projets/enquete-de-sante';
+  const pct = v => `${fmt(v)} %`;
+  function bandLabel(band) { return band === '75+' ? '75 ans et plus' : `${band.replace('-', '–')} ans`; }
+
+  /** A number line with labelled markers: the health limit, the age-band mean, the user today, the objective. */
+  function scaleHTML(marks, unit) {
+    const shown = marks.filter(m => m.v != null && Number.isFinite(m.v));
+    const max = Math.max(1, ...shown.map(m => m.v)) * 1.15;
+    const aria = shown.map(m => `${m.label} ${fmt(m.v)} ${unit}`).join(', ');
+    return `<div class="ag-scale" role="img" aria-label="${esc(aria)}">
+      <div class="ag-track">${shown.map(m => `<span class="ag-mark ${m.kind}" style="left:${Math.min(100, (m.v / max) * 100)}%"></span>`).join('')}</div>
+      <ul class="ag-legend">${shown.map(m => `<li class="${m.kind}"><i aria-hidden="true"></i><span>${esc(m.label)}</span><b>${fmt(m.v)}</b></li>`).join('')}</ul></div>`;
+  }
+
+  /**
+   * age: in years (null = unknown). me: { units, cigs } — the user's current week (declared or measured).
+   * meLabel: how to name "me" (« Toi aujourd'hui », « Toi, 4 dernières semaines »).
+   */
+  function ageGuideHTML(age, tracks, me, obj, meLabel) {
+    const s = C.ageStats(age);
+    if (!s) return `<span class="eyebrow">Repères pour ton âge</span><p class="hint">Indique ton âge pour comparer ta consommation à celle des gens de ton âge.</p>`;
+    const band = bandLabel(s.band), A = s.alcohol, T = s.tobacco, D = s.drugs;
+    let html = `<div class="ag-head"><span class="eyebrow">Repères pour ton âge</span><h3>Les ${esc(band)} en Belgique</h3></div>`;
+    if (tracks.includes('alcool')) {
+      const u = me.units, goal = num(obj.semaine);
+      let take;
+      if (u > C.HEALTH.semaine) take = `Avec ${fmt(u)} verres par semaine, tu fais partie des ${pct(A.over10)} des ${band} au-dessus du repère.`;
+      else if (u > A.avgWeekly) take = `Tu bois un peu plus que la moyenne des ${band} qui boivent chaque semaine, tout en restant dans le repère.`;
+      else take = `Tu es dans le repère, comme ${pct(100 - A.over10)} des ${band}.`;
+      if (goal > C.HEALTH.semaine) take += ` Ton objectif reste au-dessus du repère : c’est une première marche, vise 10 ensuite.`;
+      else if (goal <= A.avgWeekly) take += ` Ton objectif est sous la moyenne de ton âge.`;
+      let note = '';
+      if (s.index === 0) note = `C’est à ton âge que le binge est le plus fréquent : ${pct(A.binge)} au moins une fois par mois, contre ${pct(C.BE_HIS.all.binge)} pour l’ensemble des Belges.`;
+      if (s.index >= 5) note = `À partir de 65 ans, l’alcool s’élimine plus lentement et interagit avec beaucoup de médicaments : parles-en à ton médecin.`;
+      html += `<section class="ag-sec"><h4>Alcool <small>verres standard par semaine</small></h4>
+        ${scaleHTML([
+          { label: 'Repère santé', v: C.HEALTH.semaine, kind: 'ref' },
+          { label: `Moyenne des ${band} qui boivent chaque semaine`, v: A.avgWeekly, kind: 'avg' },
+          { label: meLabel, v: u, kind: u > C.HEALTH.semaine ? 'me over' : 'me' },
+          { label: 'Ton objectif', v: goal, kind: 'goal' },
+        ], 'verres')}
+        <ul class="ag-facts">
+          <li><b>${pct(A.over10)}</b><span>dépassent 10 verres par semaine</span></li>
+          <li><b>${pct(A.binge)}</b><span>font un binge au moins une fois par mois</span></li>
+          <li><b>${pct(A.daily)}</b><span>boivent tous les jours</span></li>
+          <li><b>${pct(A.lowRisk)}</b><span>des buveurs respectent les 4 repères</span></li>
+        </ul>
+        <p class="ag-take">${esc(take)}</p>
+        ${note ? `<p class="ag-note">${esc(note)}</p>` : ''}
+        <p class="ag-reco">Repères pour tous les adultes : 10 verres standard par semaine au plus, au moins 2 jours sans alcool, pas plus de 2 verres par jour, 4 lors d’une occasion.</p></section>`;
+    }
+    if (tracks.includes('cigarettes')) {
+      const c = me.cigs, goal = num(obj.cigarettes_jour);
+      const take = c > T.perDay ? `Tu fumes plus que la moyenne des fumeurs quotidiens de ton âge.`
+        : c > 0 ? `Tu fumes moins que la moyenne des fumeurs quotidiens de ton âge.` : `Tu ne fumes pas, comme ${pct(100 - T.daily)} des ${band} qui ne fument pas tous les jours.`;
+      html += `<section class="ag-sec"><h4>Cigarettes <small>par jour</small></h4>
+        ${scaleHTML([
+          { label: `Moyenne des fumeurs quotidiens de ${band}`, v: T.perDay, kind: 'avg' },
+          { label: meLabel, v: c, kind: 'me' },
+          { label: 'Ton objectif', v: goal, kind: 'goal' },
+        ], 'cigarettes')}
+        <ul class="ag-facts"><li><b>${pct(T.daily)}</b><span>fument tous les jours</span></li></ul>
+        <p class="ag-take">${esc(take)} Il n’existe pas de seuil sans risque : chaque cigarette en moins compte.</p></section>`;
+    }
+    if (tracks.includes('drogues')) {
+      html += `<section class="ag-sec"><h4>Drogues <small>dans les 12 derniers mois</small></h4>`
+        + (D.cannabis == null
+          ? `<p class="hint">L’enquête ne pose pas ces questions après 64 ans.</p>`
+          : `<ul class="ag-facts"><li><b>${pct(D.cannabis)}</b><span>ont consommé du cannabis</span></li><li><b>${pct(D.other)}</b><span>une autre drogue</span></li></ul>`)
+        + `</section>`;
+    }
+    html += `<p class="ag-src">Source : <a href="${HIS_URL}" target="_blank" rel="noopener">${esc(C.BE_HIS.source)}</a>, Belgique, pourcentages bruts.</p>`;
+    return html;
+  }
+
   // ================================================================ QUESTIONNAIRE (FR2)
   const FREQ_ALC = [['0', 'Jamais'], ['1', 'Une fois par semaine ou moins'], ['3', '2 à 3 fois par semaine'], ['5', '4 à 6 fois par semaine'], ['7', 'Tous les jours']];
   const FREQ_DRUG = [['1', 'Une fois par semaine ou moins'], ['3', '2 à 3 fois par semaine'], ['5', '4 à 6 fois par semaine'], ['7', 'Tous les jours']];
@@ -407,6 +485,7 @@
     const ob = {
       step: 0,
       pseudo: (existing && existing.pseudo) || '',
+      age: C.ageFromBirthYear(h0.birth_year) || '',
       look: AV.normLook(existing && existing.look),
       habits: {
         alcool: Object.assign({ use: null, issue: null, jours: 0, pils: 0, vin: 0, speciale: 0, cocktail: 0, shot: 0 }, h0.alcool || {}),
@@ -428,7 +507,10 @@
           <p class="status" id="ob-status" role="status" aria-live="polite"></p>
           <div class="ob-nav"><button type="button" class="ghost" id="ob-back">Retour</button><button type="button" class="primary" id="ob-next">Continuer</button></div>
         </section>
-        <aside class="ob-preview" aria-live="polite"><div id="ob-scene"></div><div class="ob-preview-cap" id="ob-cap"></div></aside>
+        <aside class="ob-side">
+          <div class="ob-preview" aria-live="polite"><div id="ob-scene"></div><div class="ob-preview-cap" id="ob-cap"></div></div>
+          <section class="panel ob-guide" id="ob-guide" aria-label="Repères pour ton âge" hidden></section>
+        </aside>
       </div>`;
     let body = $('#ob-body');
     // C.tracksOf() falls back to "everything" when nothing was answered yet: here we want the strict answer.
@@ -449,11 +531,21 @@
       capEl.append(stateChip(state), el('p', null, cap));
     }
 
+    function guide() {
+      const html = ob.step === 5
+        ? ageGuideHTML(Number(ob.age) || null, flagged(), { units: C.alcUnits(ob.habits.alcool, S.poids), cigs: num(ob.habits.cigarettes.par_jour) }, ob.obj || {}, 'Toi aujourd’hui')
+        : '';
+      const side = $('#ob-guide'), inline = $('#ob-guide-inline');
+      side.hidden = !html;
+      side.innerHTML = html;
+      if (inline) inline.innerHTML = html;
+    }
+
     function qty(sub, fields) {
       return `<div>${fields.map(([k, label, unit, max]) => `<div class="obj-row"><label for="h-${sub}-${k}">${label}<small>${unit}</small></label>${stepperHTML(`h-${sub}-${k}`, ob.habits[sub][k], max || 199, label)}</div>`).join('')}</div>`;
     }
     function readStep() {
-      if (ob.step === 0) ob.pseudo = $('#ob-pseudo').value.trim().slice(0, 40);
+      if (ob.step === 0) { ob.pseudo = $('#ob-pseudo').value.trim().slice(0, 40); ob.age = $('#ob-age').value.trim(); }
       const readQty = (sub, keys) => { for (const k of keys) if (document.getElementById(`h-${sub}-${k}`)) ob.habits[sub][k] = intVal(`h-${sub}-${k}`); };
       if (ob.step === 2) readQty('alcool', ['pils', 'vin', 'speciale', 'cocktail', 'shot']);
       if (ob.step === 3) readQty('cigarettes', ['par_jour']);
@@ -482,7 +574,9 @@
       if (ob.step === 0) {
         body.innerHTML = `<h1>Bienvenue sur L'Ardoise</h1>
           <p>Quelques questions pour régler ton ardoise, puis un petit tour du propriétaire. Compte deux minutes. Personne d’autre que toi ne verra tes réponses.</p>
-          <div class="field"><label for="ob-pseudo">Ton prénom ou pseudo</label><input type="text" id="ob-pseudo" maxlength="40" autocomplete="nickname" value="${esc(ob.pseudo)}"></div>`;
+          <div class="field"><label for="ob-pseudo">Ton prénom ou pseudo</label><input type="text" id="ob-pseudo" maxlength="40" autocomplete="nickname" value="${esc(ob.pseudo)}"></div>
+          <div class="field ob-age"><label for="ob-age">Ton âge</label><input type="number" id="ob-age" min="18" max="110" step="1" inputmode="numeric" value="${esc(ob.age)}">
+            <p class="hint">Pour comparer ta consommation à celle des gens de ton âge, avec les chiffres de l’enquête de santé belge.</p></div>`;
         $('#ob-pseudo').addEventListener('input', () => { ob.pseudo = $('#ob-pseudo').value.trim().slice(0, 40); preview(); });
       } else if (ob.step === 1) {
         body.innerHTML = `<h1>Ton personnage</h1><p>Il te ressemble et réagit à ta semaine. Tu pourras le changer plus tard dans les réglages.</p>${lookPickerHTML('ob')}`;
@@ -532,8 +626,9 @@
       } else if (ob.step === 5) {
         if (!ob.obj) ob.obj = C.suggestObjectifs(ob.habits, S.poids);
         body.innerHTML = `<h1>Tes objectifs</h1><p>Une première marche à partir de tes réponses, sans dépasser les repères santé. Après ta semaine de référence, on te proposera de les recaler sur −20 % de ce que tu as vraiment consommé.</p>
+          <details class="ob-guide-wrap" open><summary>Repères pour ton âge</summary><div class="ob-guide ob-guide-inline" id="ob-guide-inline"></div></details>
           ${flagged().map(sub => `<fieldset class="group"><legend>${esc(C.SUBSTANCES[sub].label)}</legend>${OBJ_FIELDS.filter(f => f[0] === sub).map(([, k, label, hint, max]) => `<div class="obj-row"><label for="o-${k}">${label}<small>${hint}</small></label>${stepperHTML(`o-${k}`, ob.obj[k], max, label)}</div>`).join('')}</fieldset>`).join('')}`;
-        wireSteppers(body, () => { readStep(); preview(); });
+        wireSteppers(body, () => { readStep(); preview(); guide(); });
       } else if (ob.step === 6) {
         body.innerHTML = `<h1>Un rappel chaque semaine</h1>
           <p>Si ta semaine précédente n’est pas complète, on t’envoie un e-mail le jour de ton choix, avec ton bilan en deux lignes. Après quatre rappels sans réponse, on te laisse tranquille.</p>
@@ -551,12 +646,18 @@
           ${heavy ? `<div class="help-box">${HELP_HTML}</div>` : ''}`;
       }
       preview();
+      guide();
       if (ob.step > 0) { const h = body.querySelector('h1'); h.tabIndex = -1; h.focus({ preventScroll: true }); }
     }
 
     function check() {
       const a = ob.habits.alcool, c = ob.habits.cigarettes, d = ob.habits.drogues;
       if (ob.step === 0 && !ob.pseudo) return 'Choisis un prénom ou un pseudo pour ton personnage.';
+      if (ob.step === 0) {
+        const age = Number(ob.age);
+        if (!ob.age || !Number.isInteger(age) || age < 1 || age > 110) return 'Indique ton âge, en années.';
+        if (age < 18) return 'L’Ardoise est réservée aux 18 ans et plus. Si ta consommation t’inquiète, Infor-Drogues répond 24 h/24 au 02 227 52 52.';
+      }
       if (ob.step === 2 && a.use == null) return 'Choisis une fréquence, même « jamais ».';
       if (ob.step === 2 && a.use && a.issue == null) return 'Dis-nous si l’alcool est un sujet pour toi.';
       if (ob.step === 3 && c.use == null) return 'Réponds oui ou non.';
@@ -578,7 +679,7 @@
       setStatus('#ob-status', 'Enregistrement…');
       const meta = (S.session.user && S.session.user.user_metadata) || {};
       const row = {
-        user_id: uid(), pseudo: ob.pseudo, look: ob.look, habits: ob.habits, objectifs: ob.obj,
+        user_id: uid(), pseudo: ob.pseudo, look: ob.look, habits: Object.assign({}, ob.habits, { birth_year: new Date().getFullYear() - Number(ob.age) }), objectifs: ob.obj,
         reminder_email: ob.email || null, reminder_enabled: ob.remind && EMAIL_RE.test(ob.email), reminder_day: ob.day,
         consent_at: meta.consent_at || new Date().toISOString(),
         onboarded_at: new Date().toISOString(), baseline_week: mondayOf(todayISO()),
@@ -1446,6 +1547,16 @@
     ['drogues', 'drogues_semaine', 'Prises de drogues par semaine', 'au plus, pondérées', 1],
   ];
 
+  /** "Me" for the age guide: the mean of the last 4 weeks with something logged, else the questionnaire answers. */
+  function meNow() {
+    const weeks = [1, 2, 3, 4].map(i => weekStats(addDays(mondayOf(todayISO()), -7 * i))).filter(w => w.logged);
+    if (weeks.length) {
+      return { units: weeks.reduce((a, w) => a + w.units, 0) / weeks.length, cigs: weeks.reduce((a, w) => a + w.cigAvg, 0) / weeks.length, label: 'Toi, 4 dernières semaines' };
+    }
+    const h = (S.profile && S.profile.habits) || {};
+    return { units: C.alcUnits((h.alcool && h.alcool.use && h.alcool) || {}, S.poids), cigs: num(h.cigarettes && h.cigarettes.use && h.cigarettes.par_jour), label: 'Toi, d’après le questionnaire' };
+  }
+
   function openSettings() {
     const dlg = $('#dlg-settings');
     const p = S.profile || {};
@@ -1460,9 +1571,13 @@
           ${C.SUBSTANCE_KEYS.map(k => `<label class="check"><input type="checkbox" id="set-tr-${k}" ${S.tracks.includes(k) ? 'checked' : ''}><span>${esc(C.SUBSTANCES[k].label)}</span></label>`).join('')}
           <p class="hint">Seules les consommations cochées apparaissent dans la saisie, le score, les points et les conseils.</p>
         </section>
-        <section><h3>Mes objectifs</h3>${OBJ_SET_FIELDS.map(([sub, k, l, h, st]) => `<div data-sub="${sub}">${row(`so-${k}`, l, h, S.obj[k], st)}</div>`).join('')}</section>
+        <section><h3>Mes objectifs</h3>
+          <details class="ob-guide-wrap set-guide-wrap"><summary>Repères pour ton âge</summary><div class="ob-guide" id="set-guide"></div></details>
+          ${OBJ_SET_FIELDS.map(([sub, k, l, h, st]) => `<div data-sub="${sub}">${row(`so-${k}`, l, h, S.obj[k], st)}</div>`).join('')}</section>
         <section><h3>Mon personnage</h3>
           <div class="field"><label for="set-pseudo">Prénom ou pseudo</label><input type="text" id="set-pseudo" maxlength="40" value="${esc(p.pseudo || '')}"></div>
+          <div class="field ob-age"><label for="set-age">Ton âge</label><input type="number" id="set-age" min="18" max="110" step="1" inputmode="numeric" value="${esc(C.ageFromBirthYear(habits.birth_year) || '')}">
+            <p class="hint">Sert uniquement aux repères pour ton âge.</p></div>
           <div class="look-grid">${lookPickerHTML('set')}<div class="look-prev" id="set-prev"></div></div>
         </section>
         <section><h3>Rappels par e-mail</h3>
@@ -1491,7 +1606,15 @@
     wireLookPicker($('#set-pick'), look, prev);
     prev();
     wireChips($('#set-form'), (g, v) => { if (g === 'day') day = Number(v); });
-    const syncObj = () => { for (const k of C.SUBSTANCE_KEYS) for (const n of $$(`[data-sub="${k}"]`, dlg)) n.hidden = !$(`#set-tr-${k}`).checked; };
+    const syncObj = () => { for (const k of C.SUBSTANCE_KEYS) for (const n of $$(`[data-sub="${k}"]`, dlg)) n.hidden = !$(`#set-tr-${k}`).checked; drawGuide(); };
+    const me = meNow();
+    function drawGuide() {
+      const objNow = Object.assign({}, S.obj);
+      for (const [, k] of OBJ_SET_FIELDS) { const v = Number($(`#so-${k}`).value); if (Number.isFinite(v)) objNow[k] = v; }
+      const tr = C.SUBSTANCE_KEYS.filter(k => $(`#set-tr-${k}`).checked);
+      $('#set-guide').innerHTML = ageGuideHTML(Number($('#set-age').value) || null, tr, me, objNow, me.label);
+    }
+    $('#set-form').addEventListener('input', ev => { if (ev.target.matches('[id^="so-"], #set-age')) drawGuide(); });
     for (const k of C.SUBSTANCE_KEYS) $(`#set-tr-${k}`).addEventListener('change', syncObj);
     syncObj();
     $('#set-x').addEventListener('click', () => dlg.close());
@@ -1541,6 +1664,12 @@
       }
       const pseudo = $('#set-pseudo').value.trim().slice(0, 40);
       if (!pseudo) return setStatus('#set-status', 'Ton personnage a besoin d’un prénom ou d’un pseudo.', 'err');
+      const ageRaw = $('#set-age').value.trim();
+      if (ageRaw) {
+        const age = Number(ageRaw);
+        if (!Number.isInteger(age) || age < 18 || age > 110) return setStatus('#set-status', 'Indique un âge entre 18 et 110 ans.', 'err');
+        habits.birth_year = new Date().getFullYear() - age;
+      }
       const remind = $('#set-remind').checked, email = $('#set-email').value.trim();
       if (remind && !EMAIL_RE.test(email)) return setStatus('#set-status', 'Entre une adresse e-mail valide pour les rappels, ou décoche-les.', 'err');
       const btn = $('#set-save'); btn.disabled = true;

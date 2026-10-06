@@ -142,7 +142,7 @@ fieldset.group legend { padding: 0; margin-bottom: 4px; font: 600 11.5px/1.2 var
 
 /* ---------- onboarding ---------- */
 .ob-wrap { max-width: 1060px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
-@media (min-width: 900px) { .ob-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); } .ob-preview { position: sticky; top: 24px; } }
+@media (min-width: 900px) { .ob-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); } .ob-side { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow: auto; } }
 .ob-card { display: grid; gap: 18px; padding: 24px; }
 .ob-progress { display: grid; gap: 8px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
 .ob-bar { height: 6px; border-radius: 3px; background: var(--line-2); overflow: hidden; }
@@ -406,3 +406,49 @@ dialog::backdrop { background: var(--veil); }
 .proposal { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
 .bilan-points { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); font-size: 13px; color: var(--ink-2); }
 .bilan-points strong { font-size: 18px; color: var(--ink); }
+
+/* ---------- age benchmarks (objectives step, settings) ---------- */
+.ob-side { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.ob-guide { display: grid; gap: 14px; min-width: 0; }
+.ob-side .ob-guide { padding: 18px; }
+.ob-guide-wrap { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; background: var(--surface-2); }
+.ob-guide-wrap > summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+.ob-guide-wrap[open] > summary { margin-bottom: 12px; }
+/* Next to the form on a wide screen, inside the step on a phone — never both. */
+@media (min-width: 900px) { .ob-body .ob-guide-wrap { display: none; } }
+@media (max-width: 899px) { .ob-side .ob-guide { display: none; } }
+.ag-head { display: grid; gap: 2px; }
+.ag-head .eyebrow { color: var(--muted); }
+.ag-head h3 { font: 800 19px/1.2 var(--f-display); }
+.ag-sec { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line-2); }
+.ag-sec h4 { margin: 0; font: 700 15px/1.3 var(--f-display); }
+.ag-sec h4 small { font: 500 12px var(--f-body); color: var(--muted); margin-left: 6px; }
+.ag-scale { display: grid; gap: 8px; }
+.ag-track { position: relative; height: 10px; border-radius: 5px; background: var(--line-2); margin: 6px 6px 0; }
+.ag-mark { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2px solid var(--surface); background: var(--muted); }
+.ag-mark.ref { width: 3px; height: 20px; margin: -10px 0 0 -1.5px; border: 0; border-radius: 2px; background: var(--ink); }
+.ag-mark.avg { background: #8a96a3; }
+.ag-mark.me { background: var(--accent); }
+.ag-mark.me.over { background: var(--crit); }
+.ag-mark.goal { background: var(--good); }
+.ag-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.ag-legend li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.ag-legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); justify-self: center; }
+.ag-legend .ref i { width: 3px; height: 12px; border-radius: 1px; background: var(--ink); }
+.ag-legend .avg i { background: #8a96a3; }
+.ag-legend .me i { background: var(--accent); }
+.ag-legend .me.over i { background: var(--crit); }
+.ag-legend .goal i { background: var(--good); }
+.ag-legend span { color: var(--ink-2); }
+.ag-legend b { font-variant-numeric: tabular-nums; }
+.ag-facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ag-facts li { display: grid; gap: 1px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); font-size: 12.5px; color: var(--ink-2); }
+.ob-guide-wrap .ag-facts li { background: var(--surface); }
+.ag-facts b { font-size: 18px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ag-take { font-size: 13.5px; font-weight: 600; }
+.ag-note { font-size: 13px; color: var(--ink-2); padding-left: 10px; border-left: 3px solid var(--warn); }
+.ag-reco { font-size: 12.5px; color: var(--muted); }
+.ag-src { font-size: 11.5px; color: var(--muted); }
+.ag-src a { color: var(--accent); }
+.ob-guide-wrap .ag-head .eyebrow { display: none; }
+.ag-facts li:only-child { grid-column: 1 / -1; }

@@ -315,8 +315,56 @@
     return o;
   }
 
+  // ---------------------------------------------------------------- Belgian benchmarks by age
+  // Sciensano, Health Interview Survey 2023-2024 (tables_al / tables_ta / tables_id, crude %, Belgium).
+  // One value per age band; drug questions stop at 64 (null after).
+  const AGE_BANDS = ['15-24', '25-34', '35-44', '45-54', '55-64', '65-74', '75+'];
+  const BE_HIS = {
+    source: 'Sciensano, Enquête de santé 2023-2024',
+    alcohol: {
+      drinkers: [66.9, 80.9, 80.7, 83.2, 81.5, 79.4, 68.4],   // drank in the past 12 months (%)
+      over10: [13.4, 16.6, 15.7, 17.7, 15.7, 20.5, 11.2],     // more than 10 standard drinks a week (%)
+      binge: [18.3, 13.9, 10.6, 11.8, 9.3, 8.3, 3.6],         // binge (F 4+ / M 6+ in 2 h) at least monthly (%)
+      daily: [1.3, 1.9, 4.5, 7.2, 9.9, 15.7, 15.8],           // drinks every day (%)
+      avgWeekly: [12.9, 9.3, 10.0, 11.0, 10.3, 10.8, 8.4],     // standard drinks a week, among weekly drinkers
+      lowRisk: [20.0, 26.6, 35.8, 37.8, 38.8, 40.2, 44.1],     // drinkers who respect all 4 recommendations (%)
+    },
+    tobacco: {
+      daily: [7.7, 12.7, 17.0, 15.1, 17.2, 10.9, 3.6],         // daily smokers (%)
+      perDay: [10.6, 12.0, 14.5, 15.1, 15.3, 15.3, 12.7],      // cigarettes a day, among daily smokers
+    },
+    drugs: {
+      cannabis: [17.9, 12.0, 10.6, 4.6, 1.8, null, null],      // cannabis in the past 12 months (%)
+      other: [3.9, 6.3, 5.2, 1.4, 0.6, null, null],            // another drug in the past 12 months (%)
+    },
+    all: { over10: 16.0, binge: 11.0, daily: 7.7, avgWeekly: 10.3, lowRisk: 34.8, tobaccoDaily: 12.8, perDay: 14.1, cannabis: 8.8, other: 3.5 },
+  };
+
+  /** Index into AGE_BANDS, or -1 when the age is unknown. */
+  function ageBandIndex(age) {
+    const a = Number(age);
+    if (!Number.isFinite(a) || a <= 0) return -1;
+    if (a < 25) return 0;
+    if (a >= 75) return 6;
+    return Math.floor((a - 15) / 10);
+  }
+  /** Age today from the year of birth kept in the profile (habits.birth_year). */
+  function ageFromBirthYear(year, today) {
+    const y = Number(year);
+    if (!Number.isFinite(y) || y < 1900) return null;
+    return (today ? parse(today) : new Date()).getFullYear() - y;
+  }
+  /** The benchmarks of one age band, as plain numbers. Null when the age is unknown. */
+  function ageStats(age) {
+    const i = ageBandIndex(age);
+    if (i < 0) return null;
+    const pick = group => Object.fromEntries(Object.entries(group).map(([k, v]) => [k, v[i]]));
+    return { band: AGE_BANDS[i], index: i, alcohol: pick(BE_HIS.alcohol), tobacco: pick(BE_HIS.tobacco), drugs: pick(BE_HIS.drugs) };
+  }
+
   const api = {
     SUBSTANCES, SUBSTANCE_KEYS, TYPES, COUNT_KEYS, ALC_KEYS, DRUG_KEYS, DEFAULT_POIDS, DEFAULT_OBJECTIFS, HEALTH, STATES, POINTS, ADVICE,
+    AGE_BANDS, BE_HIS, ageBandIndex, ageFromBirthYear, ageStats,
     iso, parse, addDays, mondayOf, isISODate, num, clamp, mergeNumbers, tracksOf, typesFor,
     unitsOf, alcUnits, drugUnits, alcCount, weekStats, scoreWeek, stateOf, stateByKey, trendOf,
     pointsWeek, adviceFor, needsHelp, habitsStats, suggestObjectifs, objectifsFromBaseline,

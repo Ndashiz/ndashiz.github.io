@@ -91,4 +91,18 @@ const base = C.objectifsFromBaseline(C.weekStats(heavyRows, MON, P, NEXT), O);
 assert.equal(base.semaine, Math.round(heavySt.units * 0.8));
 assert.equal(base.cigarettes_jour, 16);
 
+// Age bands follow Sciensano's: 18 lands in 15-24, 25 starts 25-34, 74 is 65-74, 75 and over is 75+.
+assert.deepEqual([18, 24, 25, 34, 35, 64, 65, 74, 75, 90].map(C.ageBandIndex), [0, 0, 1, 1, 2, 4, 5, 5, 6, 6]);
+assert.equal(C.ageBandIndex(''), -1);
+assert.equal(C.ageFromBirthYear(1990, '2026-10-06'), 36);
+assert.equal(C.ageFromBirthYear(null), null);
+const s30 = C.ageStats(30);
+assert.equal(s30.band, '25-34');
+assert.equal(s30.alcohol.over10, 16.6);
+assert.equal(s30.tobacco.perDay, 12.0);
+assert.equal(C.ageStats(70).drugs.cannabis, null); // drug questions stop at 64
+for (const group of ['alcohol', 'tobacco', 'drugs']) {
+  for (const [k, v] of Object.entries(C.BE_HIS[group])) assert.equal(v.length, C.AGE_BANDS.length, `${group}.${k}`);
+}
+
 console.log('core.js: all assertions passed', { clean: s1.total, heavy: s2.total, monday: s3.total, pointsHeavy: ptsHeavy.total, pointsClean: ptsClean.total });
