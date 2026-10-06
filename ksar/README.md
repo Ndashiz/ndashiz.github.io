@@ -13,6 +13,7 @@ Static vanilla JS (no build), Supabase for accounts and data. UI in French.
 | `avatar.js` | The character, four flat-vector scenes drawn in SVG (suit + convertible → city car → smoking wreck → cardboard + shopping cart), three looks (skin, hair colour, haircut) |
 | `app.js` | Views: landing + account, questionnaire, tutorial, main screen, weekly table, settings, weekly summary |
 | `schema.sql` | Tables, RLS, triggers, `ardoise_delete_me()` — run by hand |
+| `kill_switch.sql` | The switch Jarvis flips (nav → L'Ardoise): `ksar_disabled` in LazyPO's `app_settings`, RLS locks on every `ardoise_*` table, counts for the Jarvis page — run by hand, after `shared_project.sql` |
 | `shared_project.sql` | Guards for the project shared with LazyPO: a ksar sign-up gets no LazyPO profile or admin notification — run by hand, after `schema.sql` |
 | `reminders.sql` | Weekly e-mail via `pg_cron` + `pg_net` + Resend — run by hand, after `schema.sql` |
 | `config.js` | Supabase URL + anon key (public by design, RLS protects the data) |
@@ -33,7 +34,11 @@ publishable key as `lazypo/auth.js`, already in `config.js`). All its objects ar
 3. **Reminders** — on resend.com, create an API key and verify `ndashiz.be` (SPF + DKIM DNS records), then
    `select vault.create_secret('re_…', 'ardoise_resend_key');` and run `reminders.sql`.
    Test with `select public.ardoise_send_reminders();`.
-4. **Admin** — to edit the weighting matrix from the app (Settings → Administration):
+4. **Kill switch** — run `kill_switch.sql`. Jarvis (nav → L'Ardoise) then takes the site down or brings it
+   back with the LazyPO secret it already holds (`LAZYPO_SETTINGS_SECRET`). When it is on: the app shows a
+   pause screen (open tabs switch within 5 minutes), RLS refuses every `ardoise_*` row, and the reminder
+   job sends nothing. GitHub Pages still serves the files — there is no Worker on `/ksar`. No data is deleted.
+5. **Admin** — to edit the weighting matrix from the app (Settings → Administration):
    `insert into public.ardoise_admins (user_id) select id from auth.users where email = '…';`
 
 Accounts are shared across ndashiz.be: someone who already has a LazyPO or LazySyndic login signs in to

@@ -184,10 +184,40 @@
       if (session) S.session = session;
     });
 
+    watchSwitch();
+    if (await sitePaused()) return renderPaused();
     const { data } = await S.sb.auth.getSession();
     if (S.view === 'recovery') return;
     S.session = data && data.session;
     route();
+  }
+
+  // ---------------------------------------------------------------- kill switch (Jarvis → L'Ardoise)
+  // `ksar_disabled` in app_settings (public flags shared with LazyPO, see kill_switch.sql). The database
+  // locks every ardoise_* table on its own; this only replaces the app by a pause screen. Fail-open:
+  // if the flag cannot be read, the app runs and RLS stays the real boundary.
+  async function sitePaused() {
+    try {
+      const { data, error } = await S.sb.from('app_settings').select('value').eq('key', 'ksar_disabled').maybeSingle();
+      return !error && !!data && data.value === true;
+    } catch (e) { return false; }
+  }
+
+  function renderPaused() {
+    S.view = 'paused';
+    app().innerHTML = `<div class="center-msg">${brandMark()}<h2>L\u2019Ardoise fait une pause</h2>
+      <p class="sub">Le site est momentanément indisponible. Tes données sont conservées : tu les retrouveras telles quelles à la réouverture.</p>
+      <div class="help-foot" style="text-align:left">${HELP_HTML}</div></div>`;
+  }
+
+  function watchSwitch() {
+    const check = async () => {
+      const paused = await sitePaused();
+      if (paused && S.view !== 'paused') renderPaused();
+      else if (!paused && S.view === 'paused') { const { data } = await S.sb.auth.getSession(); S.session = data && data.session; route(); }
+    };
+    setInterval(check, 5 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
   }
 
   function resetData() {
@@ -200,6 +230,7 @@
     if (routing) return;
     routing = true;
     try {
+      if (await sitePaused()) return renderPaused();
       if (!S.session) return renderLanding();
       renderMessage('Chargement…', 'On sort ton ardoise.');
       const [prof, conf, adm] = await Promise.all([

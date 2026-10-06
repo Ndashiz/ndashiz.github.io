@@ -33,6 +33,13 @@ declare
   req     bigint;
   sent    integer := 0;
 begin
+  -- Site paused from Jarvis (kill_switch.sql): no reminder points to a page that cannot be used.
+  if to_regprocedure('public.app_flag(text)') is not null then
+    if public.app_flag('ksar_disabled') then
+      return 0;
+    end if;
+  end if;
+
   select decrypted_secret into api_key from vault.decrypted_secrets where name = 'ardoise_resend_key';
   if api_key is null then
     raise notice 'ardoise: no ardoise_resend_key in Vault, nothing sent';
