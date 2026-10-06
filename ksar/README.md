@@ -1,0 +1,58 @@
+# L'Ardoise — `ndashiz.be/ksar/`
+
+Habit-reduction app for alcohol, cigarettes and drugs: daily logging, a weekly score that drives an
+illustrated character, points that reward effort, data-triggered advice and a weekly reminder e-mail.
+Static vanilla JS (no build), Supabase for accounts and data. UI in French.
+
+## Files
+
+| File | Role |
+|---|---|
+| `index.html` | Shell: fonts, `app.css`, then `supabase.min.js` → `config.js` → `core.js` → `avatar.js` → `app.js` |
+| `core.js` | Pure logic (no DOM, no network): weighting matrix, weekly stats, score, points, advice triggers, onboarding suggestions. `node ksar/core.test.js` |
+| `avatar.js` | The character, four flat-vector scenes drawn in SVG (suit + convertible → city car → smoking wreck → cardboard + shopping cart), three looks (skin, hair colour, haircut) |
+| `app.js` | Views: landing + account, questionnaire, tutorial, main screen, weekly table, settings, weekly summary |
+| `schema.sql` | Tables, RLS, triggers, `ardoise_delete_me()` — run by hand |
+| `reminders.sql` | Weekly e-mail via `pg_cron` + `pg_net` + Resend — run by hand, after `schema.sql` |
+| `config.js` | Supabase URL + anon key (public by design, RLS protects the data) |
+| `supabase.min.js` | supabase-js 2.45.4, same vendored build as `scrumpoker/` |
+
+## Setup (once)
+
+1. **Supabase project** — create a *dedicated* project (EU region, e.g. Frankfurt). Not LazyPO's `hrvx…`:
+   every sign-up creates an auth user, which would also be a valid LazyPO login, and `ardoise_delete_me()`
+   deletes auth users.
+2. **SQL editor** — run `schema.sql`.
+3. **Auth → URL configuration** — Site URL `https://ndashiz.be/ksar/`; redirect URLs
+   `https://ndashiz.be/ksar/` and `http://localhost:3100/ksar/`. Keep e-mail confirmation on.
+   Supabase's built-in SMTP is rate-limited (a few e-mails an hour): for real users, plug Resend in as
+   custom SMTP (Auth → SMTP settings) — same account as the reminders.
+4. **`config.js`** — paste the project URL and the anon public key.
+5. **Reminders** — on resend.com, create an API key and verify `ndashiz.be` (SPF + DKIM DNS records), then
+   `select vault.create_secret('re_…', 'ardoise_resend_key');` and run `reminders.sql`.
+   Test with `select public.ardoise_send_reminders();`.
+6. **Admin** — to edit the weighting matrix from the app (Settings → Administration):
+   `insert into public.ardoise_admins (user_id) select id from auth.users where email = '…';`
+
+Push to `main` → GitHub Pages. Bump the `?v=` query strings in `index.html` when shipping a change,
+or Cloudflare may serve the old JS for ~10 minutes.
+
+## Decisions on the requirements' open questions
+
+| Question | Decision |
+|---|---|
+| Points direction (Q1, P2) | Two numbers. **Score /100** = consumption vs objectives, drives the character. **Points** = reward, never decrease: 10 per logged day, 30 for a full week, 15 per sport session, 40 per objective met, 5 per logged alcohol-free day, 10 per applied tip, plus a bonus per unit under the objective |
+| Reminder (Q2, FR7.2) | Per-user weekday (Monday by default). Sent only if the previous week has fewer than 7 logged days. Content = nudge + two-line snippet (days logged, standard drinks vs objective). Stops after 4 reminders without a new entry |
+| Weighting matrices (Q3, FR4) | Alcohol in Belgian standard drinks (beer 1, wine 1, special beer 2, cocktail 1.5, shot 1, alcohol-free 0); cigarettes 1 each; drugs in "occasions" (joint 1, other drug 2). Global, admin-editable in `ardoise_config` |
+| Objective definition (Q4, P3) | Both. The questionnaire proposes absolute objectives (a step down, capped at the health limits). The first week is a measurement-only baseline (neutral character); its summary offers objectives at −20 % of what was measured |
+| State thresholds (Q5) | 80+ top form · 60–79 OK · 40–59 declining · below 40 lowest state. Trend shown vs the mean of the 4 previous weeks; tips move to the top of the page when the week is declining |
+| Privacy (Q6) | Explicit consent at sign-up (stored as `consent_at`), RLS on every table, no third-party tracking, JSON export and full account deletion from Settings |
+| P1 (soften lowest state) | Not applied to the drawing: the lowest state stays "à la rue" as first requested. The copy is supportive rather than judging, and the help line appears for heavy weeks. Switching the drawing to "tired" is a one-function change in `avatar.js` |
+| P5 (safety line) | Belgian help lines in the footer, and highlighted in the tips panel / weekly summary / onboarding when a week is heavy (`needsHelp()`), with the warning about stopping alcohol abruptly |
+
+## Data model
+
+`ardoise_profiles` (one per user: pseudo, look, questionnaire answers, objectives, reminder settings,
+baseline week) · `ardoise_entries` (one row per user and day, counts per type) · `ardoise_weeks` (sport
+sessions and applied tips per week) · `ardoise_config` (weighting matrix) · `ardoise_admins` ·
+`ardoise_reminder_log`. Score and points are computed client-side from entries, never stored.
